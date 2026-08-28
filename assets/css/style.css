@@ -134,7 +134,8 @@ section { padding: 80px 0; }
 .hero-graph {
   position: absolute;
   inset: 0;
-  width: 100%;
+  left: 50%;
+  width: 50%;
   height: 100%;
   pointer-events: none;
 }

@@ -216,8 +216,8 @@ if (heroGraph) {
     const progP = makeProgram(VS, FS_POINTS);
     const progL = makeProgram(VS, FS_LINES);
 
-    const N = 80;
-    const XH = 1.15, YH = 0.8, ZH = 0.7;
+    const N = 45;
+    const XH = 1.1, YH = 0.75, ZH = 0.65;
     const pos = new Float32Array(N * 3);
     const delay = new Float32Array(N);
     const rate = new Float32Array(N);
@@ -234,7 +234,7 @@ if (heroGraph) {
       phase[i * 3 + 2] = Math.random() * Math.PI * 2;
       blink[i] = Math.random() * Math.PI * 2;
     }
-    const TH = 1.0;
+    const TH = 0.85;
     const pairs = [];
     for (let i = 0; i < N; i++) {
       for (let j = i + 1; j < N; j++) {
@@ -301,9 +301,11 @@ if (heroGraph) {
     }
     let c1 = hexRgb(cssVar("--accent"));
     let c2 = hexRgb(cssVar("--accent-2"));
+    let ce = hexRgb(cssVar("--text-soft"));
     new MutationObserver(() => {
       c1 = hexRgb(cssVar("--accent"));
       c2 = hexRgb(cssVar("--accent-2"));
+      ce = hexRgb(cssVar("--text-soft"));
     }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
     let W = 0, H = 0, raf = 0;
@@ -361,8 +363,8 @@ if (heroGraph) {
       gl.uniform2f(gl.getUniformLocation(progL, "uRot"), rotArr[0], rotArr[1]);
       gl.uniform1f(gl.getUniformLocation(progL, "uTime"), time);
       gl.uniform1f(gl.getUniformLocation(progL, "uAmp"), 0.12);
-      gl.uniform3f(gl.getUniformLocation(progL, "uColor"), c1[0], c1[1], c1[2]);
-      gl.uniform1f(gl.getUniformLocation(progL, "uAlpha"), 0.55);
+      gl.uniform3f(gl.getUniformLocation(progL, "uColor"), ce[0], ce[1], ce[2]);
+      gl.uniform1f(gl.getUniformLocation(progL, "uAlpha"), 0.5);
       gl.drawArrays(gl.LINES, 0, E * 2);
     }
 
