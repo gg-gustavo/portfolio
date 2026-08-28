@@ -141,7 +141,6 @@ if (heroGraph) {
   const gl = heroGraph.getContext("webgl", { antialias: true, alpha: true });
   if (gl) {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
 
     const VS = `
@@ -158,6 +157,7 @@ if (heroGraph) {
       uniform float uAmp;
       uniform vec2 uMouse;
       uniform float uGrav;
+      uniform float uGravRadius;
       varying float vDepth;
       varying float vAppear;
       varying float vBlink;
@@ -170,7 +170,7 @@ if (heroGraph) {
         vec2 toMouse = uMouse - p.xy;
         float dist = length(toMouse);
         if (dist > 0.001) {
-          p.xy += (toMouse / dist) * uGrav * smoothstep(1.5, 0.0, dist);
+          p.xy += (toMouse / dist) * uGrav * smoothstep(uGravRadius, 0.0, dist);
         }
         float cx = cos(uRot.x), sx = sin(uRot.x);
         float cy = cos(uRot.y), sy = sin(uRot.y);
@@ -208,7 +208,7 @@ if (heroGraph) {
       varying float vAppear;
       varying float vColor;
       void main() {
-        gl_FragColor = vec4(uColor, uAlpha * (0.35 + 0.65 * vDepth) * vAppear);
+        gl_FragColor = vec4(uColor, uAlpha * (0.45 + 0.55 * vDepth) * vAppear);
       }`;
 
     function compile(type, src) {
@@ -343,8 +343,9 @@ if (heroGraph) {
     }
     nextRandomWalk();
 
-    let dragging = false, lastX = 0, lastY = 0;
+    let clicking = false, lastX = 0;
     const mouse = { x: 999, y: 999 };
+    let mouseIn = false;
 
     function resize() {
       W = heroGraph.clientWidth;
@@ -355,67 +356,66 @@ if (heroGraph) {
     }
     resize();
 
-    function toWorld(x, y) {
+    function toWorld(clientX, clientY) {
       const r = heroGraph.getBoundingClientRect();
-      const ndcX = ((x - r.left) / r.width) * 2 - 1;
-      const ndcY = -(((y - r.top) / r.height) * 2 - 1);
+      if (r.width === 0 || r.height === 0) return { x: 0, y: 0 };
+      const ndcX = ((clientX - r.left) / r.width) * 2 - 1;
+      const ndcY = -(((clientY - r.top) / r.height) * 2 - 1);
       const f = 1 / 2.9;
       return { x: ndcX / (f * (W / H)), y: ndcY / f };
     }
 
-    if (fine || "ontouchstart" in window) {
-      heroGraph.addEventListener("mousemove", e => {
-        const m = toWorld(e.clientX, e.clientY);
-        mouse.x = m.x; mouse.y = m.y;
-      });
-      heroGraph.addEventListener("mouseleave", () => { mouse.x = 999; mouse.y = 999; });
-      heroGraph.addEventListener("mousedown", e => {
-        dragging = true;
-        lastX = e.clientX; lastY = e.clientY;
-        heroGraph.classList.add("dragging");
-      });
-      window.addEventListener("mousemove", e => {
-        if (!dragging) return;
-        const dx = e.clientX - lastX, dy = e.clientY - lastY;
-        rot.y += dx * 0.006;
-        rot.x = Math.max(-1.2, Math.min(1.2, rot.x + dy * 0.006));
-        lastX = e.clientX; lastY = e.clientY;
-      });
-      window.addEventListener("mouseup", () => {
-        dragging = false;
-        heroGraph.classList.remove("dragging");
-      });
-      heroGraph.addEventListener("touchstart", e => {
-        dragging = true;
-        lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
-        heroGraph.classList.add("dragging");
-      }, { passive: true });
-      heroGraph.addEventListener("touchmove", e => {
-        const t = e.touches[0];
-        if (!t) return;
-        const m = toWorld(t.clientX, t.clientY);
-        mouse.x = m.x; mouse.y = m.y;
-        if (dragging) {
-          const dx = t.clientX - lastX, dy = t.clientY - lastY;
-          rot.y += dx * 0.006;
-          rot.x = Math.max(-1.2, Math.min(1.2, rot.x + dy * 0.006));
-          lastX = t.clientX; lastY = t.clientY;
-          e.preventDefault();
-        }
-      }, { passive: false });
-      const endTouch = () => {
-        dragging = false;
-        heroGraph.classList.remove("dragging");
-      };
-      heroGraph.addEventListener("touchend", endTouch);
-      heroGraph.addEventListener("touchcancel", endTouch);
-    }
+    const hero = document.getElementById("principal");
+    hero.addEventListener("mousemove", e => {
+      const m = toWorld(e.clientX, e.clientY);
+      mouse.x = m.x; mouse.y = m.y;
+      mouseIn = true;
+      if (clicking) {
+        rot.y += (e.clientX - lastX) * 0.006;
+        lastX = e.clientX;
+      }
+    });
+    hero.addEventListener("mouseleave", () => {
+      mouse.x = 999; mouse.y = 999; mouseIn = false;
+    });
+    hero.addEventListener("mousedown", e => {
+      clicking = true;
+      lastX = e.clientX;
+      const m = toWorld(e.clientX, e.clientY);
+      mouse.x = m.x; mouse.y = m.y;
+    });
+    window.addEventListener("mouseup", () => { clicking = false; });
+
+    hero.addEventListener("touchstart", e => {
+      clicking = true;
+      const t = e.touches[0];
+      lastX = t.clientX;
+      const m = toWorld(t.clientX, t.clientY);
+      mouse.x = m.x; mouse.y = m.y;
+      mouseIn = true;
+    }, { passive: true });
+    hero.addEventListener("touchmove", e => {
+      const t = e.touches[0];
+      if (!t) return;
+      const m = toWorld(t.clientX, t.clientY);
+      mouse.x = m.x; mouse.y = m.y;
+      if (clicking) {
+        rot.y += (t.clientX - lastX) * 0.006;
+        lastX = t.clientX;
+        e.preventDefault();
+      }
+    }, { passive: false });
+    hero.addEventListener("touchend", () => { clicking = false; mouseIn = false; });
+    hero.addEventListener("touchcancel", () => { clicking = false; mouseIn = false; });
 
     function draw(time) {
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       const r = (W * DPR) / (H * DPR);
       const rotArr = [rot.x, rot.y];
+      const grav = clicking ? 0.8 : (mouseIn ? 0.14 : 0);
+      const gravR = clicking ? 3.0 : (mouseIn ? 1.5 : 0);
+
       bindAttrs(progP, bufP, bufPD, bufPR, bufPP, bufPB, bufPC);
       gl.uniform1f(gl.getUniformLocation(progP, "uRatio"), r);
       gl.uniform2f(gl.getUniformLocation(progP, "uRot"), rotArr[0], rotArr[1]);
@@ -423,7 +423,8 @@ if (heroGraph) {
       gl.uniform1f(gl.getUniformLocation(progP, "uAmp"), 0.16);
       gl.uniform1f(gl.getUniformLocation(progP, "uSize"), 30);
       gl.uniform2f(gl.getUniformLocation(progP, "uMouse"), mouse.x, mouse.y);
-      gl.uniform1f(gl.getUniformLocation(progP, "uGrav"), 0.14);
+      gl.uniform1f(gl.getUniformLocation(progP, "uGrav"), grav);
+      gl.uniform1f(gl.getUniformLocation(progP, "uGravRadius"), gravR);
       gl.uniform3f(gl.getUniformLocation(progP, "uColor1"), c1[0], c1[1], c1[2]);
       gl.uniform3f(gl.getUniformLocation(progP, "uColor2"), c2[0], c2[1], c2[2]);
       gl.drawArrays(gl.POINTS, 0, N);
@@ -434,14 +435,15 @@ if (heroGraph) {
       gl.uniform1f(gl.getUniformLocation(progL, "uTime"), time);
       gl.uniform1f(gl.getUniformLocation(progL, "uAmp"), 0.16);
       gl.uniform2f(gl.getUniformLocation(progL, "uMouse"), mouse.x, mouse.y);
-      gl.uniform1f(gl.getUniformLocation(progL, "uGrav"), 0.14);
+      gl.uniform1f(gl.getUniformLocation(progL, "uGrav"), grav);
+      gl.uniform1f(gl.getUniformLocation(progL, "uGravRadius"), gravR);
       gl.uniform3f(gl.getUniformLocation(progL, "uColor"), ce[0], ce[1], ce[2]);
-      gl.uniform1f(gl.getUniformLocation(progL, "uAlpha"), 0.65);
+      gl.uniform1f(gl.getUniformLocation(progL, "uAlpha"), 0.85);
       gl.drawArrays(gl.LINES, 0, E * 2);
     }
 
     function frame() {
-      if (!dragging) {
+      if (!clicking) {
         rwT -= 1 / 60;
         if (rwT <= 0) nextRandomWalk();
         target = { x: 0.5 + rw.x, y: 0.7 + rw.y };
