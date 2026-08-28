@@ -267,6 +267,9 @@ section { padding: 80px 0; }
 .project-body p { color: var(--text-soft); font-size: .92rem; margin-bottom: 16px; }
 .project-link { font-weight: 600; font-size: .9rem; }
 
+#projetos-anteriores .project-card { opacity: 0.85; }
+#projetos-anteriores .project-card:hover { opacity: 1; }
+
 /* ============ CONTATO ============ */
 .contact { text-align: center; }
 .contact .section-title { margin-bottom: 16px; }
