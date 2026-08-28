@@ -58,7 +58,7 @@ h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); }
 h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
 h3 { font-size: 1.2rem; }
 .container { max-width: var(--max-width); margin: 0 auto; padding: 0 20px; }
-section { padding: 80px 0; }
+section { padding: 60px 0; }
 .section-label {
   font-family: var(--font-mono);
   font-size: .8rem;
@@ -128,10 +128,10 @@ section { padding: 80px 0; }
 .hero {
   position: relative;
   overflow: hidden;
-  min-height: calc(100vh - var(--nav-h));
+  min-height: calc(85vh - var(--nav-h));
   display: flex;
   align-items: center;
-  padding: 60px 0;
+  padding: 40px 0 20px;
 }
 .hero-graph {
   position: absolute;
