@@ -303,17 +303,14 @@ section { padding: 80px 0; }
 .stack-icon {
   width: 44px; height: 44px;
   padding: 10px;
-  background: var(--surface);
+  background: transparent;
   border: 1px solid var(--border);
   border-radius: 12px;
   object-fit: contain;
   transition: transform .2s, border-color .2s;
 }
 .stack-icon:hover { transform: translateY(-3px); border-color: var(--accent); }
-:root[data-theme="dark"] .stack-icon.mono {
-  background: transparent;
-  filter: invert(1);
-}
+:root[data-theme="dark"] .stack-icon.mono { filter: invert(1); }
 
 /* ============ RESPONSIVO ============ */
 @media (max-width: 900px) {
