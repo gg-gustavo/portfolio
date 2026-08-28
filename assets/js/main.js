@@ -136,6 +136,124 @@ if (tiltCards.length && finePointer && !reducedMotion) {
   });
 }
 
+const heroGraph = document.getElementById("heroGraph");
+if (heroGraph) {
+  const ctx = heroGraph.getContext("2d");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  let W = 0, H = 0, nodes = [], raf = 0;
+  const mouse = { x: -1e4, y: -1e4 };
+
+  const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  function hexRgb(hex) {
+    const m = hex.replace("#", "");
+    const n = parseInt(m.length === 3 ? m.split("").map(c => c + c).join("") : m, 16);
+    return [n >> 16 & 255, n >> 8 & 255, n & 255];
+  }
+  let accent = hexRgb(cssVar("--accent"));
+  let accent2 = hexRgb(cssVar("--accent-2"));
+  new MutationObserver(() => {
+    accent = hexRgb(cssVar("--accent"));
+    accent2 = hexRgb(cssVar("--accent-2"));
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  function resize() {
+    W = heroGraph.clientWidth;
+    H = heroGraph.clientHeight;
+    heroGraph.width = W * DPR;
+    heroGraph.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    const count = Math.min(90, Math.max(40, Math.round(W * H / 18000)));
+    nodes = Array.from({ length: count }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      r: Math.random() * 1.6 + 1.2
+    }));
+  }
+
+  function step() {
+    ctx.clearRect(0, 0, W, H);
+    const linkDist = Math.min(W, H) * 0.2;
+    const R = 130;
+
+    for (const n of nodes) {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+      const dx = n.x - mouse.x, dy = n.y - mouse.y;
+      const d2 = dx * dx + dy * dy;
+      if (d2 < R * R) {
+        const d = Math.sqrt(d2) || 1;
+        const f = (1 - d / R) * 0.7;
+        n.x += (dx / d) * f;
+        n.y += (dy / d) * f;
+      }
+    }
+
+    ctx.lineWidth = 1;
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const d = Math.hypot(dx, dy);
+        if (d < linkDist) {
+          ctx.strokeStyle = `rgba(${accent[0]},${accent[1]},${accent[2]},${(1 - d / linkDist) * 0.35})`;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    nodes.forEach((n, i) => {
+      const c = i % 2 ? accent2 : accent;
+      ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},0.85)`;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    raf = requestAnimationFrame(step);
+  }
+
+  resize();
+  if (reduced) {
+    step();
+    cancelAnimationFrame(raf);
+  } else {
+    step();
+  }
+
+  window.addEventListener("resize", resize);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) cancelAnimationFrame(raf);
+    else if (!reduced) step();
+  });
+
+  if (!reduced && (fine || "ontouchstart" in window)) {
+    const hero = document.getElementById("principal");
+    const move = (x, y) => {
+      const r = hero.getBoundingClientRect();
+      mouse.x = x - r.left;
+      mouse.y = y - r.top;
+    };
+    hero.addEventListener("mousemove", e => move(e.clientX, e.clientY));
+    hero.addEventListener("mouseleave", () => { mouse.x = -1e4; mouse.y = -1e4; });
+    hero.addEventListener("touchmove", e => {
+      const t = e.touches[0];
+      if (t) move(t.clientX, t.clientY);
+    }, { passive: true });
+    hero.addEventListener("touchstart", e => {
+      const t = e.touches[0];
+      if (t) move(t.clientX, t.clientY);
+    }, { passive: true });
+  }
+}
+
 const navLinksAll = document.querySelectorAll(".nav-links a");
 if (navLinksAll.length && "IntersectionObserver" in window) {
   const sections = [...navLinksAll].map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
