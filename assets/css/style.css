@@ -216,6 +216,7 @@ section { padding: 60px 0; }
 .about-photo img { aspect-ratio: 1/1; object-fit: cover; }
 .about-text p { color: var(--text-soft); margin-bottom: 16px; }
 .about-text { min-width: 0; }
+.about-text strong { color: var(--accent-2); font-weight: 700; }
 
 /* ============ ABOUT HIGHLIGHTS ============ */
 .about-highlights {
