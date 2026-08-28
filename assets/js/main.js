@@ -143,22 +143,28 @@ if (heroGraph) {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
-    const t0 = performance.now();
 
     const VS = `
       attribute vec3 aPos;
       attribute float aDelay;
       attribute float aRate;
+      attribute vec3 aPhase;
+      attribute float aBlink;
       uniform float uTime;
       uniform vec2 uRot;
       uniform float uRatio;
       uniform float uSize;
+      uniform float uAmp;
       varying float vDepth;
       varying float vAppear;
+      varying float vBlink;
       void main() {
+        vec3 p = aPos;
+        p.x += sin(uTime * aRate + aPhase.x) * uAmp;
+        p.y += sin(uTime * aRate * 1.31 + aPhase.y) * uAmp;
+        p.z += cos(uTime * aRate * 0.77 + aPhase.z) * uAmp;
         float cx = cos(uRot.x), sx = sin(uRot.x);
         float cy = cos(uRot.y), sy = sin(uRot.y);
-        vec3 p = aPos;
         p.yz = mat2(cx, -sx, sx, cx) * p.yz;
         p.xz = mat2(cy, -sy, sy, cy) * p.xz;
         float z = 3.2;
@@ -167,6 +173,7 @@ if (heroGraph) {
         gl_Position.x *= uRatio;
         vDepth = clamp((p.z + 1.2) / 2.4, 0.0, 1.0);
         vAppear = clamp((uTime - aDelay) * aRate, 0.0, 1.0);
+        vBlink = 0.55 + 0.45 * sin(uTime * (1.0 + aRate * 2.0) + aBlink);
         gl_PointSize = uSize * f * uRatio * (0.5 + 0.5 * vAppear);
       }`;
     const FS_POINTS = `
@@ -175,10 +182,11 @@ if (heroGraph) {
       uniform vec3 uColor2;
       varying float vDepth;
       varying float vAppear;
+      varying float vBlink;
       void main() {
         float d = length(gl_PointCoord - 0.5);
         if (d > 0.5) discard;
-        float alpha = smoothstep(0.5, 0.15, d) * (0.35 + 0.65 * vDepth) * vAppear;
+        float alpha = smoothstep(0.5, 0.15, d) * (0.35 + 0.65 * vDepth) * vAppear * vBlink;
         gl_FragColor = vec4(mix(uColor1, uColor2, vDepth), alpha);
       }`;
     const FS_LINES = `
@@ -208,19 +216,25 @@ if (heroGraph) {
     const progP = makeProgram(VS, FS_POINTS);
     const progL = makeProgram(VS, FS_LINES);
 
-    const N = 90;
-    const XH = 1.6, YH = 1.15, ZH = 1.0;
+    const N = 80;
+    const XH = 1.15, YH = 0.8, ZH = 0.7;
     const pos = new Float32Array(N * 3);
     const delay = new Float32Array(N);
     const rate = new Float32Array(N);
+    const phase = new Float32Array(N * 3);
+    const blink = new Float32Array(N);
     for (let i = 0; i < N; i++) {
       pos[i * 3]     = (Math.random() * 2 - 1) * XH;
       pos[i * 3 + 1] = (Math.random() * 2 - 1) * YH;
       pos[i * 3 + 2] = (Math.random() * 2 - 1) * ZH;
       delay[i] = Math.random() * 7;
       rate[i] = 0.25 + Math.random() * 0.6;
+      phase[i * 3] = Math.random() * Math.PI * 2;
+      phase[i * 3 + 1] = Math.random() * Math.PI * 2;
+      phase[i * 3 + 2] = Math.random() * Math.PI * 2;
+      blink[i] = Math.random() * Math.PI * 2;
     }
-    const TH = 1.15;
+    const TH = 1.0;
     const pairs = [];
     for (let i = 0; i < N; i++) {
       for (let j = i + 1; j < N; j++) {
@@ -232,32 +246,48 @@ if (heroGraph) {
     const linePos = new Float32Array(E * 6);
     const lineDelay = new Float32Array(E * 2);
     const lineRate = new Float32Array(E * 2);
+    const linePhase = new Float32Array(E * 6);
+    const lineBlink = new Float32Array(E * 2);
     for (let e = 0; e < E; e++) {
       const a = pairs[e * 2], b = pairs[e * 2 + 1];
       linePos[e * 6] = pos[a * 3]; linePos[e * 6 + 1] = pos[a * 3 + 1]; linePos[e * 6 + 2] = pos[a * 3 + 2];
       linePos[e * 6 + 3] = pos[b * 3]; linePos[e * 6 + 4] = pos[b * 3 + 1]; linePos[e * 6 + 5] = pos[b * 3 + 2];
       lineDelay[e * 2] = delay[a]; lineDelay[e * 2 + 1] = delay[b];
       lineRate[e * 2] = rate[a]; lineRate[e * 2 + 1] = rate[b];
+      linePhase[e * 6] = phase[a * 3]; linePhase[e * 6 + 1] = phase[a * 3 + 1]; linePhase[e * 6 + 2] = phase[a * 3 + 2];
+      linePhase[e * 6 + 3] = phase[b * 3]; linePhase[e * 6 + 4] = phase[b * 3 + 1]; linePhase[e * 6 + 5] = phase[b * 3 + 2];
+      lineBlink[e * 2] = blink[a]; lineBlink[e * 2 + 1] = blink[b];
     }
 
-    const bufP = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bufP);
-    gl.bufferData(gl.ARRAY_BUFFER, pos, gl.STATIC_DRAW);
-    const bufPD = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bufPD);
-    gl.bufferData(gl.ARRAY_BUFFER, delay, gl.STATIC_DRAW);
-    const bufPR = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bufPR);
-    gl.bufferData(gl.ARRAY_BUFFER, rate, gl.STATIC_DRAW);
-    const bufL = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bufL);
-    gl.bufferData(gl.ARRAY_BUFFER, linePos, gl.STATIC_DRAW);
-    const bufLD = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bufLD);
-    gl.bufferData(gl.ARRAY_BUFFER, lineDelay, gl.STATIC_DRAW);
-    const bufLR = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bufLR);
-    gl.bufferData(gl.ARRAY_BUFFER, lineRate, gl.STATIC_DRAW);
+    function bindAttrs(p, bufPos, bufD, bufR, bufPh, bufB) {
+      gl.useProgram(p);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufPos);
+      gl.enableVertexAttribArray(gl.getAttribLocation(p, "aPos"));
+      gl.vertexAttribPointer(gl.getAttribLocation(p, "aPos"), 3, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufD);
+      gl.enableVertexAttribArray(gl.getAttribLocation(p, "aDelay"));
+      gl.vertexAttribPointer(gl.getAttribLocation(p, "aDelay"), 1, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufR);
+      gl.enableVertexAttribArray(gl.getAttribLocation(p, "aRate"));
+      gl.vertexAttribPointer(gl.getAttribLocation(p, "aRate"), 1, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufPh);
+      gl.enableVertexAttribArray(gl.getAttribLocation(p, "aPhase"));
+      gl.vertexAttribPointer(gl.getAttribLocation(p, "aPhase"), 3, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufB);
+      gl.enableVertexAttribArray(gl.getAttribLocation(p, "aBlink"));
+      gl.vertexAttribPointer(gl.getAttribLocation(p, "aBlink"), 1, gl.FLOAT, false, 0, 0);
+    }
+
+    const bufP = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bufP); gl.bufferData(gl.ARRAY_BUFFER, pos, gl.STATIC_DRAW);
+    const bufPD = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bufPD); gl.bufferData(gl.ARRAY_BUFFER, delay, gl.STATIC_DRAW);
+    const bufPR = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bufPR); gl.bufferData(gl.ARRAY_BUFFER, rate, gl.STATIC_DRAW);
+    const bufPP = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bufPP); gl.bufferData(gl.ARRAY_BUFFER, phase, gl.STATIC_DRAW);
+    const bufPB = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bufPB); gl.bufferData(gl.ARRAY_BUFFER, blink, gl.STATIC_DRAW);
+    const bufL = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bufL); gl.bufferData(gl.ARRAY_BUFFER, linePos, gl.STATIC_DRAW);
+    const bufLD = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bufLD); gl.bufferData(gl.ARRAY_BUFFER, lineDelay, gl.STATIC_DRAW);
+    const bufLR = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bufLR); gl.bufferData(gl.ARRAY_BUFFER, lineRate, gl.STATIC_DRAW);
+    const bufLP = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bufLP); gl.bufferData(gl.ARRAY_BUFFER, linePhase, gl.STATIC_DRAW);
+    const bufLB = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bufLB); gl.bufferData(gl.ARRAY_BUFFER, lineBlink, gl.STATIC_DRAW);
 
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -276,25 +306,17 @@ if (heroGraph) {
       c2 = hexRgb(cssVar("--accent-2"));
     }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
-    function setup(p, bufPos, bufD, bufR, r, rotArr, time) {
-      gl.useProgram(p);
-      gl.bindBuffer(gl.ARRAY_BUFFER, bufPos);
-      gl.enableVertexAttribArray(gl.getAttribLocation(p, "aPos"));
-      gl.vertexAttribPointer(gl.getAttribLocation(p, "aPos"), 3, gl.FLOAT, false, 0, 0);
-      gl.bindBuffer(gl.ARRAY_BUFFER, bufD);
-      gl.enableVertexAttribArray(gl.getAttribLocation(p, "aDelay"));
-      gl.vertexAttribPointer(gl.getAttribLocation(p, "aDelay"), 1, gl.FLOAT, false, 0, 0);
-      gl.bindBuffer(gl.ARRAY_BUFFER, bufR);
-      gl.enableVertexAttribArray(gl.getAttribLocation(p, "aRate"));
-      gl.vertexAttribPointer(gl.getAttribLocation(p, "aRate"), 1, gl.FLOAT, false, 0, 0);
-      gl.uniform1f(gl.getUniformLocation(p, "uRatio"), r);
-      gl.uniform2f(gl.getUniformLocation(p, "uRot"), rotArr[0], rotArr[1]);
-      gl.uniform1f(gl.getUniformLocation(p, "uTime"), time);
-    }
-
     let W = 0, H = 0, raf = 0;
     const rot = { x: 0.5, y: 0.7 };
-    const target = { x: 0.5, y: 0.7 };
+    let target = { x: 0.5, y: 0.7 };
+    let mouseIn = false;
+    let rw = { x: 0, y: 0 };
+    let rwT = 0;
+    function nextRandomWalk() {
+      rw = { x: (Math.random() * 2 - 1) * 0.55, y: (Math.random() * 2 - 1) * 0.55 };
+      rwT = 1.5 + Math.random() * 2.5;
+    }
+    nextRandomWalk();
 
     function resize() {
       W = heroGraph.clientWidth;
@@ -308,15 +330,14 @@ if (heroGraph) {
     const hero = document.getElementById("principal");
     const move = (x, y) => {
       const r = hero.getBoundingClientRect();
-      target.y = 0.7 + ((x - r.left) / r.width - 0.5) * 1.8;
-      target.x = 0.5 + ((y - r.top) / r.height - 0.5) * 1.2;
+      target = { x: 0.5 + ((y - r.top) / r.height - 0.5) * 1.2, y: 0.7 + ((x - r.left) / r.width - 0.5) * 1.8 };
     };
     if (fine || "ontouchstart" in window) {
-      hero.addEventListener("mousemove", e => move(e.clientX, e.clientY));
-      hero.addEventListener("mouseleave", () => { target.x = 0.5; target.y = 0.7; });
+      hero.addEventListener("mousemove", e => { mouseIn = true; move(e.clientX, e.clientY); });
+      hero.addEventListener("mouseleave", () => { mouseIn = false; nextRandomWalk(); });
       hero.addEventListener("touchmove", e => {
         const t = e.touches[0];
-        if (t) move(t.clientX, t.clientY);
+        if (t) { mouseIn = true; move(t.clientX, t.clientY); }
       }, { passive: true });
     }
 
@@ -324,22 +345,36 @@ if (heroGraph) {
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       const r = (W * DPR) / (H * DPR);
-      setup(progP, bufP, bufPD, bufPR, r, [rot.x, rot.y], time);
+      const rotArr = [rot.x, rot.y];
+      bindAttrs(progP, bufP, bufPD, bufPR, bufPP, bufPB);
+      gl.uniform1f(gl.getUniformLocation(progP, "uRatio"), r);
+      gl.uniform2f(gl.getUniformLocation(progP, "uRot"), rotArr[0], rotArr[1]);
+      gl.uniform1f(gl.getUniformLocation(progP, "uTime"), time);
+      gl.uniform1f(gl.getUniformLocation(progP, "uAmp"), 0.12);
       gl.uniform1f(gl.getUniformLocation(progP, "uSize"), 9);
       gl.uniform3f(gl.getUniformLocation(progP, "uColor1"), c1[0], c1[1], c1[2]);
       gl.uniform3f(gl.getUniformLocation(progP, "uColor2"), c2[0], c2[1], c2[2]);
       gl.drawArrays(gl.POINTS, 0, N);
 
-      setup(progL, bufL, bufLD, bufLR, r, [rot.x, rot.y], time);
+      bindAttrs(progL, bufL, bufLD, bufLR, bufLP, bufLB);
+      gl.uniform1f(gl.getUniformLocation(progL, "uRatio"), r);
+      gl.uniform2f(gl.getUniformLocation(progL, "uRot"), rotArr[0], rotArr[1]);
+      gl.uniform1f(gl.getUniformLocation(progL, "uTime"), time);
+      gl.uniform1f(gl.getUniformLocation(progL, "uAmp"), 0.12);
       gl.uniform3f(gl.getUniformLocation(progL, "uColor"), c1[0], c1[1], c1[2]);
       gl.uniform1f(gl.getUniformLocation(progL, "uAlpha"), 0.55);
       gl.drawArrays(gl.LINES, 0, E * 2);
     }
 
+    const t0 = performance.now();
     function frame() {
-      rot.x += (target.x - rot.x) * 0.04;
-      rot.y += (target.y - rot.y) * 0.04;
-      rot.y += 0.00025;
+      if (!mouseIn) {
+        rwT -= 1 / 60;
+        if (rwT <= 0) nextRandomWalk();
+        target = { x: 0.5 + rw.x, y: 0.7 + rw.y };
+      }
+      rot.x += (target.x - rot.x) * 0.03;
+      rot.y += (target.y - rot.y) * 0.03;
       draw((performance.now() - t0) / 1000);
       raf = requestAnimationFrame(frame);
     }
