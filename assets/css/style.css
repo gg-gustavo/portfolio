@@ -165,6 +165,8 @@ section { padding: 80px 0; }
 .btn-primary:hover { box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 40%, transparent); }
 .btn-ghost { background: var(--surface); color: var(--text); border-color: var(--border); }
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.btn-green { background: var(--accent-2); color: var(--bg); border-color: var(--accent-2); }
+.btn-green:hover { filter: brightness(1.15); }
 
 .socials { display: flex; gap: 10px; }
 .socials a {
