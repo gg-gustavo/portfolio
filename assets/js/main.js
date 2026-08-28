@@ -38,7 +38,7 @@ navLinks.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
 
 const typingEl = document.getElementById("typing");
 if (typingEl) {
-  const words = ["produtos.", "pesquisa.", "software.", "inovação."];
+  const words = ["LLMs.", "automação.", "gamificação.", "software."];
   let wi = 0, ci = 0, deleting = false;
   (function type() {
     const word = words[wi];
