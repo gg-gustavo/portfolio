@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCC — Avaliação de Experiência Gamificada e Usabilidade</title>
+<style>
+:root {
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-alt: #eef1f8;
+  --text: #1c2333;
+  --text-soft: #4a5470;
+  --border: #d9dfec;
+  --accent: #059669;
+  --accent-strong: #047857;
+  --accent-soft: #dcf5ea;
+  --accent2: #5b5bd6;
+  --accent2-strong: #4545b8;
+  --accent2-soft: #ececfb;
+  --shadow: 0 10px 30px rgba(28, 35, 51, 0.10);
+  --shadow-sm: 0 2px 8px rgba(28, 35, 51, 0.08);
+  --radius: 14px;
+}
+:root[data-theme="dark"] {
+  --bg: #0f1220;
+  --surface: #1a1f33;
+  --surface-alt: #232a44;
+  --text: #eef1fb;
+  --text-soft: #aab2d0;
+  --border: #333c5e;
+  --accent: #34d399;
+  --accent-strong: #6ee7b7;
+  --accent-soft: #17362a;
+  --accent2: #8f8fff;
+  --accent2-strong: #b0b0ff;
+  --accent2-soft: #262c4d;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  transition: background .3s, color .3s;
+}
+
+header.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.05rem; }
+.brand .logo {
+  display: grid; place-items: center;
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; border-radius: 10px; font-size: .95rem;
+}
+.topbar-actions { display: flex; gap: 8px; }
+.icon-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit; font-size: .85rem; font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .2s, transform .1s, border-color .2s;
+}
+.icon-btn:hover { background: var(--accent-soft); border-color: var(--accent); }
+.icon-btn:active { transform: scale(.96); }
+
+nav.jump {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  margin-bottom: 30px;
+}
+nav.jump a {
+  padding: 6px 16px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: .82rem; font-weight: 600; color: var(--text-soft);
+  text-decoration: none;
+}
+nav.jump a:hover { border-color: var(--accent); color: var(--accent); }
+
+main { max-width: 860px; margin: 0 auto; padding: 28px 20px 80px; }
+
+.hero {
+  text-align: center;
+  padding: 44px 24px;
+  border-radius: var(--radius);
+  background: linear-gradient(160deg, var(--accent-soft), var(--surface) 70%);
+  border: 1px solid var(--border);
+  margin-bottom: 36px;
+}
+.hero h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin-bottom: 10px; letter-spacing: -.02em; }
+.hero h1 span.g { color: var(--accent); }
+.hero h1 span.p { color: var(--accent2); }
+.hero p { color: var(--text-soft); max-width: 640px; margin: 0 auto; }
+
+section.block {
+  margin-bottom: 32px;
+  padding: 24px 24px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  scroll-margin-top: 90px;
+}
+section.block > header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.sec-num {
+  display: grid; place-items: center;
+  width: 40px; height: 40px; flex: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #fff;
+  font-weight: 800; font-size: 1.05rem;
+}
+section.block[data-accent="purple"] .sec-num { background: linear-gradient(135deg, var(--accent2), var(--accent2-strong)); }
+section.block h2 { font-size: 1.2rem; letter-spacing: -.01em; }
+section.block small.sub { display: block; color: var(--text-soft); font-weight: 500; font-size: .85rem; }
+section.block p { margin-bottom: 12px; color: var(--text); font-size: .95rem; }
+section.block p strong { color: inherit; }
+section.block .ref-tag { color: var(--text-soft); font-size: .85rem; }
+
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.form-card {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 22px; background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; gap: 8px;
+  transition: transform .15s, box-shadow .15s;
+}
+.form-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.form-card .tag {
+  align-self: flex-start;
+  padding: 4px 12px; border-radius: 999px;
+  font-size: .72rem; font-weight: 800; letter-spacing: .04em;
+}
+.form-card.sus .tag { background: var(--accent-soft); color: var(--accent-strong); }
+.form-card.gamex .tag { background: var(--accent2-soft); color: var(--accent2-strong); }
+:root[data-theme="dark"] .form-card.sus .tag { color: var(--accent); }
+:root[data-theme="dark"] .form-card.gamex .tag { color: var(--accent2); }
+.form-card h3 { font-size: 1.1rem; }
+.form-card p { font-size: .88rem; color: var(--text-soft); flex: 1; }
+.form-card .meta { font-size: .78rem; color: var(--text-soft); }
+.btn-open {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 6px;
+  padding: 11px 22px;
+  border: none; border-radius: 999px;
+  font: inherit; font-weight: 800; font-size: .92rem;
+  color: #fff;
+  text-decoration: none;
+  transition: filter .2s, transform .1s;
+}
+.btn-open:hover { filter: brightness(1.08); }
+.btn-open:active { transform: scale(.97); }
+.form-card.sus .btn-open { background: linear-gradient(135deg, var(--accent), var(--accent-strong)); }
+.form-card.gamex .btn-open { background: linear-gradient(135deg, var(--accent2), var(--accent2-strong)); }
+
+ol.refs {
+  padding-left: 20px;
+  font-size: .86rem;
+  color: var(--text-soft);
+  display: grid; gap: 10px;
+}
+ol.refs i { color: var(--text); }
+
+footer { text-align: center; color: var(--text-soft); font-size: .8rem; margin-top: 40px; }
+footer a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 520px) {
+  .topbar { padding: 10px 14px; }
+  .brand span.title { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo" aria-hidden="true">T</div>
+    <span class="title">TCC · Avaliação</span>
+  </div>
+  <div class="topbar-actions">
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="Alternar tema">🌙 <span id="themeLabel">Dark</span></button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Avaliação de <span class="g">Usabilidade</span> e <span class="p">Experiência Gamificada</span></h1>
+    <p>Hub dos instrumentos de avaliação da pesquisa: conceitos fundamentais, formulários interativos e referências utilizadas no trabalho.</p>
+  </section>
+
+  <nav class="jump" aria-label="Ir para seção">
+    <a href="#conceito-gamificada">Experiência Gamificada</a>
+    <a href="#conceito-usabilidade">Usabilidade</a>
+    <a href="#conceito-sus">SUS</a>
+    <a href="#conceito-gamex">GAMEX</a>
+    <a href="#formularios">Formulários</a>
+    <a href="#referencias">Referências</a>
+  </nav>
+
+  <section class="block" id="conceito-gamificada">
+    <header>
+      <div class="sec-num">1</div>
+      <h2>Experiência Gamificada <small class="sub">Fundamento conceitual da gamificação</small></h2>
+    </header>
+    <p>A gamificação consiste na aplicação de elementos de design de jogos em contextos não lúdicos, com o objetivo de engajar pessoas e motivar comportamentos desejados <span class="ref-tag">(Werbach; Hunter, 2012)</span>. Para Huotari e Hamari (2017), trata-se de um processo que provê uma experiência gamificada ao usuário — o efeito psicológico decorrente da interação com um sistema que emprega tais elementos.</p>
+    <p>A experiência gamificada não é o conjunto de mecânicas em si (pontos, medalhas, rankings), mas a percepção subjetiva gerada por essas mecânicas durante o uso. Dois sistemas podem utilizar os mesmos elementos de jogo e provocar experiências completamente diferentes <span class="ref-tag">(Eppmann; Bekk; Klein, 2018)</span>.</p>
+    <p>O construto é multidimensional. Sua mensuração permite avaliar se o design gamificado atingiu seu propósito, motivo pelo qual escalas validadas, como a GAMEX, foram desenvolvidas.</p>
+  </section>
+
+  <section class="block" id="conceito-usabilidade">
+    <header>
+      <div class="sec-num">2</div>
+      <h2>Usabilidade <small class="sub">Definições normativas e atributos práticos</small></h2>
+    </header>
+    <p>Usabilidade é definida pela norma ISO 9241-11 como o grau em que um produto pode ser usado por usuários específicos para alcançar objetivos específicos com eficácia, eficiência e satisfação, em um contexto de uso específico <span class="ref-tag">(ISO, 2018)</span>.</p>
+    <p>Nielsen (1994) complementa com atributos práticos: facilidade de aprendizado, eficiência de uso, memorização, baixa taxa de erros e satisfação subjetiva. Sistemas difíceis de usar tendem a ser abandonados independentemente de sua funcionalidade.</p>
+    <p>Nesta pesquisa, a usabilidade é tratada como requisito essencial à adoção do sistema avaliado, sendo mensurada por meio de instrumentos padronizados — em especial a escala SUS.</p>
+  </section>
+
+  <section class="block" data-accent="green" id="conceito-sus">
+    <header>
+      <div class="sec-num">3</div>
+      <h2>System Usability Scale (SUS) <small class="sub">Brooke (1996) · 10 itens · escore 0–100</small></h2>
+    </header>
+    <p>A SUS é um dos instrumentos mais utilizados para avaliação rápida de usabilidade. Compõe-se de dez afirmações alternadas — cinco positivas e cinco negativas — respondidas em escala Likert de cinco pontos, de “discordo totalmente” (1) a “concordo totalmente” (5) <span class="ref-tag">(Brooke, 1996)</span>.</p>
+    <p>O cálculo converte as respostas em nota de 0 a 100: nos itens ímpares subtrai-se um ponto da nota marcada; nos itens pares a nota é subtraída de cinco; a soma é multiplicada por 2,5. O resultado pode ser agrupado em intervalos, em que pontuações abaixo de 60 são consideradas indesejáveis e valores iguais ou superiores a <strong>70</strong> indicam usabilidade aceitável.</p>
+    <p>Vantagens: aplicação rápida (~5 minutos), gratuidade e robustez com amostras pequenas — adequada às primeiras iterações de design <span class="ref-tag">(Brooke, 2013)</span>.</p>
+  </section>
+
+  <section class="block" data-accent="purple" id="conceito-gamex">
+    <header>
+      <div class="sec-num">4</div>
+      <h2>Gameful Experience Scale (GAMEX) <small class="sub">Eppmann, Bekk e Klein (2018) · Likert 1–5</small></h2>
+    </header>
+    <p>A GAMEX mede a experiência gamificada do usuário, preenchendo a lacuna deixada pelas escalas tradicionais de usabilidade, que não capturam os aspectos motivacionais e afetivos dos elementos de jogo <span class="ref-tag">(Eppmann; Bekk; Klein, 2018)</span>. A escala avalia seis componentes: prazer (<em>enjoyment</em>), absorção (<em>absorption</em>), pensamento criativo (<em>creative thinking</em>), ativação (<em>activation</em>), ausência de afeto negativo (<em>absence of negative affect</em>) e dominância (<em>dominance</em>).</p>
+    <p>Cada componente é medido por afirmações em escala Likert de cinco pontos, analisados pela média das respostas por dimensão — revelando quais aspectos da experiência são mais ou menos intensos.</p>
+    <p>A escala é composta por 27 questões distribuídas nestas dimensões — versão adotada nesta pesquisa. Assim como a SUS, foi escolhida por ser validada, rápida e adequada à comparação entre designs gamificados.</p>
+  </section>
+
+  <section class="block" id="formularios">
+    <header>
+      <div class="sec-num">📋</div>
+      <h2>Formulários de Avaliação <small class="sub">Versões interativas para coleta com participantes</small></h2>
+    </header>
+    <div class="form-grid">
+      <article class="form-card sus">
+        <span class="tag">SUS</span>
+        <h3>Escala de Usabilidade</h3>
+        <p>10 afirmações alternadas em escala Likert de 1 a 5, com cálculo automático do escore 0–100 e classificação de aceitabilidade.</p>
+        <span class="meta">Brooke (1996) · aceitável ≥ 70</span>
+        <a class="btn-open" href="sus.html">Abrir formulário →</a>
+      </article>
+      <article class="form-card gamex">
+        <span class="tag">GAMEX</span>
+        <h3>Escala de Experiência Gamificada</h3>
+        <p>27 questões em 6 dimensões da experiência gamificada, com médias por dimensão e resultado consolidado.</p>
+        <span class="meta">Eppmann, Bekk e Klein (2018)</span>
+        <a class="btn-open" href="gamex.html">Abrir formulário →</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="block" id="referencias">
+    <header>
+      <div class="sec-num">📚</div>
+      <h2>Referências <small class="sub">Obras citadas nesta pesquisa</small></h2>
+    </header>
+    <ol class="refs">
+      <li>BROOKE, J. SUS: a quick and dirty usability scale. In: JORDAN, P. W. et al. (Ed.). <i>Usability Evaluation in Industry</i>. London: Taylor &amp; Francis, 1996. p. 189–194.</li>
+      <li>BROOKE, J. SUS: a retrospective. <i>Journal of Usability Studies</i>, v. 8, n. 2, p. 29–40, 2013.</li>
+      <li>EPPMANN, R.; BEKK, M.; KLEIN, K. Gameful experience in gamification: construction and validation of a gameful experience scale (GAMEX). <i>Journal of Interactive Marketing</i>, v. 43, p. 98–115, 2018.</li>
+      <li>HUOTARI, K.; HAMARI, J. A definition for gamification: anchoring gamification in the service marketing literature. <i>Electronic Markets</i>, v. 27, n. 1, p. 21–31, 2017.</li>
+      <li>INTERNATIONAL ORGANIZATION FOR STANDARDIZATION. <i>ISO 9241-11</i>: Ergonomics of human-system interaction — Part 11: Usability: Definitions and concepts. Geneva: ISO, 2018.</li>
+      <li>NIELSEN, J. <i>Usability Engineering</i>. San Francisco: Morgan Kaufmann, 1994.</li>
+      <li>WERBACH, K.; HUNTER, D. <i>For the Win</i>: how game thinking can revolutionize your business. Philadelphia: Wharton Digital Press, 2012.</li>
+    </ol>
+  </section>
+
+  <footer>TCC Gustavo Ripka · <a href="sus.html">SUS</a> · <a href="gamex.html">GAMEX</a> · Instrumentos de avaliação</footer>
+</main>
+
+<script>
+document.getElementById("themeBtn").addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.getAttribute("data-theme") !== "dark";
+  root.setAttribute("data-theme", dark ? "dark" : "");
+  document.getElementById("themeLabel").textContent = dark ? "Light" : "Dark";
+  document.getElementById("themeBtn").innerHTML = "🌙 <span id='themeLabel'>" + (dark ? "Light" : "Dark") + "</span>";
+});
+</script>
+</body>
+</html>
