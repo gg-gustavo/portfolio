@@ -146,38 +146,41 @@ if (heroGraph) {
 
     const VS = `
       attribute vec3 aPos;
-      uniform float uTime;
       uniform vec2 uRot;
       uniform float uRatio;
       uniform float uSize;
       varying float vDepth;
-      varying float vMix;
       void main() {
         float cx = cos(uRot.x), sx = sin(uRot.x);
         float cy = cos(uRot.y), sy = sin(uRot.y);
         vec3 p = aPos;
         p.yz = mat2(cx, -sx, sx, cx) * p.yz;
         p.xz = mat2(cy, -sy, sy, cy) * p.xz;
-        float z = 3.0;
+        float z = 3.2;
         float f = 1.0 / (z - p.z);
-        gl_Position = vec4(p.xy * f * 1.2, p.z / z, 1.0);
+        gl_Position = vec4(p.xy * f, p.z / z, 1.0);
         gl_Position.x *= uRatio;
+        vDepth = clamp((p.z + 1.2) / 2.4, 0.0, 1.0);
         gl_PointSize = uSize * f * uRatio;
-        vDepth = (p.z + 1.25) / 2.5;
-        vMix = fract(aPos.x * 7.31 + aPos.y * 3.17 + aPos.z * 5.23);
       }`;
-    const FS = `
+    const FS_POINTS = `
       precision mediump float;
       uniform vec3 uColor1;
       uniform vec3 uColor2;
       varying float vDepth;
-      varying float vMix;
       void main() {
         float d = length(gl_PointCoord - 0.5);
         if (d > 0.5) discard;
-        float alpha = smoothstep(0.5, 0.15, d) * (0.2 + 0.8 * vDepth);
-        vec3 c = mix(uColor1, uColor2, vMix);
-        gl_FragColor = vec4(c, alpha);
+        float alpha = smoothstep(0.5, 0.15, d) * (0.35 + 0.65 * vDepth);
+        gl_FragColor = vec4(mix(uColor1, uColor2, vDepth), alpha);
+      }`;
+    const FS_LINES = `
+      precision mediump float;
+      uniform vec3 uColor;
+      uniform float uAlpha;
+      varying float vDepth;
+      void main() {
+        gl_FragColor = vec4(uColor, uAlpha * (0.35 + 0.65 * vDepth));
       }`;
 
     function compile(type, src) {
@@ -187,36 +190,46 @@ if (heroGraph) {
       if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
       return s;
     }
-    const prog = gl.createProgram();
-    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
-    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
-    gl.linkProgram(prog);
-    gl.useProgram(prog);
-
-    const aPos = gl.getAttribLocation(prog, "aPos");
-    const uTime = gl.getUniformLocation(prog, "uTime");
-    const uRot = gl.getUniformLocation(prog, "uRot");
-    const uRatio = gl.getUniformLocation(prog, "uRatio");
-    const uSize = gl.getUniformLocation(prog, "uSize");
-    const uColor1 = gl.getUniformLocation(prog, "uColor1");
-    const uColor2 = gl.getUniformLocation(prog, "uColor2");
-
-    const N = 600, R = 1.25;
-    const pts = new Float32Array(N * 3);
-    const GA = Math.PI * (3 - Math.sqrt(5));
-    for (let i = 0; i < N; i++) {
-      const y = 1 - (i / (N - 1)) * 2;
-      const rad = Math.sqrt(1 - y * y);
-      const th = GA * i;
-      pts[i * 3] = Math.cos(th) * rad * R;
-      pts[i * 3 + 1] = y * R;
-      pts[i * 3 + 2] = Math.sin(th) * rad * R;
+    function makeProgram(vsSrc, fsSrc) {
+      const p = gl.createProgram();
+      gl.attachShader(p, compile(gl.VERTEX_SHADER, vsSrc));
+      gl.attachShader(p, compile(gl.FRAGMENT_SHADER, fsSrc));
+      gl.linkProgram(p);
+      return p;
     }
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, pts, gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(aPos);
-    gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
+    const progP = makeProgram(VS, FS_POINTS);
+    const progL = makeProgram(VS, FS_LINES);
+
+    const N = 90;
+    const XH = 1.6, YH = 1.15, ZH = 1.0;
+    const pos = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) {
+      pos[i * 3]     = (Math.random() * 2 - 1) * XH;
+      pos[i * 3 + 1] = (Math.random() * 2 - 1) * YH;
+      pos[i * 3 + 2] = (Math.random() * 2 - 1) * ZH;
+    }
+    const TH = 1.15;
+    const pairs = [];
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const dx = pos[i * 3] - pos[j * 3], dy = pos[i * 3 + 1] - pos[j * 3 + 1], dz = pos[i * 3 + 2] - pos[j * 3 + 2];
+        if (dx * dx + dy * dy + dz * dz < TH * TH) pairs.push(i, j);
+      }
+    }
+    const E = pairs.length / 2;
+    const linePos = new Float32Array(E * 6);
+    for (let e = 0; e < E; e++) {
+      const a = pairs[e * 2], b = pairs[e * 2 + 1];
+      linePos[e * 6] = pos[a * 3]; linePos[e * 6 + 1] = pos[a * 3 + 1]; linePos[e * 6 + 2] = pos[a * 3 + 2];
+      linePos[e * 6 + 3] = pos[b * 3]; linePos[e * 6 + 4] = pos[b * 3 + 1]; linePos[e * 6 + 5] = pos[b * 3 + 2];
+    }
+
+    const bufP = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufP);
+    gl.bufferData(gl.ARRAY_BUFFER, pos, gl.STATIC_DRAW);
+    const bufL = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufL);
+    gl.bufferData(gl.ARRAY_BUFFER, linePos, gl.STATIC_DRAW);
 
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -235,9 +248,17 @@ if (heroGraph) {
       c2 = hexRgb(cssVar("--accent-2"));
     }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
+    function setup(p, r, rotArr) {
+      gl.useProgram(p);
+      gl.enableVertexAttribArray(gl.getAttribLocation(p, "aPos"));
+      gl.vertexAttribPointer(gl.getAttribLocation(p, "aPos"), 3, gl.FLOAT, false, 0, 0);
+      gl.uniform1f(gl.getUniformLocation(p, "uRatio"), r);
+      gl.uniform2f(gl.getUniformLocation(p, "uRot"), rotArr[0], rotArr[1]);
+    }
+
     let W = 0, H = 0, raf = 0;
-    const rot = { x: 0.4, y: 0.6 };
-    const target = { x: 0.4, y: 0.6 };
+    const rot = { x: 0.5, y: 0.7 };
+    const target = { x: 0.5, y: 0.7 };
 
     function resize() {
       W = heroGraph.clientWidth;
@@ -251,42 +272,45 @@ if (heroGraph) {
     const hero = document.getElementById("principal");
     const move = (x, y) => {
       const r = hero.getBoundingClientRect();
-      target.y = 0.6 + ((x - r.left) / r.width - 0.5) * 1.6;
-      target.x = 0.4 + ((y - r.top) / r.height - 0.5) * 1.2;
+      target.y = 0.7 + ((x - r.left) / r.width - 0.5) * 1.8;
+      target.x = 0.5 + ((y - r.top) / r.height - 0.5) * 1.2;
     };
     if (fine || "ontouchstart" in window) {
       hero.addEventListener("mousemove", e => move(e.clientX, e.clientY));
-      hero.addEventListener("mouseleave", () => { target.x = 0.4; target.y = 0.6; });
+      hero.addEventListener("mouseleave", () => { target.x = 0.5; target.y = 0.7; });
       hero.addEventListener("touchmove", e => {
         const t = e.touches[0];
         if (t) move(t.clientX, t.clientY);
       }, { passive: true });
     }
 
-    function frame(t) {
-      rot.x += (target.x - rot.x) * 0.04;
-      rot.y += (target.y - rot.y) * 0.04;
-      rot.y += 0.0008;
+    function draw() {
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.uniform1f(uTime, t / 1000);
-      gl.uniform2f(uRot, rot.x, rot.y);
-      gl.uniform1f(uRatio, (W * DPR) / (H * DPR));
-      gl.uniform1f(uSize, 16);
-      gl.uniform3f(uColor1, c1[0], c1[1], c1[2]);
-      gl.uniform3f(uColor2, c2[0], c2[1], c2[2]);
+      const r = (W * DPR) / (H * DPR);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufP);
+      setup(progP, r, [rot.x, rot.y]);
+      gl.uniform1f(gl.getUniformLocation(progP, "uSize"), 9);
+      gl.uniform3f(gl.getUniformLocation(progP, "uColor1"), c1[0], c1[1], c1[2]);
+      gl.uniform3f(gl.getUniformLocation(progP, "uColor2"), c2[0], c2[1], c2[2]);
       gl.drawArrays(gl.POINTS, 0, N);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufL);
+      setup(progL, r, [rot.x, rot.y]);
+      gl.uniform3f(gl.getUniformLocation(progL, "uColor"), c1[0], c1[1], c1[2]);
+      gl.uniform1f(gl.getUniformLocation(progL, "uAlpha"), 0.55);
+      gl.drawArrays(gl.LINES, 0, E * 2);
+    }
+
+    function frame() {
+      rot.x += (target.x - rot.x) * 0.04;
+      rot.y += (target.y - rot.y) * 0.04;
+      rot.y += 0.0006;
+      draw();
       raf = requestAnimationFrame(frame);
     }
 
-    gl.uniform1f(uTime, 0);
-    gl.uniform2f(uRot, rot.x, rot.y);
-    gl.uniform1f(uRatio, (W * DPR) / (H * DPR));
-    gl.uniform1f(uSize, 16);
-    gl.uniform3f(uColor1, c1[0], c1[1], c1[2]);
-    gl.uniform3f(uColor2, c2[0], c2[1], c2[2]);
-    gl.drawArrays(gl.POINTS, 0, N);
-
+    draw();
     if (!reduced) raf = requestAnimationFrame(frame);
 
     window.addEventListener("resize", resize);
