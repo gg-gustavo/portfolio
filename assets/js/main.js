@@ -169,7 +169,7 @@ if (heroGraph) {
         float cy = cos(uRot.y), sy = sin(uRot.y);
         p.yz = mat2(cx, -sx, sx, cx) * p.yz;
         p.xz = mat2(cy, -sy, sy, cy) * p.xz;
-        float z = 3.2;
+        float z = 2.9;
         float f = 1.0 / (z - p.z);
         gl_Position = vec4(p.xy * f, p.z / z, 1.0);
         gl_Position.x *= uRatio;
@@ -190,7 +190,7 @@ if (heroGraph) {
       void main() {
         float d = length(gl_PointCoord - 0.5);
         if (d > 0.5) discard;
-        float alpha = smoothstep(0.5, 0.15, d) * (0.35 + 0.65 * vDepth) * vAppear * vBlink;
+        float alpha = smoothstep(0.5, 0.15, d) * (0.5 + 0.5 * vDepth) * vAppear * vBlink;
         gl_FragColor = vec4(mix(uColor1, uColor2, vColor), alpha);
       }`;
     const FS_LINES = `
@@ -222,7 +222,7 @@ if (heroGraph) {
     const progL = makeProgram(VS, FS_LINES);
 
     const N = 45;
-    const XH = 1.5, YH = 1.05, ZH = 0.85;
+    const XH = 1.7, YH = 1.25, ZH = 1.0;
     const pos = new Float32Array(N * 3);
     const delay = new Float32Array(N);
     const rate = new Float32Array(N);
@@ -311,15 +311,18 @@ if (heroGraph) {
     function hexRgb(hex) {
       const m = hex.replace("#", "");
       const n = parseInt(m.length === 3 ? m.split("").map(c => c + c).join("") : m, 16);
+      if (isNaN(n)) return [0.85, 0.47, 0.02];
       return [n >> 16 & 255, n >> 8 & 255, n & 255].map(v => v / 255);
     }
     let c1 = hexRgb(cssVar("--accent"));
     let c2 = hexRgb(cssVar("--accent-2"));
     let ce = hexRgb(cssVar("--text-soft"));
+    const t0 = performance.now();
     new MutationObserver(() => {
       c1 = hexRgb(cssVar("--accent"));
       c2 = hexRgb(cssVar("--accent-2"));
       ce = hexRgb(cssVar("--text-soft"));
+      draw(reduced ? 999 : (performance.now() - t0) / 1000);
     }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
     let W = 0, H = 0, raf = 0;
@@ -366,8 +369,8 @@ if (heroGraph) {
       gl.uniform1f(gl.getUniformLocation(progP, "uRatio"), r);
       gl.uniform2f(gl.getUniformLocation(progP, "uRot"), rotArr[0], rotArr[1]);
       gl.uniform1f(gl.getUniformLocation(progP, "uTime"), time);
-      gl.uniform1f(gl.getUniformLocation(progP, "uAmp"), 0.14);
-      gl.uniform1f(gl.getUniformLocation(progP, "uSize"), 13);
+      gl.uniform1f(gl.getUniformLocation(progP, "uAmp"), 0.16);
+      gl.uniform1f(gl.getUniformLocation(progP, "uSize"), 24);
       gl.uniform3f(gl.getUniformLocation(progP, "uColor1"), c1[0], c1[1], c1[2]);
       gl.uniform3f(gl.getUniformLocation(progP, "uColor2"), c2[0], c2[1], c2[2]);
       gl.drawArrays(gl.POINTS, 0, N);
@@ -376,13 +379,12 @@ if (heroGraph) {
       gl.uniform1f(gl.getUniformLocation(progL, "uRatio"), r);
       gl.uniform2f(gl.getUniformLocation(progL, "uRot"), rotArr[0], rotArr[1]);
       gl.uniform1f(gl.getUniformLocation(progL, "uTime"), time);
-      gl.uniform1f(gl.getUniformLocation(progL, "uAmp"), 0.14);
+      gl.uniform1f(gl.getUniformLocation(progL, "uAmp"), 0.16);
       gl.uniform3f(gl.getUniformLocation(progL, "uColor"), ce[0], ce[1], ce[2]);
-      gl.uniform1f(gl.getUniformLocation(progL, "uAlpha"), 0.5);
+      gl.uniform1f(gl.getUniformLocation(progL, "uAlpha"), 0.65);
       gl.drawArrays(gl.LINES, 0, E * 2);
     }
 
-    const t0 = performance.now();
     function frame() {
       if (!mouseIn) {
         rwT -= 1 / 60;
