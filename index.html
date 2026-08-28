@@ -1,371 +1,292 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-br" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gustavo Gabriel Ripka</title>
-    <link rel="icon" href="/assets/images/icone.png" type="image/png">
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./assets/css/aos.css">
-    <link rel="stylesheet" href="./assets/css/line-awesome.min.css">
+    <title>Gustavo Gabriel Ripka — Portfólio</title>
+    <link rel="icon" href="./assets/images/icone.png" type="image/png">
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
+<body>
 
-<body data-bs-spy="scroll" data-bs-target=".navbar">
-
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container flex-lg-column">
-            <a class="navbar-brand mx-lg-auto mb-lg-4" href="#">
-                <span class="h3 fw-bold d-block d-lg-none">Gustavo Ripka</span>
-                <img src="./assets/images/GG.jpeg" class="d-none d-lg-block rounded-circle" alt="">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto flex-lg-column text-lg-center">
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#principal">Principal</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#competencias">Competências</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#projetos">Projetos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#sobre">Sobre</a>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#contato">Contato</a>
-                    </li>
-
-                </ul>
+    <!-- NAV -->
+    <nav class="nav" id="nav">
+        <div class="container">
+            <a class="nav-logo" href="#principal">Gustavo<span>.</span>Ripka</a>
+            <ul class="nav-links" id="navLinks" hidden>
+                <li><a href="#principal">Principal</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#habilidades">Habilidades</a></li>
+                <li><a href="#projetos">Projetos</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="icon-btn" id="themeBtn" type="button" aria-label="Alternar tema claro e escuro">
+                    <svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+                <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
             </div>
         </div>
     </nav>
-    <!-- //NAVBAR -->
+    <!-- //NAV -->
 
-    <!-- CONTENT WRAPPER -->
-    <div id="content-wrapper">
+    <!-- HERO -->
+    <header class="hero" id="principal">
+        <div class="hero-blob b1"></div>
+        <div class="hero-blob b2"></div>
+        <div class="hero-blob b3"></div>
+        <div class="container">
+            <span class="hero-badge">UFPR · CNPq · ECOMP</span>
+            <h1>Olá, sou Gustavo —<br>estudante de <span class="accent">Ciência da Computação</span> e apaixonado por <span class="typing" id="typing"></span></h1>
+            <p class="lead">Estudante de Ciência da Computação na Universidade Federal do Paraná (UFPR).
+                Pesquisador de Iniciação Científica com bolsa CNPq, focado em Ciência Aberta e Direito.
+                Assessor de Negócios e Product Owner na Empresa Júnior de Computação (ECOMP).</p>
+            <div class="hero-cta">
+                <a href="#projetos" class="btn btn-primary">Veja meus projetos</a>
+                <a href="#contato" class="btn btn-ghost">Fale comigo</a>
+            </div>
+            <div class="socials">
+                <a href="http://lattes.cnpq.br/9744505057560410" target="_blank" rel="noopener" aria-label="Currículo Lattes">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/gustavo-ripka/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+                </a>
+                <a href="https://www.instagram.com/gustavoripka/" target="_blank" rel="noopener" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </a>
+                <a href="https://github.com/gg-gustavo" target="_blank" rel="noopener" aria-label="GitHub">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.15c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.7 1.25 3.35.96.1-.75.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.59.24 2.76.12 3.05.74.81 1.18 1.83 1.18 3.09 0 4.41-2.7 5.38-5.27 5.66.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.55A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+                </a>
+            </div>
+        </div>
+    </header>
+    <!-- //HERO -->
 
-        <!-- PRINCIPAL -->
-        <section id="principal" class="full-height px-lg-5">
+    <main>
 
+        <!-- DESTAQUES -->
+        <section id="destaques">
             <div class="container">
-                
-                <div class="row">
-                    <div class="col-lg-10">
-                        <h1 class="display-4 fw-bold" data-aos="fade-up">Estudante de <span class="text-brand">CIÊNCIA DA COMPUTAÇÃO</span> da Universidade Federal do Paraná</h1>
-                        <p class="lead mt-2 mb-4" data-aos="fade-up" data-aos-delay="300">Olá, sou Gustavo, estudante de Ciência da Computação na Universidade Federal do Paraná (UFPR). 
-                            Atualmente, sou pesquisador de <strong>Iniciação Científica</strong> com bolsa CNPq, focado em Ciência Aberta e Direito. Além disso, sou <strong>Assessor de Negócios</strong> 
-                            e Product Owner na Empresa Júnior de Computação <strong>(ECOMP)</strong>, onde atuo em projetos e ajudo a transformar ideias em soluções inovadoras.
-                        
-                            Tenho paixão por tecnologia, inovação e <strong>Desenvolvimento de Produtos</strong> que possam impactar positivamente a qualidade de vida das pessoas. 
-                            Estou sempre em busca de novos desafios que me permitam crescer tanto no campo acadêmico quanto profissional.</p>                        
-
-                        <div class="container d-flex justify-content-between align-items-center">
-                            <div class="d-flex" data-aos="fade-up" data-aos-delay="600">
-                                <a href="#projetos" class="btn btn-brand me-3">Veja meus projetos</a>
+                <div class="section-title reveal">
+                    <p class="section-label">Destaques</p>
+                    <h2>O que estou construindo</h2>
+                </div>
+                <div class="carousel reveal" id="carousel">
+                    <div class="carousel-viewport">
+                        <div class="carousel-track" id="carouselTrack">
+                            <div class="carousel-slide">
+                                <h3><span>Pesquisa · PARAJÁS</span>Base de dados em Direito</h3>
+                                <p>Base de Dados em Direito reunindo publicações de acesso aberto do domínio jurídico brasileiro, promovendo ciência aberta e acesso livre ao conhecimento. Apresentado no 9º EBBC em Brasília.</p>
+                                <a href="https://ebbc.inf.br/ojs/index.php/ebbc/article/view/389/370" target="_blank" rel="noopener" class="project-link">Saiba mais →</a>
                             </div>
-                            <div class="row gy-4 justify-content-between">
-                                <div class="col-auto">
-                                    
-                                </div>
-                                <div class="col-auto">
-                                    <div class="social-icons">
-                                        <a href="http://lattes.cnpq.br/9744505057560410" target=blank><i class="lab la la-graduation-cap"></i></a>
-                                        <a href="https://www.linkedin.com/in/gustavo-ripka/" target=blank><i class="lab la-linkedin"></i></a>
-                                        <a href="https://www.instagram.com/gustavoripka/" target=_blank><i class="lab la-instagram"></i></a>
-                                        <a href="https://github.com/gg-gustavo" target=_blank><i class="lab la-github"></i></a>
-                                    </div>
-                                </div>
+                            <div class="carousel-slide">
+                                <h3><span>ECOMP · Empresa Júnior</span>Assessor de Negócios e PO</h3>
+                                <p>Atuação desde 2024: capacitações em backend Laravel, formação como Product Owner, reuniões de briefing com clientes e documentos de features detalhados.</p>
+                                <a href="https://ecomp.co/" target="_blank" rel="noopener" class="project-link">Conheça a ECOMP →</a>
                             </div>
+                            <div class="carousel-slide">
+                                <h3><span>Pesquisa · INFOJUS</span>Informação, Direito e Sociedade</h3>
+                                <p>Grupo de pesquisa da UFPR focado em ciência aberta, uso de dados informacionais e gestão de sistemas de justiça. Linha de pesquisa em gestão da informação científica.</p>
+                                <a href="https://www.infojus.org.br/quem-faz-acontecer/" target="_blank" rel="noopener" class="project-link">Saiba mais →</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-nav">
+                        <div class="carousel-dots" id="carouselDots"></div>
+                        <div class="carousel-arrows">
+                            <button class="icon-btn" id="prevSlide" type="button" aria-label="Slide anterior">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <button class="icon-btn" id="nextSlide" type="button" aria-label="Próximo slide">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-
         </section>
-        <!-- //PRINCIPAL -->
-
-        <!-- COMPETENCIAS -->
-        <section id="competencias" class="full-height px-lg-5">
-            <div class="container">
-
-                <div class="row pb-4" data-aos="fade-up">
-                    <div class="col-lg-8">
-                        <h6 class="text-brand">COMPETÊNCIAS</h6>
-                        <h1>Habilidades Técnicas e Soft Skills</h1>
-                    </div>
-                </div>
-
-                <div class="row gy-4">
-
-                    <div class="col-md-4" data-aos="fade-up">
-                        <div class="service p-4 bg-base rounded-4 shadow-effect">
-                            <div class="iconbox rounded-4">
-                                <i class="las la-users-cog custom-icon" ></i>
-                            </div>
-                            <h5 class="mt-4 mb-2">Liderança</h5>
-                            <p>Liderei o backend do projeto de pesquisa.  Aprimorei habilidades de gestão de equipe e resolução de problemas, garantindo que todos os desenvolvimentos seguissem os prazos estabelecidos. Além disso, organizei reuniões regulares para revisar o progresso e ajustar o planejamento quando necessário. Essa experiência fortaleceu minha capacidade de tomada de decisão e organização.</p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-                        <div class="service p-4 bg-base rounded-4 shadow-effect">
-                            <div class="iconbox rounded-4">
-                                <i class="las la-pencil-ruler custom-icon"></i>
-                            </div>
-                            <h5 class="mt-4 mb-2">Gestão de Projetos</h5>
-                            <p>Como Product Owner na ECOMP, aprendi a gerenciar projetos usando metodologias ágeis, garantindo a entrega eficiente dos objetivos e a qualidade final dos produtos. Aprendi como priorizar tarefas, organizar sprints e acompanhar o progresso da equipe, assegurando que os prazos fossem cumpridos. Minha atuação também incluiu o monitoramento constante de KPIs, permitindo ajustes rápidos e melhorando a eficiência do projeto.</p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="600">
-                        <div class="service p-4 bg-base rounded-4 shadow-effect">
-                            <div class="iconbox rounded-4">
-                                <i class="las la-laptop-code custom-icon"></i>
-                            </div>
-                            <h5 class="mt-4 mb-2">Desenvolvimento de Software</h5>
-                            <p>Experiência em desenvolvimento backend com framework Django (Python). Conhecimento em C, Pascal. 
-                            Foco em boas práticas de programação e trabalho colaborativo em equipes. Atualmente
-                            aprendendo Java em contexto de Programação Orientada a Objetos.</p>
-                            <a href="https://github.com/gg-gustavo/Trabalhos_Faculdade" target="blank" class="link-custom">Saiba mais</a>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </section>
-        <!-- COMPETENCIAS -->
-
-        <!-- PROJETOS -->
-        <section id="projetos" class="full-height px-lg-5">
-            <div class="container">
-
-                <div class="row pb-4" data-aos="fade-up">
-                    <div class="col-lg-8">
-                        <h6 class="text-brand">PROJETOS</h6>
-                        <h1>Meus projetos mais rescentes</h1>
-                    </div>
-                </div>
-
-                <div class="row gy-4">
-
-                    <div class="col-md-6" data-aos="fade-up">
-                        <div class="card-custom rounded-4 bg-base shadow-effect">
-                            <div class="card-custom-image rounded-4">
-                                <img class="rounded-4" src="./assets/images/parajas.png" alt="">
-                            </div>
-                            <div class="card-custom-content p-4">
-                                <h4>Desenvolvimento da PARAJÁS</h4>
-                                <p>O projeto PARAJÁS visa criar uma Base de Dados em Direito, reunindo publicações de acesso aberto do domínio jurídico brasileiro. 
-                                A base tem como objetivo facilitar o acesso a informações científicas de qualidade, promovendo a ciência aberta e o acesso livre ao conhecimento. 
-                                O projeto foi publicado em julho de 2024 e apresentado no 9º Encontro Brasileiro de Bibliometria e Cientometria (EBBC), realizado em Brasília. Atualmente, 
-                                está na fase de desenvolvimento e criação da política de informação e estrutura de dados, com previsão de lançamento da primeira versão até o final de 2024. 
-                                A base inicial contará com a indexação de 120 periódicos científicos em direito, permitindo a intensificação de estudos de comunicação científica na área jurídica.</p>
-                                <a href="https://ebbc.inf.br/ojs/index.php/ebbc/article/view/389/370" target="_blank" class="link-custom">Saiba Mais</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
-                        <div class="card-custom rounded-4 bg-base shadow-effect">
-                            <div class="card-custom-image rounded-4">
-                                <img class="rounded-4" src="./assets/images/prog2figthers.png" alt="">
-                            </div>
-                            <div class="card-custom-content p-4">
-                                <h4>Desenvolvimento de Jogos em Allegro5 C/C++</h4>
-                                <p>Este projeto consistiu na criação de um jogo utilizando a biblioteca Allegro5 em C/C++, desenvolvido como parte da disciplina de Programação 2. O foco do jogo foi implementar uma experiência dinâmica e interativa, aplicando conceitos de programação orientada a eventos. Durante o desenvolvimento, foram utilizados recursos avançados da biblioteca, como controle de gráficos, entrada do usuário e sons, resultando em uma aplicação funcional e divertida. Além disso, trabalhei na otimização do desempenho do jogo para garantir uma jogabilidade fluida. Esse projeto me proporcionou um profundo aprendizado sobre estruturação de código, gerenciamento de eventos em tempo real e otimização de desempenho para jogos. </p>
-                                <a href="https://github.com/gg-gustavo/Trabalhos_Faculdade/tree/main/Prog2Fighters" target="blank" class="link-custom">Saiba Mais</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6" data-aos="fade-up">
-                        <div class="card-custom rounded-4 bg-base shadow-effect">
-                            <div class="card-custom-image rounded-4">
-                                <img class="rounded-4" src="./assets/images/infojus.png" alt="">
-                            </div>
-                            <div class="card-custom-content p-4">
-                                <h4>Grupo de Pesquisa INFOJUS (Informação, Direito e Sociedade)</h4>
-                                <p>O grupo de pesquisa INFOJUS, vinculado à Universidade Federal do Paraná, integra conhecimentos de gestão da informação, administração pública e estudos jurídicos com o objetivo de aprimorar a relação entre justiça, políticas públicas e sociedade. Com uma abordagem interdisciplinar, o grupo desenvolve projetos descritivos, analíticos e avaliativos, focando em temas relacionados à ciência aberta, uso de dados informacionais e gestão de sistemas de justiça. As atividades incluem pesquisa, educação e serviços de apoio à gestão pública. Minha linha de pesquisa está voltada para a gestão da informação científica no contexto da ciência aberta. Tenho atuado diretamente em projetos que buscam melhorar o acesso à informação e o desenvolvimento de indicadores de qualidade para subsidiar políticas públicas e o sistema de justiça no Brasil, promovendo maior transparência e eficiência no uso de dados jurídicos.</p>
-                                <a href="https://www.infojus.org.br/quem-faz-acontecer/" target="blank" class="link-custom">Saiba Mais</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
-                        <div class="card-custom rounded-4 bg-base shadow-effect">
-                            <div class="card-custom-image rounded-4">
-                                <img class="rounded-4" src="./assets/images/ecomp.png" alt="">
-                            </div>
-                            <div class="card-custom-content p-4">
-                                <h4>Assessor de Negócios na Empresa Júnior de Computação (ECOMP)</h4>
-                                <p>Atuando como Assessor de Negócios desde abril de 2024 na ECOMP, participei de capacitações internas, como desenvolvimento backend com Laravel (PHP) e formação como Product Owner. Nesse período, aprendi a organizar e conduzir reuniões de briefing com clientes, além de elaborar documentos de features detalhados, assegurando que os requisitos fossem claros para a equipe técnica. Também me aprofundei na cultura organizacional da ECOMP, que se baseia em missão, visão e valores fortes, e adquiri conhecimento sobre metodologias de gestão como OKRs (Objectives and Key Results), fundamentais para o acompanhamento de metas e resultados dentro dos projetos. Além disso, colaborei diretamente em melhorias internas na empresa, focando em sugestões otimizar a comunicação entre as equipes. Essa experiência tem sido fundamental para meu desenvolvimento em gestão de projetos e liderança.</p>
-                                <a href="https://ecomp.co/" target="blank" class="link-custom">Saiba Mais</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-        <!-- //PROJETOS -->
+        <!-- //DESTAQUES -->
 
         <!-- SOBRE -->
-        <section id="sobre" class="full-height px-lg-5">
+        <section id="sobre">
             <div class="container">
-
-                <div class="row pb-4" data-aos="fade-up">
-                    <div class="col-lg-8">
-                        <h6 class="text-brand">SOBRE</h6>
-                        <h1>FORMAÇÃO ACADÊMICA, CURIOSIDADES E EXPERIÊNCIA</h1>
+                <div class="section-title reveal">
+                    <p class="section-label">Sobre</p>
+                    <h2>Um pouco da minha história</h2>
+                </div>
+                <div class="about-grid">
+                    <div class="about-photo reveal">
+                        <img src="./assets/images/GG.jpeg" alt="Foto de Gustavo Ripka">
+                    </div>
+                    <div class="about-text reveal">
+                        <p>Tenho paixão por tecnologia, inovação e desenvolvimento de produtos que possam impactar positivamente a qualidade de vida das pessoas. Atuo na interseção entre pesquisa acadêmica, gestão de projetos e desenvolvimento de software.</p>
+                        <p>Como pesquisador de Iniciação Científica com bolsa CNPq, trabalho com Ciência Aberta e Direito. Como Assessor de Negócios e Product Owner na ECOMP, ajudo a transformar ideias em soluções inovadoras.</p>
+                        <div class="counters">
+                            <div class="counter">
+                                <div class="num" data-count="6" data-suffix="+">0</div>
+                                <div class="lbl">anos de formação</div>
+                            </div>
+                            <div class="counter">
+                                <div class="num" data-count="4">0</div>
+                                <div class="lbl">projetos no portfólio</div>
+                            </div>
+                            <div class="counter">
+                                <div class="num" data-count="2" data-suffix="+">0</div>
+                                <div class="lbl">anos na ECOMP</div>
+                            </div>
+                        </div>
+                        <div class="chips">
+                            <span class="chip">Python</span>
+                            <span class="chip">Django</span>
+                            <span class="chip">C</span>
+                            <span class="chip">Pascal</span>
+                            <span class="chip">Java</span>
+                            <span class="chip">PHP · Laravel</span>
+                            <span class="chip">Git</span>
+                            <span class="chip">Metodologias ágeis</span>
+                            <span class="chip">OKRs</span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="row gy-5">
-                    <div class="col-lg-6">
-
-                        <h3 class="mb-4" data-aos="fade-up" data-aos-delay="300">Formação Acadêmica</h3>
-                        <div class="row gy-4">
-
-                            <div class="col-12" data-aos="fade-up" data-aos-delay="600">
-                                <div class="bg-base p-4 rounded-4 shadow-effect">
-                                    <h4>Bacharelado em Ciência da Computação</h4>
-                                    <p class="text-brand mb-2"><strong>Universidade Federal do Paraná (2020 - andamento)</strong></p>
-                                    <p class="mb-0">Atualmente cursando Ciência da Computação, onde desenvolvo habilidades técnicas em programação, algoritmos e sistemas.</p>
-                                </div>
-                            </div>
-
-                            <div class="col-12" data-aos="fade-up" data-aos-delay="600">
-                                <div class="bg-base p-4 rounded-4 shadow-effect">
-                                    <h4>Técnico em Mecânica</h4>
-                                    <p class="text-brand mb-2"><strong>Instituto Federal do Paraná (2017 - 2018)</strong></p>
-                                    <p class="mb-0">Durante o curso, tive o primeiro contato com programação em uma disciplina de automação. Isso despertou meu interesse pela área e me motivou a seguir carreira em Ciência da Computação.</p>
-                                </div>
-                            </div>
-
-                            <div class="col-12" data-aos="fade-up" data-aos-delay="600">
-                                <div class="bg-base p-4 rounded-4 shadow-effect">
-                                    <h4>Cursei uma disciplina eletiva de LIBRAS</h4>
-                                    <p class="text-brand mb-2"><strong>Letras LIBRAS (2024)</strong></p>
-                                    <p class="mb-0">Esta experiência me proporcionou um desenvolvimento pessoal significativo. Tive a curiosidade de aprender uma nova Língua e reforçou meu entendimento sobre a acessibilidade ser essencial em nossa sociedade.</p>
-                                    <a href="https://youtube.com/playlist?list=PLI75GpwUn3AjPTQ1UxE0o9TN9PLJQZygl&si=r2XnmzILRukMCYdd" target="blank" class="link-custom">Saiba Mais</a>
-                                
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-lg-6">
-
-                        <h3 class="mb-4" data-aos="fade-up" data-aos-delay="300">Experiências</h3>
-                        <div class="row gy-4">
-
-                            <div class="col-12" data-aos="fade-up" data-aos-delay="600">
-                                <div class="bg-base p-4 rounded-4 shadow-effect">
-                                    <h4>Bolsista Sibi - UFPR</h4>
-                                    <p class="text-brand mb-2"><strong>Biblioteca de Ciência e Tecnologia (2022 - 2023)</strong></p>
-                                    <p class="mb-0">Trabalhei com sistemas de gestão de usuários e atendimento ao público, o que aprimorou minhas habilidades de comunicação. Também colaborei na criação de tutoriais visuais e informes utilizados até hoje.</p>
-                                    <a href="https://1drv.ms/f/s!Auh2W-RVnAFZgbZaZopmhRIEI5n2hQ" target="blank" class="link-custom">Saiba Mais</a>
-                                </div>
-                            </div>
-
-                            <div class="col-12" data-aos="fade-up" data-aos-delay="600">
-                                <div class="bg-base p-4 rounded-4 shadow-effect">
-                                    <h4>Assistente Administrativo</h4>
-                                    <p class="text-brand mb-2"><strong>New Pet Alimentos (2019 - 2020)</strong></p>
-                                    <p class="mb-0">Atuei na administração e logística da empresa, desenvolvendo habilidades de organização e trabalho em equipe. Essa experiência me ensinou o funcionamento de processos empresariais.</p>
-                                </div>
-                            </div>
-
-                            <div class="col-12" data-aos="fade-up" data-aos-delay="600">
-                                <div class="bg-base p-4 rounded-4 shadow-effect">
-                                    <h4>Professor particular de Física</h4>
-                                    <p class="text-brand mb-2"><strong>Trabalho Voluntário (2018 - 2019)</strong></p>
-                                    <p class="mb-0">Fui professor de física para alunos do ensino médio, e parte dos recursos arrecadados ajudou a financiar uma campanha de Natal para crianças em vulnerabilidade social. Esta experiência reforçou meu desejo de contribuir para pautas sociais e fazer a diferença na vida das pessoas.</p>
-                                    <a href="https://1drv.ms/f/s!Auh2W-RVnAFZhX6h0kO6SRp4iYy0" target="blank" class="link-custom">Saiba Mais</a>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
             </div>
         </section>
         <!-- //SOBRE -->
 
-        <!-- CONTATO -->
-        <section id="contato" class="full-height px-lg-5">
+        <!-- HABILIDADES -->
+        <section id="habilidades">
             <div class="container">
-                <div class="row justify-content-center text-center">
-                    <div class="col-lg-8 pb-4" data-aos="fade-up">
-                        <h6 class="text-brand">Contato</h6>
-                        <h1> Entre em contato comigo!</h1>
+                <div class="section-title reveal">
+                    <p class="section-label">Habilidades</p>
+                    <h2>Competências técnicas e soft skills</h2>
+                </div>
+                <div class="skills-grid">
+                    <div class="skill-card reveal">
+                        <div class="skill-icon">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <h3>Liderança</h3>
+                        <p>Liderei o backend do projeto de pesquisa, aprimorando gestão de equipe e resolução de problemas. Organizei reuniões regulares para revisar progresso e ajustar o planejamento, fortalecendo tomada de decisão e organização.</p>
+                        <div class="skill-tags chips"><span class="chip">Gestão de equipe</span><span class="chip">Tomada de decisão</span></div>
                     </div>
-        
-                    <div class="col-lg-8" data-aos="fade-up" data-aos-delay="300">
-                        <form id="contactForm" class="row g-lg-3 gy-3">
-                            <div class="form-group col-md-6">
-                                <input type="text" class="form-control" id="name" placeholder="Nome">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <input type="email" class="form-control" id="email" placeholder="Email">
-                            </div>
-                            <div class="form-group col-12">
-                                <input type="text" class="form-control" id="subject" placeholder="Assunto">
-                            </div>
-                            <div class="form-group col-12">
-                                <textarea id="message" rows="4" class="form-control" placeholder="Escreva sua Mensagem"></textarea>
-                            </div>
-                            <div class="form-group col-12 d-grid">
-                                <button type="submit" class="btn btn-brand">Enviar Mensagem</button>
-                            </div>
-                        </form>
+                    <div class="skill-card reveal">
+                        <div class="skill-icon">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                        </div>
+                        <h3>Gestão de Projetos</h3>
+                        <p>Como Product Owner na ECOMP, gerencio projetos com metodologias ágeis: priorização de tarefas, organização de sprints e monitoramento de KPIs, garantindo entrega eficiente e qualidade final.</p>
+                        <div class="skill-tags chips"><span class="chip">Ágil</span><span class="chip">Sprints</span><span class="chip">KPIs</span><span class="chip">OKRs</span></div>
                     </div>
+                    <div class="skill-card reveal">
+                        <div class="skill-icon">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        </div>
+                        <h3>Desenvolvimento de Software</h3>
+                        <p>Experiência em backend com Django (Python). Conhecimento em C, Pascal e Java (POO). Foco em boas práticas de programação e trabalho colaborativo em equipes.</p>
+                        <div class="skill-tags chips"><span class="chip">Python</span><span class="chip">Django</span><span class="chip">C</span><span class="chip">Java</span></div>
+                        <p style="margin-top:12px"><a href="https://github.com/gg-gustavo/Trabalhos_Faculdade" target="_blank" rel="noopener" class="project-link">Ver trabalhos →</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- //HABILIDADES -->
+
+        <!-- PROJETOS -->
+        <section id="projetos">
+            <div class="container">
+                <div class="section-title reveal">
+                    <p class="section-label">Projetos</p>
+                    <h2>Meus projetos mais recentes</h2>
+                </div>
+                <div class="projects-grid">
+                    <article class="project-card reveal">
+                        <div class="project-img"><img src="./assets/images/parajas.png" alt="Projeto PARAJÁS"></div>
+                        <div class="project-body">
+                            <div class="project-tags"><span class="chip">Pesquisa</span><span class="chip">Ciência Aberta</span></div>
+                            <h3>Desenvolvimento da PARAJÁS</h3>
+                            <p>Base de Dados em Direito reunindo publicações de acesso aberto do domínio jurídico brasileiro. Publicado em julho de 2024 e apresentado no 9º EBBC, em Brasília.</p>
+                            <a href="https://ebbc.inf.br/ojs/index.php/ebbc/article/view/389/370" target="_blank" rel="noopener" class="project-link">Saiba mais →</a>
+                        </div>
+                    </article>
+                    <article class="project-card reveal">
+                        <div class="project-img"><img src="./assets/images/prog2figthers.png" alt="Jogo Prog2Fighters"></div>
+                        <div class="project-body">
+                            <div class="project-tags"><span class="chip">C/C++</span><span class="chip">Allegro5</span><span class="chip">Jogos</span></div>
+                            <h3>Desenvolvimento de Jogos em Allegro5 C/C++</h3>
+                            <p>Jogo criado com a biblioteca Allegro5 em C/C++, aplicando conceitos de programação orientada a eventos: gráficos, entrada do usuário, sons e otimização de desempenho.</p>
+                            <a href="https://github.com/gg-gustavo/Trabalhos_Faculdade/tree/main/Prog2Fighters" target="_blank" rel="noopener" class="project-link">Ver código →</a>
+                        </div>
+                    </article>
+                    <article class="project-card reveal">
+                        <div class="project-img"><img src="./assets/images/infojus.png" alt="Grupo de pesquisa INFOJUS"></div>
+                        <div class="project-body">
+                            <div class="project-tags"><span class="chip">Pesquisa</span><span class="chip">UFPR</span></div>
+                            <h3>Grupo de Pesquisa INFOJUS</h3>
+                            <p>Grupo de pesquisa da UFPR integrando gestão da informação, administração pública e estudos jurídicos. Minha linha: gestão da informação científica no contexto da ciência aberta.</p>
+                            <a href="https://www.infojus.org.br/quem-faz-acontecer/" target="_blank" rel="noopener" class="project-link">Saiba mais →</a>
+                        </div>
+                    </article>
+                    <article class="project-card reveal">
+                        <div class="project-img"><img src="./assets/images/ecomp.png" alt="Empresa Júnior ECOMP"></div>
+                        <div class="project-body">
+                            <div class="project-tags"><span class="chip">Gestão</span><span class="chip">Produto</span></div>
+                            <h3>Assessor de Negócios na ECOMP</h3>
+                            <p>Desde abril de 2024: capacitações em backend Laravel, formação como Product Owner, briefings com clientes, documentos de features e cultura organizacional com OKRs.</p>
+                            <a href="https://ecomp.co/" target="_blank" rel="noopener" class="project-link">Conheça a ECOMP →</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <!-- //PROJETOS -->
+
+        <!-- CONTATO -->
+        <section id="contato" class="contact">
+            <div class="container">
+                <div class="section-title reveal">
+                    <p class="section-label">Contato</p>
+                    <h2>Vamos conversar?</h2>
+                </div>
+                <p class="lead reveal">Tem um projeto, oportunidade ou só quer trocar uma ideia? Me chama — respondo por email ou redes sociais.</p>
+                <div class="contact-actions reveal">
+                    <a href="mailto:ggr20@inf.ufpr.br?subject=Contato%20via%20portf%C3%B3lio" class="btn btn-primary">Enviar email</a>
+                    <a href="https://www.linkedin.com/in/gustavo-ripka/" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn</a>
+                </div>
+                <div class="socials reveal" style="justify-content:center">
+                    <a href="http://lattes.cnpq.br/9744505057560410" target="_blank" rel="noopener" aria-label="Currículo Lattes">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/gustavo-ripka/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/gustavoripka/" target="_blank" rel="noopener" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    </a>
+                    <a href="https://github.com/gg-gustavo" target="_blank" rel="noopener" aria-label="GitHub">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.15c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.7 1.25 3.35.96.1-.75.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.59.24 2.76.12 3.05.74.81 1.18 1.83 1.18 3.09 0 4.41-2.7 5.38-5.27 5.66.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.55A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+                    </a>
                 </div>
             </div>
         </section>
         <!-- //CONTATO -->
 
-        <!-- FOOTER -->
-        <footer class="py-5 px-lg-5">
-            <div class="container">
-                <div class="row gy-4 justify-content-between">
-                    <div class="col-auto">
-                        <p class="mb-0">REDES SOCIAIS <a href="#" class="fw-bold">GUSTAVO GABRIEL RIPKA</a></p>
-                    </div>
-                    <div class="col-auto">
-                        <div class="social-icons">
-                            <a href="http://lattes.cnpq.br/9744505057560410" target=blank><i class="lab la la-graduation-cap"></i></a>
-                            <a href="https://www.linkedin.com/in/gustavo-ripka/" target=blank><i class="lab la-linkedin"></i></a>
-                            <a href="https://www.instagram.com/gustavoripka/" target=_blank><i class="lab la-instagram"></i></a>
-                            <a href="https://github.com/gg-gustavo" target=_blank><i class="lab la-github"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!-- //FOOTER -->
+    </main>
 
-    </div>
-    <!-- //CONTENT WRAPPER -->
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 Gustavo Gabriel Ripka</p>
+            <p>Feito com design system próprio · Vanilla CSS + JS</p>
+        </div>
+    </footer>
+    <!-- //FOOTER -->
 
-    <script src="./assets/js/bootstrap.bundle.min.js"></script>
-    <script src="./assets/js/aos.js"></script>
     <script src="./assets/js/main.js"></script>
 </body>
-
 </html>
