@@ -248,7 +248,7 @@ if (heroGraph) {
       blink[i] = Math.random() * Math.PI * 2;
       col[i] = i % 2;
     }
-    const TH = 0.95;
+    const TH = 0.92;
     const pairs = [];
     for (let i = 0; i < N; i++) {
       for (let j = i + 1; j < N; j++) {
@@ -343,7 +343,7 @@ if (heroGraph) {
     }
     nextRandomWalk();
 
-    let clicking = false, lastX = 0;
+    let clicking = false, lastX = 0, lastY = 0;
     const mouse = { x: 999, y: 999 };
     let mouseIn = false;
 
@@ -372,7 +372,9 @@ if (heroGraph) {
       mouseIn = true;
       if (clicking) {
         rot.y += (e.clientX - lastX) * 0.006;
-        lastX = e.clientX;
+        rot.x += (e.clientY - lastY) * 0.006;
+        rot.x = Math.max(-1.2, Math.min(1.2, rot.x));
+        lastX = e.clientX; lastY = e.clientY;
       }
     });
     hero.addEventListener("mouseleave", () => {
@@ -380,7 +382,7 @@ if (heroGraph) {
     });
     hero.addEventListener("mousedown", e => {
       clicking = true;
-      lastX = e.clientX;
+      lastX = e.clientX; lastY = e.clientY;
       const m = toWorld(e.clientX, e.clientY);
       mouse.x = m.x; mouse.y = m.y;
     });
@@ -389,7 +391,7 @@ if (heroGraph) {
     hero.addEventListener("touchstart", e => {
       clicking = true;
       const t = e.touches[0];
-      lastX = t.clientX;
+      lastX = t.clientX; lastY = t.clientY;
       const m = toWorld(t.clientX, t.clientY);
       mouse.x = m.x; mouse.y = m.y;
       mouseIn = true;
@@ -399,12 +401,7 @@ if (heroGraph) {
       if (!t) return;
       const m = toWorld(t.clientX, t.clientY);
       mouse.x = m.x; mouse.y = m.y;
-      if (clicking) {
-        rot.y += (t.clientX - lastX) * 0.006;
-        lastX = t.clientX;
-        e.preventDefault();
-      }
-    }, { passive: false });
+    }, { passive: true });
     hero.addEventListener("touchend", () => { clicking = false; mouseIn = false; });
     hero.addEventListener("touchcancel", () => { clicking = false; mouseIn = false; });
 
