@@ -138,119 +138,162 @@ if (tiltCards.length && finePointer && !reducedMotion) {
 
 const heroGraph = document.getElementById("heroGraph");
 if (heroGraph) {
-  const ctx = heroGraph.getContext("2d");
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
-  let W = 0, H = 0, nodes = [], raf = 0;
-  const mouse = { x: -1e4, y: -1e4 };
+  const gl = heroGraph.getContext("webgl", { antialias: true, alpha: true });
+  if (gl) {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
 
-  const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  function hexRgb(hex) {
-    const m = hex.replace("#", "");
-    const n = parseInt(m.length === 3 ? m.split("").map(c => c + c).join("") : m, 16);
-    return [n >> 16 & 255, n >> 8 & 255, n & 255];
-  }
-  let accent = hexRgb(cssVar("--accent"));
-  let accent2 = hexRgb(cssVar("--accent-2"));
-  new MutationObserver(() => {
-    accent = hexRgb(cssVar("--accent"));
-    accent2 = hexRgb(cssVar("--accent-2"));
-  }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    const VS = `
+      attribute vec3 aPos;
+      uniform float uTime;
+      uniform vec2 uRot;
+      uniform float uRatio;
+      uniform float uSize;
+      varying float vDepth;
+      varying float vMix;
+      void main() {
+        float cx = cos(uRot.x), sx = sin(uRot.x);
+        float cy = cos(uRot.y), sy = sin(uRot.y);
+        vec3 p = aPos;
+        p.yz = mat2(cx, -sx, sx, cx) * p.yz;
+        p.xz = mat2(cy, -sy, sy, cy) * p.xz;
+        float z = 3.0;
+        float f = 1.0 / (z - p.z);
+        gl_Position = vec4(p.xy * f * 1.2, p.z / z, 1.0);
+        gl_Position.x *= uRatio;
+        gl_PointSize = uSize * f * uRatio;
+        vDepth = (p.z + 1.25) / 2.5;
+        vMix = fract(aPos.x * 7.31 + aPos.y * 3.17 + aPos.z * 5.23);
+      }`;
+    const FS = `
+      precision mediump float;
+      uniform vec3 uColor1;
+      uniform vec3 uColor2;
+      varying float vDepth;
+      varying float vMix;
+      void main() {
+        float d = length(gl_PointCoord - 0.5);
+        if (d > 0.5) discard;
+        float alpha = smoothstep(0.5, 0.15, d) * (0.2 + 0.8 * vDepth);
+        vec3 c = mix(uColor1, uColor2, vMix);
+        gl_FragColor = vec4(c, alpha);
+      }`;
 
-  function resize() {
-    W = heroGraph.clientWidth;
-    H = heroGraph.clientHeight;
-    heroGraph.width = W * DPR;
-    heroGraph.height = H * DPR;
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    const count = Math.min(90, Math.max(40, Math.round(W * H / 18000)));
-    nodes = Array.from({ length: count }, () => ({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.35,
-      vy: (Math.random() - 0.5) * 0.35,
-      r: Math.random() * 1.6 + 1.2
-    }));
-  }
-
-  function step() {
-    ctx.clearRect(0, 0, W, H);
-    const linkDist = Math.min(W, H) * 0.2;
-    const R = 130;
-
-    for (const n of nodes) {
-      n.x += n.vx; n.y += n.vy;
-      if (n.x < 0 || n.x > W) n.vx *= -1;
-      if (n.y < 0 || n.y > H) n.vy *= -1;
-      const dx = n.x - mouse.x, dy = n.y - mouse.y;
-      const d2 = dx * dx + dy * dy;
-      if (d2 < R * R) {
-        const d = Math.sqrt(d2) || 1;
-        const f = (1 - d / R) * 0.7;
-        n.x += (dx / d) * f;
-        n.y += (dy / d) * f;
-      }
+    function compile(type, src) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+      return s;
     }
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
 
-    ctx.lineWidth = 1;
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = nodes[i], b = nodes[j];
-        const dx = a.x - b.x, dy = a.y - b.y;
-        const d = Math.hypot(dx, dy);
-        if (d < linkDist) {
-          ctx.strokeStyle = `rgba(${accent[0]},${accent[1]},${accent[2]},${(1 - d / linkDist) * 0.35})`;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-        }
-      }
+    const aPos = gl.getAttribLocation(prog, "aPos");
+    const uTime = gl.getUniformLocation(prog, "uTime");
+    const uRot = gl.getUniformLocation(prog, "uRot");
+    const uRatio = gl.getUniformLocation(prog, "uRatio");
+    const uSize = gl.getUniformLocation(prog, "uSize");
+    const uColor1 = gl.getUniformLocation(prog, "uColor1");
+    const uColor2 = gl.getUniformLocation(prog, "uColor2");
+
+    const N = 600, R = 1.25;
+    const pts = new Float32Array(N * 3);
+    const GA = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < N; i++) {
+      const y = 1 - (i / (N - 1)) * 2;
+      const rad = Math.sqrt(1 - y * y);
+      const th = GA * i;
+      pts[i * 3] = Math.cos(th) * rad * R;
+      pts[i * 3 + 1] = y * R;
+      pts[i * 3 + 2] = Math.sin(th) * rad * R;
     }
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, pts, gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(aPos);
+    gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
 
-    nodes.forEach((n, i) => {
-      const c = i % 2 ? accent2 : accent;
-      ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},0.85)`;
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-      ctx.fill();
-    });
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.disable(gl.DEPTH_TEST);
 
-    raf = requestAnimationFrame(step);
-  }
+    const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    function hexRgb(hex) {
+      const m = hex.replace("#", "");
+      const n = parseInt(m.length === 3 ? m.split("").map(c => c + c).join("") : m, 16);
+      return [n >> 16 & 255, n >> 8 & 255, n & 255].map(v => v / 255);
+    }
+    let c1 = hexRgb(cssVar("--accent"));
+    let c2 = hexRgb(cssVar("--accent-2"));
+    new MutationObserver(() => {
+      c1 = hexRgb(cssVar("--accent"));
+      c2 = hexRgb(cssVar("--accent-2"));
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
-  resize();
-  if (reduced) {
-    step();
-    cancelAnimationFrame(raf);
-  } else {
-    step();
-  }
+    let W = 0, H = 0, raf = 0;
+    const rot = { x: 0.4, y: 0.6 };
+    const target = { x: 0.4, y: 0.6 };
 
-  window.addEventListener("resize", resize);
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) cancelAnimationFrame(raf);
-    else if (!reduced) step();
-  });
+    function resize() {
+      W = heroGraph.clientWidth;
+      H = heroGraph.clientHeight;
+      heroGraph.width = W * DPR;
+      heroGraph.height = H * DPR;
+      gl.viewport(0, 0, W * DPR, H * DPR);
+    }
+    resize();
 
-  if (!reduced && (fine || "ontouchstart" in window)) {
     const hero = document.getElementById("principal");
     const move = (x, y) => {
       const r = hero.getBoundingClientRect();
-      mouse.x = x - r.left;
-      mouse.y = y - r.top;
+      target.y = 0.6 + ((x - r.left) / r.width - 0.5) * 1.6;
+      target.x = 0.4 + ((y - r.top) / r.height - 0.5) * 1.2;
     };
-    hero.addEventListener("mousemove", e => move(e.clientX, e.clientY));
-    hero.addEventListener("mouseleave", () => { mouse.x = -1e4; mouse.y = -1e4; });
-    hero.addEventListener("touchmove", e => {
-      const t = e.touches[0];
-      if (t) move(t.clientX, t.clientY);
-    }, { passive: true });
-    hero.addEventListener("touchstart", e => {
-      const t = e.touches[0];
-      if (t) move(t.clientX, t.clientY);
-    }, { passive: true });
+    if (fine || "ontouchstart" in window) {
+      hero.addEventListener("mousemove", e => move(e.clientX, e.clientY));
+      hero.addEventListener("mouseleave", () => { target.x = 0.4; target.y = 0.6; });
+      hero.addEventListener("touchmove", e => {
+        const t = e.touches[0];
+        if (t) move(t.clientX, t.clientY);
+      }, { passive: true });
+    }
+
+    function frame(t) {
+      rot.x += (target.x - rot.x) * 0.04;
+      rot.y += (target.y - rot.y) * 0.04;
+      rot.y += 0.0008;
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform1f(uTime, t / 1000);
+      gl.uniform2f(uRot, rot.x, rot.y);
+      gl.uniform1f(uRatio, (W * DPR) / (H * DPR));
+      gl.uniform1f(uSize, 16);
+      gl.uniform3f(uColor1, c1[0], c1[1], c1[2]);
+      gl.uniform3f(uColor2, c2[0], c2[1], c2[2]);
+      gl.drawArrays(gl.POINTS, 0, N);
+      raf = requestAnimationFrame(frame);
+    }
+
+    gl.uniform1f(uTime, 0);
+    gl.uniform2f(uRot, rot.x, rot.y);
+    gl.uniform1f(uRatio, (W * DPR) / (H * DPR));
+    gl.uniform1f(uSize, 16);
+    gl.uniform3f(uColor1, c1[0], c1[1], c1[2]);
+    gl.uniform3f(uColor2, c2[0], c2[1], c2[2]);
+    gl.drawArrays(gl.POINTS, 0, N);
+
+    if (!reduced) raf = requestAnimationFrame(frame);
+
+    window.addEventListener("resize", resize);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) cancelAnimationFrame(raf);
+      else if (!reduced) raf = requestAnimationFrame(frame);
+    });
   }
 }
 
