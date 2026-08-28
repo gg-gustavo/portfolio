@@ -248,7 +248,7 @@ if (heroGraph) {
       blink[i] = Math.random() * Math.PI * 2;
       col[i] = i % 2;
     }
-    const TH = 0.85;
+    const TH = 0.95;
     const pairs = [];
     for (let i = 0; i < N; i++) {
       for (let j = i + 1; j < N; j++) {
@@ -323,12 +323,12 @@ if (heroGraph) {
     }
     let c1 = hexRgb(cssVar("--accent"));
     let c2 = hexRgb(cssVar("--accent-2"));
-    let ce = hexRgb(cssVar("--text-soft"));
+    let ce = hexRgb(cssVar("--edge"));
     const t0 = performance.now();
     new MutationObserver(() => {
       c1 = hexRgb(cssVar("--accent"));
       c2 = hexRgb(cssVar("--accent-2"));
-      ce = hexRgb(cssVar("--text-soft"));
+      ce = hexRgb(cssVar("--edge"));
       draw(reduced ? 999 : (performance.now() - t0) / 1000);
     }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
@@ -421,9 +421,9 @@ if (heroGraph) {
       gl.uniform2f(gl.getUniformLocation(progP, "uRot"), rotArr[0], rotArr[1]);
       gl.uniform1f(gl.getUniformLocation(progP, "uTime"), time);
       gl.uniform1f(gl.getUniformLocation(progP, "uAmp"), 0.16);
-      gl.uniform1f(gl.getUniformLocation(progP, "uSize"), 24);
+      gl.uniform1f(gl.getUniformLocation(progP, "uSize"), 30);
       gl.uniform2f(gl.getUniformLocation(progP, "uMouse"), mouse.x, mouse.y);
-      gl.uniform1f(gl.getUniformLocation(progP, "uGrav"), 0.08);
+      gl.uniform1f(gl.getUniformLocation(progP, "uGrav"), 0.14);
       gl.uniform3f(gl.getUniformLocation(progP, "uColor1"), c1[0], c1[1], c1[2]);
       gl.uniform3f(gl.getUniformLocation(progP, "uColor2"), c2[0], c2[1], c2[2]);
       gl.drawArrays(gl.POINTS, 0, N);
@@ -434,7 +434,7 @@ if (heroGraph) {
       gl.uniform1f(gl.getUniformLocation(progL, "uTime"), time);
       gl.uniform1f(gl.getUniformLocation(progL, "uAmp"), 0.16);
       gl.uniform2f(gl.getUniformLocation(progL, "uMouse"), mouse.x, mouse.y);
-      gl.uniform1f(gl.getUniformLocation(progL, "uGrav"), 0.08);
+      gl.uniform1f(gl.getUniformLocation(progL, "uGrav"), 0.14);
       gl.uniform3f(gl.getUniformLocation(progL, "uColor"), ce[0], ce[1], ce[2]);
       gl.uniform1f(gl.getUniformLocation(progL, "uAlpha"), 0.65);
       gl.drawArrays(gl.LINES, 0, E * 2);
