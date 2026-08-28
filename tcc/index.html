@@ -4,193 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TCC — Avaliação de Experiência Gamificada e Usabilidade</title>
-<style>
-:root {
-  --bg: #f4f6fb;
-  --surface: #ffffff;
-  --surface-alt: #eef1f8;
-  --text: #1c2333;
-  --text-soft: #4a5470;
-  --border: #d9dfec;
-  --accent: #059669;
-  --accent-strong: #047857;
-  --accent-soft: #dcf5ea;
-  --accent2: #5b5bd6;
-  --accent2-strong: #4545b8;
-  --accent2-soft: #ececfb;
-  --shadow: 0 10px 30px rgba(28, 35, 51, 0.10);
-  --shadow-sm: 0 2px 8px rgba(28, 35, 51, 0.08);
-  --radius: 14px;
-}
-:root[data-theme="dark"] {
-  --bg: #0f1220;
-  --surface: #1a1f33;
-  --surface-alt: #232a44;
-  --text: #eef1fb;
-  --text-soft: #aab2d0;
-  --border: #333c5e;
-  --accent: #34d399;
-  --accent-strong: #6ee7b7;
-  --accent-soft: #17362a;
-  --accent2: #8f8fff;
-  --accent2-strong: #b0b0ff;
-  --accent2-soft: #262c4d;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.7;
-  transition: background .3s, color .3s;
-}
-
-header.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 20px;
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
-}
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.05rem; }
-.brand .logo {
-  display: grid; place-items: center;
-  width: 34px; height: 34px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  color: #fff; border-radius: 10px; font-size: .95rem;
-}
-.topbar-actions { display: flex; gap: 8px; }
-.icon-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 14px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--text);
-  font: inherit; font-size: .85rem; font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background .2s, transform .1s, border-color .2s;
-}
-.icon-btn:hover { background: var(--accent-soft); border-color: var(--accent); }
-.icon-btn:active { transform: scale(.96); }
-
-nav.jump {
-  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
-  margin-bottom: 30px;
-}
-nav.jump a {
-  padding: 6px 16px; border-radius: 999px;
-  background: var(--surface); border: 1px solid var(--border);
-  font-size: .82rem; font-weight: 600; color: var(--text-soft);
-  text-decoration: none;
-}
-nav.jump a:hover { border-color: var(--accent); color: var(--accent); }
-
-main { max-width: 860px; margin: 0 auto; padding: 28px 20px 80px; }
-
-.hero {
-  text-align: center;
-  padding: 44px 24px;
-  border-radius: var(--radius);
-  background: linear-gradient(160deg, var(--accent-soft), var(--surface) 70%);
-  border: 1px solid var(--border);
-  margin-bottom: 36px;
-}
-.hero h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin-bottom: 10px; letter-spacing: -.02em; }
-.hero h1 span.g { color: var(--accent); }
-.hero h1 span.p { color: var(--accent2); }
-.hero p { color: var(--text-soft); max-width: 640px; margin: 0 auto; }
-
-section.block {
-  margin-bottom: 32px;
-  padding: 24px 24px 20px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  scroll-margin-top: 90px;
-}
-section.block > header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.sec-num {
-  display: grid; place-items: center;
-  width: 40px; height: 40px; flex: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #fff;
-  font-weight: 800; font-size: 1.05rem;
-}
-section.block[data-accent="purple"] .sec-num { background: linear-gradient(135deg, var(--accent2), var(--accent2-strong)); }
-section.block h2 { font-size: 1.2rem; letter-spacing: -.01em; }
-section.block small.sub { display: block; color: var(--text-soft); font-weight: 500; font-size: .85rem; }
-section.block p { margin-bottom: 12px; color: var(--text); font-size: .95rem; }
-section.block p strong { color: inherit; }
-section.block .ref-tag { color: var(--text-soft); font-size: .85rem; }
-
-.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-.form-card {
-  border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 22px; background: var(--surface);
-  box-shadow: var(--shadow-sm);
-  display: flex; flex-direction: column; gap: 8px;
-  transition: transform .15s, box-shadow .15s;
-}
-.form-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
-.form-card .tag {
-  align-self: flex-start;
-  padding: 4px 12px; border-radius: 999px;
-  font-size: .72rem; font-weight: 800; letter-spacing: .04em;
-}
-.form-card.sus .tag { background: var(--accent-soft); color: var(--accent-strong); }
-.form-card.gamex .tag { background: var(--accent2-soft); color: var(--accent2-strong); }
-:root[data-theme="dark"] .form-card.sus .tag { color: var(--accent); }
-:root[data-theme="dark"] .form-card.gamex .tag { color: var(--accent2); }
-.form-card h3 { font-size: 1.1rem; }
-.form-card p { font-size: .88rem; color: var(--text-soft); flex: 1; }
-.form-card .meta { font-size: .78rem; color: var(--text-soft); }
-.btn-open {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  margin-top: 6px;
-  padding: 11px 22px;
-  border: none; border-radius: 999px;
-  font: inherit; font-weight: 800; font-size: .92rem;
-  color: #fff;
-  text-decoration: none;
-  transition: filter .2s, transform .1s;
-}
-.btn-open:hover { filter: brightness(1.08); }
-.btn-open:active { transform: scale(.97); }
-.form-card.sus .btn-open { background: linear-gradient(135deg, var(--accent), var(--accent-strong)); }
-.form-card.gamex .btn-open { background: linear-gradient(135deg, var(--accent2), var(--accent2-strong)); }
-
-ol.refs {
-  padding-left: 20px;
-  font-size: .86rem;
-  color: var(--text-soft);
-  display: grid; gap: 10px;
-}
-ol.refs i { color: var(--text); }
-
-footer { text-align: center; color: var(--text-soft); font-size: .8rem; margin-top: 40px; }
-footer a { color: var(--accent); text-decoration: none; }
-
-@media (max-width: 520px) {
-  .topbar { padding: 10px 14px; }
-  .brand span.title { display: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
-}
-</style>
+<link rel="stylesheet" href="tcc.css">
 </head>
 <body>
 
@@ -200,6 +14,7 @@ footer a { color: var(--accent); text-decoration: none; }
     <span class="title">TCC · Avaliação</span>
   </div>
   <div class="topbar-actions">
+    <a class="icon-btn" href="../index.html">← Portfólio</a>
     <button id="themeBtn" class="icon-btn" type="button" aria-label="Alternar tema">🌙 <span id="themeLabel">Dark</span></button>
   </div>
 </header>
@@ -301,14 +116,8 @@ footer a { color: var(--accent); text-decoration: none; }
   <footer>TCC Gustavo Ripka · <a href="sus.html">SUS</a> · <a href="gamex.html">GAMEX</a> · Instrumentos de avaliação</footer>
 </main>
 
+<script src="tcc.js"></script>
 <script>
-document.getElementById("themeBtn").addEventListener("click", () => {
-  const root = document.documentElement;
-  const dark = root.getAttribute("data-theme") !== "dark";
-  root.setAttribute("data-theme", dark ? "dark" : "");
-  document.getElementById("themeLabel").textContent = dark ? "Light" : "Dark";
-  document.getElementById("themeBtn").innerHTML = "🌙 <span id='themeLabel'>" + (dark ? "Light" : "Dark") + "</span>";
-});
 </script>
 </body>
 </html>
