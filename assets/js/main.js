@@ -156,6 +156,8 @@ if (heroGraph) {
       uniform float uRatio;
       uniform float uSize;
       uniform float uAmp;
+      uniform vec2 uMouse;
+      uniform float uGrav;
       varying float vDepth;
       varying float vAppear;
       varying float vBlink;
@@ -165,6 +167,11 @@ if (heroGraph) {
         p.x += sin(uTime * aRate + aPhase.x) * uAmp;
         p.y += sin(uTime * aRate * 1.31 + aPhase.y) * uAmp;
         p.z += cos(uTime * aRate * 0.77 + aPhase.z) * uAmp;
+        vec2 toMouse = uMouse - p.xy;
+        float dist = length(toMouse);
+        if (dist > 0.001) {
+          p.xy += (toMouse / dist) * uGrav * smoothstep(1.5, 0.0, dist);
+        }
         float cx = cos(uRot.x), sx = sin(uRot.x);
         float cy = cos(uRot.y), sy = sin(uRot.y);
         p.yz = mat2(cx, -sx, sx, cx) * p.yz;
@@ -328,7 +335,6 @@ if (heroGraph) {
     let W = 0, H = 0, raf = 0;
     const rot = { x: 0.5, y: 0.7 };
     let target = { x: 0.5, y: 0.7 };
-    let mouseIn = false;
     let rw = { x: 0, y: 0 };
     let rwT = 0;
     function nextRandomWalk() {
@@ -336,6 +342,9 @@ if (heroGraph) {
       rwT = 1.5 + Math.random() * 2.5;
     }
     nextRandomWalk();
+
+    let dragging = false, lastX = 0, lastY = 0;
+    const mouse = { x: 999, y: 999 };
 
     function resize() {
       W = heroGraph.clientWidth;
@@ -346,18 +355,60 @@ if (heroGraph) {
     }
     resize();
 
-    const hero = document.getElementById("principal");
-    const move = (x, y) => {
-      const r = hero.getBoundingClientRect();
-      target = { x: 0.5 + ((y - r.top) / r.height - 0.5) * 1.2, y: 0.7 + ((x - r.left) / r.width - 0.5) * 1.8 };
-    };
+    function toWorld(x, y) {
+      const r = heroGraph.getBoundingClientRect();
+      const ndcX = ((x - r.left) / r.width) * 2 - 1;
+      const ndcY = -(((y - r.top) / r.height) * 2 - 1);
+      const f = 1 / 2.9;
+      return { x: ndcX / (f * (W / H)), y: ndcY / f };
+    }
+
     if (fine || "ontouchstart" in window) {
-      hero.addEventListener("mousemove", e => { mouseIn = true; move(e.clientX, e.clientY); });
-      hero.addEventListener("mouseleave", () => { mouseIn = false; nextRandomWalk(); });
-      hero.addEventListener("touchmove", e => {
-        const t = e.touches[0];
-        if (t) { mouseIn = true; move(t.clientX, t.clientY); }
+      heroGraph.addEventListener("mousemove", e => {
+        const m = toWorld(e.clientX, e.clientY);
+        mouse.x = m.x; mouse.y = m.y;
+      });
+      heroGraph.addEventListener("mouseleave", () => { mouse.x = 999; mouse.y = 999; });
+      heroGraph.addEventListener("mousedown", e => {
+        dragging = true;
+        lastX = e.clientX; lastY = e.clientY;
+        heroGraph.classList.add("dragging");
+      });
+      window.addEventListener("mousemove", e => {
+        if (!dragging) return;
+        const dx = e.clientX - lastX, dy = e.clientY - lastY;
+        rot.y += dx * 0.006;
+        rot.x = Math.max(-1.2, Math.min(1.2, rot.x + dy * 0.006));
+        lastX = e.clientX; lastY = e.clientY;
+      });
+      window.addEventListener("mouseup", () => {
+        dragging = false;
+        heroGraph.classList.remove("dragging");
+      });
+      heroGraph.addEventListener("touchstart", e => {
+        dragging = true;
+        lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+        heroGraph.classList.add("dragging");
       }, { passive: true });
+      heroGraph.addEventListener("touchmove", e => {
+        const t = e.touches[0];
+        if (!t) return;
+        const m = toWorld(t.clientX, t.clientY);
+        mouse.x = m.x; mouse.y = m.y;
+        if (dragging) {
+          const dx = t.clientX - lastX, dy = t.clientY - lastY;
+          rot.y += dx * 0.006;
+          rot.x = Math.max(-1.2, Math.min(1.2, rot.x + dy * 0.006));
+          lastX = t.clientX; lastY = t.clientY;
+          e.preventDefault();
+        }
+      }, { passive: false });
+      const endTouch = () => {
+        dragging = false;
+        heroGraph.classList.remove("dragging");
+      };
+      heroGraph.addEventListener("touchend", endTouch);
+      heroGraph.addEventListener("touchcancel", endTouch);
     }
 
     function draw(time) {
@@ -371,6 +422,8 @@ if (heroGraph) {
       gl.uniform1f(gl.getUniformLocation(progP, "uTime"), time);
       gl.uniform1f(gl.getUniformLocation(progP, "uAmp"), 0.16);
       gl.uniform1f(gl.getUniformLocation(progP, "uSize"), 24);
+      gl.uniform2f(gl.getUniformLocation(progP, "uMouse"), mouse.x, mouse.y);
+      gl.uniform1f(gl.getUniformLocation(progP, "uGrav"), 0.08);
       gl.uniform3f(gl.getUniformLocation(progP, "uColor1"), c1[0], c1[1], c1[2]);
       gl.uniform3f(gl.getUniformLocation(progP, "uColor2"), c2[0], c2[1], c2[2]);
       gl.drawArrays(gl.POINTS, 0, N);
@@ -380,19 +433,21 @@ if (heroGraph) {
       gl.uniform2f(gl.getUniformLocation(progL, "uRot"), rotArr[0], rotArr[1]);
       gl.uniform1f(gl.getUniformLocation(progL, "uTime"), time);
       gl.uniform1f(gl.getUniformLocation(progL, "uAmp"), 0.16);
+      gl.uniform2f(gl.getUniformLocation(progL, "uMouse"), mouse.x, mouse.y);
+      gl.uniform1f(gl.getUniformLocation(progL, "uGrav"), 0.08);
       gl.uniform3f(gl.getUniformLocation(progL, "uColor"), ce[0], ce[1], ce[2]);
       gl.uniform1f(gl.getUniformLocation(progL, "uAlpha"), 0.65);
       gl.drawArrays(gl.LINES, 0, E * 2);
     }
 
     function frame() {
-      if (!mouseIn) {
+      if (!dragging) {
         rwT -= 1 / 60;
         if (rwT <= 0) nextRandomWalk();
         target = { x: 0.5 + rw.x, y: 0.7 + rw.y };
+        rot.x += (target.x - rot.x) * 0.03;
+        rot.y += (target.y - rot.y) * 0.03;
       }
-      rot.x += (target.x - rot.x) * 0.03;
-      rot.y += (target.y - rot.y) * 0.03;
       draw((performance.now() - t0) / 1000);
       raf = requestAnimationFrame(frame);
     }
