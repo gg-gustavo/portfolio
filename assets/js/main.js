@@ -143,13 +143,18 @@ if (heroGraph) {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    const t0 = performance.now();
 
     const VS = `
       attribute vec3 aPos;
+      attribute float aDelay;
+      attribute float aRate;
+      uniform float uTime;
       uniform vec2 uRot;
       uniform float uRatio;
       uniform float uSize;
       varying float vDepth;
+      varying float vAppear;
       void main() {
         float cx = cos(uRot.x), sx = sin(uRot.x);
         float cy = cos(uRot.y), sy = sin(uRot.y);
@@ -161,17 +166,19 @@ if (heroGraph) {
         gl_Position = vec4(p.xy * f, p.z / z, 1.0);
         gl_Position.x *= uRatio;
         vDepth = clamp((p.z + 1.2) / 2.4, 0.0, 1.0);
-        gl_PointSize = uSize * f * uRatio;
+        vAppear = clamp((uTime - aDelay) * aRate, 0.0, 1.0);
+        gl_PointSize = uSize * f * uRatio * (0.5 + 0.5 * vAppear);
       }`;
     const FS_POINTS = `
       precision mediump float;
       uniform vec3 uColor1;
       uniform vec3 uColor2;
       varying float vDepth;
+      varying float vAppear;
       void main() {
         float d = length(gl_PointCoord - 0.5);
         if (d > 0.5) discard;
-        float alpha = smoothstep(0.5, 0.15, d) * (0.35 + 0.65 * vDepth);
+        float alpha = smoothstep(0.5, 0.15, d) * (0.35 + 0.65 * vDepth) * vAppear;
         gl_FragColor = vec4(mix(uColor1, uColor2, vDepth), alpha);
       }`;
     const FS_LINES = `
@@ -179,8 +186,9 @@ if (heroGraph) {
       uniform vec3 uColor;
       uniform float uAlpha;
       varying float vDepth;
+      varying float vAppear;
       void main() {
-        gl_FragColor = vec4(uColor, uAlpha * (0.35 + 0.65 * vDepth));
+        gl_FragColor = vec4(uColor, uAlpha * (0.35 + 0.65 * vDepth) * vAppear);
       }`;
 
     function compile(type, src) {
@@ -203,10 +211,14 @@ if (heroGraph) {
     const N = 90;
     const XH = 1.6, YH = 1.15, ZH = 1.0;
     const pos = new Float32Array(N * 3);
+    const delay = new Float32Array(N);
+    const rate = new Float32Array(N);
     for (let i = 0; i < N; i++) {
       pos[i * 3]     = (Math.random() * 2 - 1) * XH;
       pos[i * 3 + 1] = (Math.random() * 2 - 1) * YH;
       pos[i * 3 + 2] = (Math.random() * 2 - 1) * ZH;
+      delay[i] = Math.random() * 7;
+      rate[i] = 0.25 + Math.random() * 0.6;
     }
     const TH = 1.15;
     const pairs = [];
@@ -218,18 +230,34 @@ if (heroGraph) {
     }
     const E = pairs.length / 2;
     const linePos = new Float32Array(E * 6);
+    const lineDelay = new Float32Array(E * 2);
+    const lineRate = new Float32Array(E * 2);
     for (let e = 0; e < E; e++) {
       const a = pairs[e * 2], b = pairs[e * 2 + 1];
       linePos[e * 6] = pos[a * 3]; linePos[e * 6 + 1] = pos[a * 3 + 1]; linePos[e * 6 + 2] = pos[a * 3 + 2];
       linePos[e * 6 + 3] = pos[b * 3]; linePos[e * 6 + 4] = pos[b * 3 + 1]; linePos[e * 6 + 5] = pos[b * 3 + 2];
+      lineDelay[e * 2] = delay[a]; lineDelay[e * 2 + 1] = delay[b];
+      lineRate[e * 2] = rate[a]; lineRate[e * 2 + 1] = rate[b];
     }
 
     const bufP = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bufP);
     gl.bufferData(gl.ARRAY_BUFFER, pos, gl.STATIC_DRAW);
+    const bufPD = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufPD);
+    gl.bufferData(gl.ARRAY_BUFFER, delay, gl.STATIC_DRAW);
+    const bufPR = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufPR);
+    gl.bufferData(gl.ARRAY_BUFFER, rate, gl.STATIC_DRAW);
     const bufL = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bufL);
     gl.bufferData(gl.ARRAY_BUFFER, linePos, gl.STATIC_DRAW);
+    const bufLD = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufLD);
+    gl.bufferData(gl.ARRAY_BUFFER, lineDelay, gl.STATIC_DRAW);
+    const bufLR = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufLR);
+    gl.bufferData(gl.ARRAY_BUFFER, lineRate, gl.STATIC_DRAW);
 
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -248,12 +276,20 @@ if (heroGraph) {
       c2 = hexRgb(cssVar("--accent-2"));
     }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
-    function setup(p, r, rotArr) {
+    function setup(p, bufPos, bufD, bufR, r, rotArr, time) {
       gl.useProgram(p);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufPos);
       gl.enableVertexAttribArray(gl.getAttribLocation(p, "aPos"));
       gl.vertexAttribPointer(gl.getAttribLocation(p, "aPos"), 3, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufD);
+      gl.enableVertexAttribArray(gl.getAttribLocation(p, "aDelay"));
+      gl.vertexAttribPointer(gl.getAttribLocation(p, "aDelay"), 1, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufR);
+      gl.enableVertexAttribArray(gl.getAttribLocation(p, "aRate"));
+      gl.vertexAttribPointer(gl.getAttribLocation(p, "aRate"), 1, gl.FLOAT, false, 0, 0);
       gl.uniform1f(gl.getUniformLocation(p, "uRatio"), r);
       gl.uniform2f(gl.getUniformLocation(p, "uRot"), rotArr[0], rotArr[1]);
+      gl.uniform1f(gl.getUniformLocation(p, "uTime"), time);
     }
 
     let W = 0, H = 0, raf = 0;
@@ -284,19 +320,17 @@ if (heroGraph) {
       }, { passive: true });
     }
 
-    function draw() {
+    function draw(time) {
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       const r = (W * DPR) / (H * DPR);
-      gl.bindBuffer(gl.ARRAY_BUFFER, bufP);
-      setup(progP, r, [rot.x, rot.y]);
+      setup(progP, bufP, bufPD, bufPR, r, [rot.x, rot.y], time);
       gl.uniform1f(gl.getUniformLocation(progP, "uSize"), 9);
       gl.uniform3f(gl.getUniformLocation(progP, "uColor1"), c1[0], c1[1], c1[2]);
       gl.uniform3f(gl.getUniformLocation(progP, "uColor2"), c2[0], c2[1], c2[2]);
       gl.drawArrays(gl.POINTS, 0, N);
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, bufL);
-      setup(progL, r, [rot.x, rot.y]);
+      setup(progL, bufL, bufLD, bufLR, r, [rot.x, rot.y], time);
       gl.uniform3f(gl.getUniformLocation(progL, "uColor"), c1[0], c1[1], c1[2]);
       gl.uniform1f(gl.getUniformLocation(progL, "uAlpha"), 0.55);
       gl.drawArrays(gl.LINES, 0, E * 2);
@@ -305,12 +339,12 @@ if (heroGraph) {
     function frame() {
       rot.x += (target.x - rot.x) * 0.04;
       rot.y += (target.y - rot.y) * 0.04;
-      rot.y += 0.0006;
-      draw();
+      rot.y += 0.00025;
+      draw((performance.now() - t0) / 1000);
       raf = requestAnimationFrame(frame);
     }
 
-    draw();
+    draw(999);
     if (!reduced) raf = requestAnimationFrame(frame);
 
     window.addEventListener("resize", resize);
