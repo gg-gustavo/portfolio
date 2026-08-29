@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="dark" data-accent="red">
+<html lang="pt-BR" data-accent="red">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,19 +8,19 @@
 <style>
   .turnbar{display:flex; align-items:center; justify-content:center; gap:10px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px}
   .dot{width:18px; height:18px; border-radius:50%; transition:all .2s}
-  .dot.red{background:#ff4757; box-shadow:0 0 12px #ff4757}
-  .dot.yellow{background:#f5a623; box-shadow:0 0 12px #f5a623}
+  .dot.red{background:var(--accent); box-shadow:0 0 12px var(--accent)}
+  .dot.yellow{background:var(--accent-2); box-shadow:0 0 12px var(--accent-2)}
   .dot.dim{opacity:.25; box-shadow:none}
   .mode{display:flex; flex-direction:column; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:8px}
   .modebtns{display:flex; gap:8px}
   .modebtns button{flex:1; padding:10px; font-size:14px; background:transparent; color:var(--text-soft); border:1px solid transparent; border-radius:10px}
   .modebtns button.active{background:var(--surface-2); color:var(--text); border-color:var(--border)}
-  .turnName.red{color:#ff4757}
-  .turnName.yellow{color:#f5a623}
+  .turnName.red{color:var(--accent)}
+  .turnName.yellow{color:var(--accent-2)}
   .hint{aspect-ratio:1/1; border-radius:50%; opacity:0; transition:opacity .1s}
   .hint.show{opacity:.45}
-  .hint.red{background:#ff4757}
-  .hint.yellow{background:#f5a623}
+  .hint.red{background:var(--accent)}
+  .hint.yellow{background:var(--accent-2)}
   .cell.drop{animation:fall .32s ease-in}
   @keyframes fall{from{transform:translateY(-500%); opacity:.9}}
   .board{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px}
@@ -28,8 +28,8 @@
   .col{display:flex; flex-direction:column-reverse; gap:6px; cursor:pointer; padding:4px; border-radius:10px; transition:background .15s}
   .col:hover{background:var(--surface-2)}
   .cell{aspect-ratio:1/1; border-radius:50%; background:var(--bg); border:2px solid var(--border); transition:background .15s}
-  .cell.red{background:#ff4757; border-color:#ff4757; box-shadow:inset 0 -4px 8px rgba(0,0,0,.3)}
-  .cell.yellow{background:#f5a623; border-color:#f5a623; box-shadow:inset 0 -4px 8px rgba(0,0,0,.3)}
+  .cell.red{background:var(--accent); border-color:var(--accent); box-shadow:inset 0 -4px 8px rgba(0,0,0,.3)}
+  .cell.yellow{background:var(--accent-2); border-color:var(--accent-2); box-shadow:inset 0 -4px 8px rgba(0,0,0,.3)}
   .cell.win{animation:pulse .6s infinite alternate}
   @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.15)}}
   .theme-btn-sm {
@@ -41,6 +41,7 @@
   .theme-btn-sm:hover { border-color: var(--acc); background: var(--acc-soft); }
   @media (max-width:420px){ .app{max-width:340px} }
 </style>
+<script>document.documentElement.setAttribute("data-theme",(localStorage.getItem("theme")||"dark"));</script>
 </head>
 <body>
 <div class="app">
@@ -55,7 +56,7 @@
   <div class="turnbar">
     <span>Vez de</span>
     <span class="dot red" id="dotRed"></span>
-    <span id="turnName">Vermelho</span>
+    <span id="turnName">Âmbar</span>
     <span class="dot yellow" id="dotY"></span>
   </div>
 
@@ -92,7 +93,7 @@
 const ROWS=6, COLS=7;
 const RED=1, YELLOW=2;
 let grid, turn, over, mode='cpu';
-let names={[RED]:'Vermelho',[YELLOW]:'Amarelo'};
+let names={[RED]:'Âmbar',[YELLOW]:'Verde'};
 
 const colsEl=document.getElementById('cols');
 const turnName=document.getElementById('turnName');
@@ -201,8 +202,8 @@ function showWin(w){
   else{
     const who=names[w];
     const icon=w===RED
-      ? '<circle cx="12" cy="12" r="9" fill="#ff4757" stroke="none"/>'
-      : '<circle cx="12" cy="12" r="9" fill="#f5a623" stroke="none"/>';
+      ? '<circle cx="12" cy="12" r="9" fill="var(--accent)" stroke="none"/>'
+      : '<circle cx="12" cy="12" r="9" fill="var(--accent-2)" stroke="none"/>';
     t.innerHTML='<svg class="icon-trophy" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 4h1"/><path d="M17 6h3a2 2 0 0 1-2 4h-1"/></svg> <svg width="16" height="16" viewBox="0 0 24 24">'+icon+'</svg> '+who+' venceu!';
     s.textContent='Quatro em linha!';
   }
@@ -254,8 +255,8 @@ function selectMode(m){
 function setMode(m){
   mode=m;
   if(m==='2p'){
-    names[RED]='Vermelho';
-    names[YELLOW]='Amarelo';
+    names[RED]='Âmbar';
+    names[YELLOW]='Verde';
   }else{
     names[RED]='Você';
     names[YELLOW]='Computador';

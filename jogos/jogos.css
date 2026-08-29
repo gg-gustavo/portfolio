@@ -65,11 +65,7 @@
 :root[data-accent="gold"]    { --game: #f5a623; --game-strong: #d18a14; --game-soft: #fef2df; }
 :root[data-accent="cyan"]    { --game: #45b7d1; --game-strong: #3197af; --game-soft: #e0f4f9; }
 
-:root[data-accent="blue"]:not([data-theme="dark"]), :root[data-accent="purple"]:not([data-theme="dark"]),
-:root[data-accent="green"]:not([data-theme="dark"]), :root[data-accent="red"]:not([data-theme="dark"]),
-:root[data-accent="gold"]:not([data-theme="dark"]), :root[data-accent="cyan"]:not([data-theme="dark"]) {
-  --acc: var(--game); --acc-strong: var(--game-strong); --acc-soft: var(--game-soft);
-}
+:root[data-accent] { --acc: var(--game); --acc-strong: var(--game-strong); --acc-soft: var(--game-soft); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -124,6 +120,7 @@ button.gold { background: linear-gradient(135deg, var(--game), var(--game-strong
 
 .overlay {
   position: fixed; inset: 0; z-index: 10;
+  background: rgba(15, 17, 19, .78);
   background: color-mix(in srgb, var(--bg) 78%, transparent);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
