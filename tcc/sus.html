@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-accent="amber">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SUS — Escala de Usabilidade do Sistema</title>
+<title>SUS · Escala de Usabilidade do Sistema</title>
 <link rel="stylesheet" href="tcc.css">
 </head>
 <body>
@@ -18,7 +18,7 @@
     <a class="icon-btn" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> <span data-i18n="btnHome">Início</span></a>
     <a class="icon-btn" href="gamex.html">GAMEX</a>
     <button id="langBtn" class="icon-btn" type="button" aria-label="Alternar idioma"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span data-i18n="btnLang">EN</span></button>
-    <button id="themeBtn" class="icon-btn" type="button" aria-label="Alternar tema"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> <span id="themeLabel">Dark</span></button>
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
   </div>
 </header>
 
@@ -33,6 +33,11 @@
     <div id="dimensions"></div>
 
     <div class="actions">
+      <div class="scale-legend" role="group" aria-label="Escala de resposta">
+        <span><b>1</b><span data-i18n="scaleMin">Discordo totalmente</span></span>
+        <span><b>3</b><span data-i18n="scaleMid">Neutro</span></span>
+        <span><b>5</b><span data-i18n="scaleMax">Concordo totalmente</span></span>
+      </div>
       <div class="required-hint" id="requiredHint" data-i18n="requiredHint" hidden>Responda todas as 10 questões para calcular.</div>
       <button type="submit" class="calculate" data-i18n="btnCalc">Calcular Resultado</button>
       <button type="button" class="btn-reset" data-i18n="btnReset" hidden>Limpar respostas</button>
@@ -51,9 +56,9 @@
     <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> <span data-i18n="resTitle">Seu Resultado</span></h2>
     <p class="sub" data-i18n="resSub">Pontuação SUS convertida (0 a 100) e classificação de aceitabilidade.</p>
     <div class="legend">
-      <span><i class="bar-color-ok"></i><span data-i18n="resHigh">70 – 100 · Aceitável</span></span>
-      <span><i class="bar-color-mid"></i><span data-i18n="resMid">60 – 69.9 · Marginal</span></span>
-      <span><i class="bar-color-low"></i><span data-i18n="resLow">0 – 59.9 · Inaceitável</span></span>
+      <span><i class="bar-color-ok"></i><span data-i18n="resHigh">70 a 100 · Aceitável</span></span>
+      <span><i class="bar-color-mid"></i><span data-i18n="resMid">60 a 69.9 · Marginal</span></span>
+      <span><i class="bar-color-low"></i><span data-i18n="resLow">0 a 59.9 · Inaceitável</span></span>
     </div>
     <div class="card-grid" id="cards"></div>
     <div class="summary">
@@ -63,7 +68,7 @@
     </div>
   </section>
 
-  <footer>SUS · System Usability Scale — Brooke (1996) · Material didático para avaliação de usabilidade. · <a href="index.html#referencias" style="color:var(--accent)">Referências</a></footer>
+  <footer>SUS · System Usability Scale · Brooke (1996) · Material didático para avaliação de usabilidade. · <a href="index.html#referencias" style="color:var(--accent)">Referências</a></footer>
 </main>
 
 <script src="tcc.js"></script>
@@ -95,13 +100,14 @@ const i18n = {
     btnLang: "EN", theme: "Dark", btnCalc: "Calcular Resultado", btnReset: "Limpar respostas",
     btnHome: "Início",
     requiredHint: "Responda todas as 10 questões para calcular.",
+    scaleMin: "Discordo totalmente", scaleMid: "Neutro", scaleMax: "Concordo totalmente",
     heroTitle: "O que é a SUS?",
     heroDesc: "A <strong>SUS</strong> (System Usability Scale) é uma escala validada que mede a usabilidade de um sistema por meio de <strong>10 questões</strong> alternadas (positivas e negativas), respondidas em uma escala Likert de 1 a 5. O resultado é convertido para uma pontuação de <strong>0 a 100</strong>, em que pontuações a partir de <strong>70</strong> são consideradas aceitáveis.",
     resTitle: "Seu Resultado",
     resSub: "Pontuação SUS convertida (0 a 100) e classificação de aceitabilidade.",
-    resHigh: "70 – 100 · Aceitável",
-    resMid: "60 – 69.9 · Marginal",
-    resLow: "0 – 59.9 · Inaceitável",
+    resHigh: "70 a 100 · Aceitável",
+    resMid: "60 a 69.9 · Marginal",
+    resLow: "0 a 59.9 · Inaceitável",
     resOverall: "Pontuação SUS:",
     resBenchmark: "· Aceitável: ≥ 70",
     resScoreCard: "Pontuação SUS",
@@ -109,20 +115,21 @@ const i18n = {
     gradeAcceptable: "Aceitável",
     gradeMarginal: "Marginal",
     gradeNotAcceptable: "Inaceitável",
-    footer: "SUS · System Usability Scale — Brooke (1996) · Material didático para avaliação de usabilidade.",
+    footer: "SUS · System Usability Scale · Brooke (1996) · Material didático para avaliação de usabilidade.",
     dimSubtitle: "Escala de usabilidade do sistema"
   },
   en: {
     btnLang: "PT", theme: "Dark", btnCalc: "Calculate Result", btnReset: "Clear answers",
     btnHome: "Home",
     requiredHint: "Answer all 10 questions to calculate.",
+    scaleMin: "Strongly Disagree", scaleMid: "Neutral", scaleMax: "Strongly Agree",
     heroTitle: "What is the SUS?",
     heroDesc: "The <strong>SUS</strong> (System Usability Scale) is a validated scale that measures a system's usability through <strong>10 alternating questions</strong> (positive and negative), answered on a 1-to-5 Likert scale. The result is converted into a score from <strong>0 to 100</strong>, where scores from <strong>70</strong> and above are considered acceptable.",
     resTitle: "Your Result",
     resSub: "Converted SUS score (0 to 100) and acceptability classification.",
-    resHigh: "70 – 100 · Acceptable",
-    resMid: "60 – 69.9 · Marginal",
-    resLow: "0 – 59.9 · Not acceptable",
+    resHigh: "70 to 100 · Acceptable",
+    resMid: "60 to 69.9 · Marginal",
+    resLow: "0 to 59.9 · Not acceptable",
     resOverall: "SUS Score:",
     resBenchmark: "· Acceptable: ≥ 70",
     resScoreCard: "SUS Score",
@@ -185,9 +192,7 @@ function buildForm() {
       const val = document.createElement("span");
       val.className = "val";
       val.textContent = v + 1;
-      const descEl = document.createElement("span");
-      descEl.textContent = desc;
-      lab.append(val, descEl);
+      lab.appendChild(val);
       rating.appendChild(input);
       rating.appendChild(lab);
       input.addEventListener("change", () => {
@@ -196,10 +201,6 @@ function buildForm() {
         if (resetBtn) resetBtn.hidden = false;
       });
     });
-    const end = document.createElement("span");
-    end.className = "scale-end";
-    end.textContent = "1 — Discordo\n5 — Concordo".split("\n")[0];
-    rating.appendChild(end);
 
     div.append(text, rating);
     section.appendChild(div);
@@ -321,10 +322,6 @@ function applyLanguage() {
 
   susData.questions.forEach(q => {
     document.querySelectorAll(".q-text .q-label")[q.id - 1].textContent = q[lang];
-  });
-
-  document.querySelectorAll(".rating .scale-end").forEach(el => {
-    el.textContent = "1 — " + scale.labels[lang][0] + " | 5 — " + scale.labels[lang][4];
   });
 
   if (document.getElementById("result").classList.contains("visible")) {
