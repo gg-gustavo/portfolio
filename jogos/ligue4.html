@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark" data-accent="red">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ligue 4</title>
+<link rel="stylesheet" href="jogos.css">
+<style>
+  .turnbar{display:flex; align-items:center; justify-content:center; gap:10px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px}
+  .dot{width:18px; height:18px; border-radius:50%; transition:all .2s}
+  .dot.red{background:#ff4757; box-shadow:0 0 12px #ff4757}
+  .dot.yellow{background:#f5a623; box-shadow:0 0 12px #f5a623}
+  .dot.dim{opacity:.25; box-shadow:none}
+  .mode{display:flex; flex-direction:column; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:8px}
+  .modebtns{display:flex; gap:8px}
+  .modebtns button{flex:1; padding:10px; font-size:14px; background:transparent; color:var(--text-soft); border:1px solid transparent; border-radius:10px}
+  .modebtns button.active{background:var(--surface-2); color:var(--text); border-color:var(--border)}
+  .turnName.red{color:#ff4757}
+  .turnName.yellow{color:#f5a623}
+  .hint{aspect-ratio:1/1; border-radius:50%; opacity:0; transition:opacity .1s}
+  .hint.show{opacity:.45}
+  .hint.red{background:#ff4757}
+  .hint.yellow{background:#f5a623}
+  .cell.drop{animation:fall .32s ease-in}
+  @keyframes fall{from{transform:translateY(-500%); opacity:.9}}
+  .board{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px}
+  .cols{display:grid; grid-template-columns:repeat(7,1fr); gap:6px}
+  .col{display:flex; flex-direction:column-reverse; gap:6px; cursor:pointer; padding:4px; border-radius:10px; transition:background .15s}
+  .col:hover{background:var(--surface-2)}
+  .cell{aspect-ratio:1/1; border-radius:50%; background:var(--bg); border:2px solid var(--border); transition:background .15s}
+  .cell.red{background:#ff4757; border-color:#ff4757; box-shadow:inset 0 -4px 8px rgba(0,0,0,.3)}
+  .cell.yellow{background:#f5a623; border-color:#f5a623; box-shadow:inset 0 -4px 8px rgba(0,0,0,.3)}
+  .cell.win{animation:pulse .6s infinite alternate}
+  @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.15)}}
+  .theme-btn-sm {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    cursor: pointer; transition: border-color .15s, background .15s;
+  }
+  .theme-btn-sm:hover { border-color: var(--acc); background: var(--acc-soft); }
+  @media (max-width:420px){ .app{max-width:340px} }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <h1>Ligue 4</h1>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="theme-btn-sm" id="themeBtn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Voltar</a>
+    </div>
+  </header>
+
+  <div class="turnbar">
+    <span>Vez de</span>
+    <span class="dot red" id="dotRed"></span>
+    <span id="turnName">Vermelho</span>
+    <span class="dot yellow" id="dotY"></span>
+  </div>
+
+  <div class="board"><div class="cols" id="cols"></div></div>
+  <div class="controls">
+    <button class="ghost" id="btnReset">Reiniciar</button>
+    <button class="primary" id="btnMenu">Menu</button>
+  </div>
+</div>
+
+<div class="overlay" id="modeOverlay">
+  <div class="modal">
+    <h2>Ligue 4</h2>
+    <p class="sub">Escolha o modo de jogo</p>
+    <div class="modebtns">
+      <button id="btnCpu">vs Computador</button>
+      <button id="btn2p">2 Jogadores</button>
+    </div>
+    <button class="primary" id="btnStart">Iniciar</button>
+  </div>
+</div>
+
+<div class="overlay hidden" id="winOverlay">
+  <div class="modal">
+    <h2 id="winTitle"></h2>
+    <p class="sub" id="winSub">Fim de jogo</p>
+    <button class="primary" id="btnAgain">Jogar Novamente</button>
+    <button class="ghost" id="btnMenu2">Menu</button>
+  </div>
+</div>
+
+<script src="jogos.js"></script>
+<script>
+const ROWS=6, COLS=7;
+const RED=1, YELLOW=2;
+let grid, turn, over, mode='cpu';
+let names={[RED]:'Vermelho',[YELLOW]:'Amarelo'};
+
+const colsEl=document.getElementById('cols');
+const turnName=document.getElementById('turnName');
+const dotRed=document.getElementById('dotRed');
+const dotY=document.querySelector('.dot.yellow');
+
+function init(){
+  grid=Array.from({length:ROWS},()=>Array(COLS).fill(0));
+  turn=RED; over=false;
+  updateTurn();
+  render();
+  document.getElementById('winOverlay').classList.add('hidden');
+}
+
+function render(){
+  colsEl.innerHTML='';
+  for(let c=0;c<COLS;c++){
+    const col=document.createElement('div');
+    col.className='col';
+    for(let r=ROWS-1;r>=0;r--){
+      const cell=document.createElement('div');
+      cell.className='cell'+(grid[r][c]===RED?' red':grid[r][c]===YELLOW?' yellow':'');
+      if(over && grid[r][c] && isWinCell(r,c)) cell.classList.add('win');
+      col.appendChild(cell);
+    }
+    const hint=document.createElement('div');
+    hint.className='hint';
+    col.appendChild(hint);
+    col.addEventListener('click',()=>drop(c));
+    col.addEventListener('mousemove',()=>showHint(c));
+    col.addEventListener('mouseleave',()=>clearHint(c));
+    col.addEventListener('mousedown',()=>showHint(c));
+    col.addEventListener('mouseup',()=>clearHint(c));
+    colsEl.appendChild(col);
+  }
+}
+
+function drop(c){
+  if(over) return;
+  for(let r=ROWS-1;r>=0;r--){
+    if(grid[r][c]===0){
+      grid[r][c]=turn;
+      if(checkWin(r,c)){ over=true; showWin(turn); }
+      else if(grid.every(row=>row.every(v=>v))){ over=true; showWin(0); }
+      else turn=turn===RED?YELLOW:RED;
+      updateTurn(); render();
+      colsEl.children[c].children[ROWS-1-r].classList.add('drop');
+      if(!over&&mode==='cpu'&&turn===YELLOW) setTimeout(aiMove,thinkDelay());
+      return;
+    }
+  }
+}
+
+function checkWin(r,c){
+  const v=grid[r][c];
+  const dirs=[[0,1],[1,0],[1,1],[1,-1]];
+  for(const [dr,dc] of dirs){
+    let count=1;
+    for(const s of [1,-1]){
+      let rr=r+dr*s, cc=c+dc*s;
+      while(rr>=0&&rr<ROWS&&cc>=0&&cc<COLS&&grid[rr][cc]===v){
+        count++; rr+=dr*s; cc+=dc*s;
+      }
+    }
+    if(count>=4) return true;
+  }
+  return false;
+}
+
+function isWinCell(r,c){
+  const v=grid[r][c];
+  const dirs=[[0,1],[1,0],[1,1],[1,-1]];
+  for(const [dr,dc] of dirs){
+    let count=1;
+    for(const s of [1,-1]){
+      let rr=r+dr*s, cc=c+dc*s;
+      while(rr>=0&&rr<ROWS&&cc>=0&&cc<COLS&&grid[rr][cc]===v){count++; rr+=dr*s; cc+=dc*s;}
+    }
+    if(count>=4) return true;
+  }
+  return false;
+}
+
+function showHint(c){
+  if(over) return;
+  const col=colsEl.children[c];
+  const hint=col.querySelector('.hint');
+  hint.className='hint show '+(turn===RED?'red':'yellow');
+}
+function clearHint(c){
+  const col=colsEl.children[c];
+  const hint=col.querySelector('.hint');
+  hint.className='hint';
+}
+function updateTurn(){
+  turnName.textContent = names[turn];
+  turnName.className = turn===RED?'turnName red':'turnName yellow';
+  dotRed.classList.toggle('dim',turn!==RED);
+  dotY.classList.toggle('dim',turn!==YELLOW);
+}
+
+function showWin(w){
+  const t=document.getElementById('winTitle');
+  const s=document.getElementById('winSub');
+  if(w===0){ t.innerHTML='<svg class="icon-flag" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4"/><path d="M4 4c2-2 3 1 6 1s4-1 6 0c1 1 0 1 4 1v7c-4 0-3-1-6-1s-4 1-6 0z"/></svg> Empate!'; s.textContent='Ninguém conseguiu ligar 4.'; }
+  else{
+    const who=names[w];
+    const icon=w===RED
+      ? '<circle cx="12" cy="12" r="9" fill="#ff4757" stroke="none"/>'
+      : '<circle cx="12" cy="12" r="9" fill="#f5a623" stroke="none"/>';
+    t.innerHTML='<svg class="icon-trophy" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 4h1"/><path d="M17 6h3a2 2 0 0 1-2 4h-1"/></svg> <svg width="16" height="16" viewBox="0 0 24 24">'+icon+'</svg> '+who+' venceu!';
+    s.textContent='Quatro em linha!';
+  }
+  document.getElementById('winOverlay').classList.remove('hidden');
+}
+
+function lowestEmpty(c){ for(let r=ROWS-1;r>=0;r--) if(grid[r][c]===0) return r; return -1; }
+function thinkDelay(){ return (Math.random()<0.5?500:1500)+Math.floor(Math.random()*500); }
+function aiMove(){
+  if(over||turn!==YELLOW) return;
+  const col=bestMove(YELLOW);
+  if(col>=0) drop(col);
+}
+function scoreCell(r,c,p){
+  const dirs=[[0,1],[1,0],[1,1],[1,-1]];
+  let total=0;
+  for(const [dr,dc] of dirs){
+    let run=1;
+    for(const s of [1,-1]){
+      let rr=r+dr*s, cc=c+dc*s;
+      while(rr>=0&&rr<ROWS&&cc>=0&&cc<COLS&&grid[rr][cc]===p){run++; rr+=dr*s; cc+=dc*s;}
+    }
+    total+=run*run;
+  }
+  return total;
+}
+function bestMove(p){
+  const opp=p===RED?YELLOW:RED;
+  const prefs=[3,2,4,1,5,0,6];
+  for(const c of prefs){ const r=lowestEmpty(c); if(r<0)continue; grid[r][c]=p; const w=checkWin(r,c); grid[r][c]=0; if(w)return c; }
+  for(const c of prefs){ const r=lowestEmpty(c); if(r<0)continue; grid[r][c]=opp; const w=checkWin(r,c); grid[r][c]=0; if(w)return c; }
+  let best=-1, bestScore=-1;
+  for(const c of prefs){
+    const r=lowestEmpty(c); if(r<0)continue;
+    grid[r][c]=p;
+    const sc=scoreCell(r,c,p);
+    grid[r][c]=0;
+    if(sc>bestScore){bestScore=sc; best=c;}
+  }
+  return best;
+}
+
+let selected='cpu';
+function selectMode(m){
+  selected=m;
+  document.getElementById('btn2p').classList.toggle('active',m==='2p');
+  document.getElementById('btnCpu').classList.toggle('active',m==='cpu');
+}
+function setMode(m){
+  mode=m;
+  if(m==='2p'){
+    names[RED]='Vermelho';
+    names[YELLOW]='Amarelo';
+  }else{
+    names[RED]='Você';
+    names[YELLOW]='Computador';
+  }
+  updateTurn();
+}
+function showMode(){ selectMode(selected); document.getElementById('modeOverlay').classList.remove('hidden'); }
+function startGame(){ setMode(selected); document.getElementById('modeOverlay').classList.add('hidden'); init(); }
+
+document.getElementById('btnCpu').addEventListener('click',()=>selectMode('cpu'));
+document.getElementById('btn2p').addEventListener('click',()=>selectMode('2p'));
+document.getElementById('btnStart').addEventListener('click',startGame);
+document.getElementById('btnReset').addEventListener('click',showMode);
+document.getElementById('btnAgain').addEventListener('click',init);
+document.getElementById('btnMenu').addEventListener('click',()=>location.href='index.html');
+document.getElementById('btnMenu2').addEventListener('click',()=>location.href='index.html');
+
+init();
+showMode();
+</script>
+</body>
+</html>

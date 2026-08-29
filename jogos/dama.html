@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark" data-accent="green">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dama</title>
+<link rel="stylesheet" href="jogos.css">
+<style>
+  :root { --light: #e8ecf4; --dark: #3a4256; }
+  :root[data-theme="dark"] { --light: #d6dbe6; --dark: #46536e; }
+  .turnbar{display:flex; align-items:center; justify-content:center; gap:10px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px}
+  .chip{width:18px; height:18px; border-radius:50%; transition:all .2s}
+  .chip.red{background:#ff6b6b; box-shadow:0 0 12px #ff6b6b}
+  .chip.black{background:#232323; box-shadow:0 0 12px #aaa}
+  .chip.dim{opacity:.25; box-shadow:none}
+  .board{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px;
+    display:grid; grid-template-columns:repeat(8,1fr); aspect-ratio:1/1;
+  }
+  .sq{position:relative; display:flex; align-items:center; justify-content:center; cursor:pointer; aspect-ratio:1/1; min-width:0; min-height:0}
+  .sq.light{background:var(--light)}
+  .sq.dark{background:var(--dark)}
+  .sq.sel{box-shadow:inset 0 0 0 3px var(--acc)}
+  .sq.hint::after,.sq.cap::after{content:''; position:absolute; width:30%; height:30%; border-radius:50%}
+  .sq.hint::after{background:color-mix(in srgb, var(--acc) 50%, transparent)}
+  .sq.cap::after{background:color-mix(in srgb, var(--bad) 60%, transparent)}
+  .piece{
+    width:78%; height:78%; border-radius:50%; position:relative; transition:transform .15s;
+  }
+  .piece.red{background:radial-gradient(circle at 35% 30%,#ff8a8a,#d63031); box-shadow:0 3px 6px rgba(0,0,0,.4)}
+  .piece.black{background:radial-gradient(circle at 35% 30%,#555,#111); box-shadow:0 3px 6px rgba(0,0,0,.6)}
+  .piece.king::after{
+    content:'♛'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:70%; color:#f5a623;
+  }
+  .game{display:flex; gap:10px; align-items:stretch}
+  .board{flex:1; min-width:0}
+  .captured{display:flex; flex-direction:column; gap:10px; flex:0 0 46px}
+  .cap{flex:1; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:6px; display:flex; flex-wrap:wrap; align-content:flex-start; gap:4px; min-height:46px}
+  .cap .mini{width:14px; height:14px; border-radius:50%}
+  .cap .mini.red{background:#d63031; box-shadow:0 2px 4px rgba(0,0,0,.4)}
+  .cap .mini.black{background:#111; box-shadow:0 2px 4px rgba(0,0,0,.6)}
+  .colorpick { margin-top: 12px; }
+  .err{color:var(--bad); font-size:13px; margin-top:10px}
+  .theme-btn-sm {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    cursor: pointer; transition: border-color .15s, background .15s;
+  }
+  .theme-btn-sm:hover { border-color: var(--acc); background: var(--acc-soft); }
+  @media (max-width:420px){ .app{max-width:340px} }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <h1>Dama</h1>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="theme-btn-sm" id="themeBtn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Voltar</a>
+    </div>
+  </header>
+
+  <div class="turnbar">
+    <span>Vez de:</span>
+    <div class="chip red" id="chipRed"></div>
+    <span id="turnName">Vermelho</span>
+    <div class="chip black" id="chipBlack"></div>
+  </div>
+
+  <div class="game">
+    <div class="board" id="board"></div>
+    <div class="captured">
+      <div class="cap" id="capRed" title="Peças do preto capturadas"></div>
+      <div class="cap" id="capBlack" title="Peças do vermelho capturadas"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="ghost" id="btnNew">Novo Jogo</button>
+    <button class="ghost" id="btnReset">Reiniciar</button>
+    <button class="primary" id="btnMenu">Menu</button>
+  </div>
+</div>
+
+<div class="overlay" id="modeOverlay">
+  <div class="modal">
+    <h2>Dama</h2>
+    <p class="sub">Escolha o modo de jogo</p>
+    <div class="modebtns">
+      <button id="btnCpu">vs Computador</button>
+      <button id="btn2p">2 Jogadores</button>
+    </div>
+    <div class="colorpick hidden" id="colorpick">
+      <p class="sub">Suas peças:</p>
+      <div class="modebtns">
+        <button id="btnRed">Vermelhas</button>
+        <button id="btnBlack">Pretas</button>
+      </div>
+      <p class="err hidden" id="modeErr">Escolha a cor da peça</p>
+    </div>
+    <button class="primary" id="btnStart">Iniciar</button>
+  </div>
+</div>
+
+<div class="overlay hidden" id="winOverlay">
+  <div class="modal">
+    <h2 id="winTitle"></h2>
+    <p class="sub">Fim de jogo</p>
+    <button class="primary" id="btnAgain">Jogar Novamente</button>
+    <button class="ghost" id="btnMenu2">Menu</button>
+  </div>
+</div>
+
+<script src="jogos.js"></script>
+<script>
+const N=8;
+const RED='r', BLACK='b';
+let board, turn, selected, legalMoves, over;
+let mode='cpu', selectedMode='cpu', humanColor=null, cpuColor=BLACK, colorChosen=false;
+let names={[RED]:'Vermelho',[BLACK]:'Preto'};
+let redCap=[], blackCap=[];
+
+function init(){
+  board=Array.from({length:N},()=>Array(N).fill(null));
+  for(let r=0;r<3;r++)
+    for(let c=0;c<N;c++)
+      if((r+c)%2===1) board[r][c]={p:'b',king:false};
+  for(let r=5;r<8;r++)
+    for(let c=0;c<N;c++)
+      if((r+c)%2===1) board[r][c]={p:'r',king:false};
+  turn=RED; selected=null; legalMoves=[]; over=false;
+  redCap=[]; blackCap=[];
+  updateTurn();
+  render();
+  renderCaptured();
+  document.getElementById('winOverlay').classList.add('hidden');
+  if(mode==='cpu'&&turn===cpuColor) setTimeout(cpuMove,thinkDelay());
+}
+
+function render(){
+  const b=document.getElementById('board');
+  b.innerHTML='';
+  for(let r=0;r<N;r++){
+    for(let c=0;c<N;c++){
+      const sq=document.createElement('div');
+      sq.className='sq '+( (r+c)%2===1 ? 'dark':'light' );
+      const i=r*N+c;
+      if(selected===i) sq.classList.add('sel');
+      const mv=legalMoves.find(m=>m.to===i);
+      if(mv) sq.classList.add(mv.capture?'cap':'hint');
+      const pc=board[r][c];
+      if(pc){
+        const p=document.createElement('div');
+        p.className='piece '+(pc.p===RED?'red':'black')+(pc.king?' king':'');
+        sq.appendChild(p);
+      }
+      sq.addEventListener('click',()=>click(i));
+      b.appendChild(sq);
+    }
+  }
+}
+
+function allMoves(p){
+  const res=[];
+  for(let r=0;r<N;r++)
+    for(let c=0;c<N;c++)
+      if(board[r][c] && board[r][c].p===p){
+        const ms=getMoves(r,c);
+        if(ms.length) res.push({from:r*N+c,moves:ms});
+      }
+  return res;
+}
+
+function getMoves(r,c){
+  const pc=board[r][c];
+  const dirs=pc.king?[[-1,-1],[-1,1],[1,-1],[1,1]]:(pc.p===RED?[[-1,-1],[-1,1]]:[[1,-1],[1,1]]);
+  const caps=[], simple=[];
+  for(const [dr,dc] of dirs){
+    let rr=r+dr, cc=c+dc;
+    if(rr<0||rr>=N||cc<0||cc>=N) continue;
+    if(!board[rr][cc]) simple.push({to:rr*N+cc,capture:false});
+    else if(board[rr][cc].p!==pc.p){
+      const rr2=rr+dr, cc2=cc+dc;
+      if(rr2>=0&&rr2<N&&cc2>=0&&cc2<N&&!board[rr2][cc2])
+        caps.push({to:rr2*N+cc2,capture:true,cap:rr*N+cc});
+    }
+  }
+  if(pc.king){
+    const kingCaps=[], kingSimple=[];
+    for(const [dr,dc] of dirs){
+      let rr=r+dr, cc=c+dc;
+      while(rr>=0&&rr<N&&cc>=0&&cc<N){
+        if(!board[rr][cc]){ kingSimple.push({to:rr*N+cc,capture:false}); rr+=dr; cc+=dc; }
+        else if(board[rr][cc].p!==pc.p){
+          const rr2=rr+dr, cc2=cc+dc;
+          while(rr2>=0&&rr2<N&&cc2>=0&&cc2<N&&!board[rr2][cc2]){
+            kingCaps.push({to:rr2*N+cc2,capture:true,cap:rr*N+cc}); rr2+=dr; cc2+=dc;
+          }
+          break;
+        }
+        else break;
+      }
+    }
+    return kingCaps.length?kingCaps:(kingSimple.length?kingSimple:[]);
+  }
+  return caps.length?caps:simple;
+}
+
+function click(i){
+  const r=Math.floor(i/N), c=i%N;
+  const pc=board[r][c];
+  if(!over && pc && pc.p===turn){
+    selected=i;
+    legalMoves=getMoves(r,c);
+    render();
+    return;
+  }
+  if(selected!==null){
+    const mv=legalMoves.find(m=>m.to===i);
+    if(mv){ doMove(mv); return; }
+  }
+  selected=null; legalMoves=[];
+  render();
+}
+
+function doMove(mv){
+  const sr=Math.floor(selected/N), sc=selected%N;
+  const tr=Math.floor(mv.to/N), tc=mv.to%N;
+  const pc=board[sr][sc];
+  board[tr][tc]=pc;
+  board[sr][sc]=null;
+  if(mv.capture){
+    const cr=Math.floor(mv.cap/N), cc=mv.cap%N;
+    const eaten=board[cr][cc];
+    if(eaten) (eaten.p===RED?blackCap:redCap).push(eaten.p);
+    board[cr][cc]=null;
+    if((pc.p===RED&&tr===0)||(pc.p===BLACK&&tr===N-1)) pc.king=true;
+    renderCaptured();
+    const cont=getMoves(tr,tc).filter(m=>m.capture);
+    if(cont.length){ selected=mv.to; legalMoves=cont; render(); if(mode==='cpu'&&turn===cpuColor) setTimeout(cpuMove,thinkDelay()); return; }
+  }
+  if((pc.p===RED&&tr===0)||(pc.p===BLACK&&tr===N-1)) pc.king=true;
+  selected=null; legalMoves=[];
+  turn=turn===RED?BLACK:RED;
+  updateTurn();
+  checkEnd();
+  render();
+  if(!over&&mode==='cpu'&&turn===cpuColor) setTimeout(cpuMove,thinkDelay());
+}
+
+function checkEnd(){
+  const rHas=allMoves(RED).length, bHas=allMoves(BLACK).length;
+  const redPieces=board.flat().filter(p=>p&&p.p===RED).length;
+  const blackPieces=board.flat().filter(p=>p&&p.p===BLACK).length;
+  let winner=null;
+  if(redPieces===0||rHas===0) winner=RED;
+  else if(blackPieces===0||bHas===0) winner=BLACK;
+  if(winner){ over=true; showWin(winner); }
+}
+
+function updateTurn(){
+  document.getElementById('turnName').textContent=names[turn];
+  document.getElementById('turnName').style.color=turn===RED?'#ff6b6b':'#e8ecf4';
+  document.getElementById('chipRed').classList.toggle('dim',turn!==RED);
+  document.getElementById('chipBlack').classList.toggle('dim',turn!==BLACK);
+}
+
+function showWin(w){
+  const who=names[w];
+  const icon=w===RED
+    ? '<circle cx="12" cy="12" r="9" fill="#ff6b6b" stroke="none"/>'
+    : '<circle cx="12" cy="12" r="9" fill="#232323" stroke="none"/>';
+  document.getElementById('winTitle').innerHTML='<svg class="icon-trophy" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 4h1"/><path d="M17 6h3a2 2 0 0 1-2 4h-1"/></svg> <svg width="16" height="16" viewBox="0 0 24 24">'+icon+'</svg> '+who+' venceu!';
+  document.getElementById('winOverlay').classList.remove('hidden');
+}
+
+function renderCaptured(){
+  const cr=document.getElementById('capRed');
+  const cb=document.getElementById('capBlack');
+  cr.innerHTML=''; cb.innerHTML='';
+  redCap.forEach(p=>{ const s=document.createElement('div'); s.className='mini '+(p===RED?'red':'black'); cr.appendChild(s); });
+  blackCap.forEach(p=>{ const s=document.createElement('div'); s.className='mini '+(p===RED?'red':'black'); cb.appendChild(s); });
+}
+function thinkDelay(){ return (Math.random()<0.5?500:1500)+Math.floor(Math.random()*500); }
+function cpuMove(){
+  if(over||turn!==cpuColor) return;
+  const moves=allMoves(cpuColor);
+  if(!moves.length) return;
+  let best=[], bestScore=-Infinity;
+  for(const grp of moves){
+    for(const m of grp.moves){
+      let sc=Math.random()*10;
+      if(m.capture) sc+=100;
+      if(sc>bestScore){bestScore=sc; best=[{from:grp.from,m}];}
+      else if(sc===bestScore) best.push({from:grp.from,m});
+    }
+  }
+  const pick=best[Math.floor(Math.random()*best.length)];
+  selected=pick.from;
+  legalMoves=getMoves(Math.floor(pick.from/N),pick.from%N).filter(x=>x.to===pick.m.to);
+  doMove(pick.m);
+}
+function selectMode(m){
+  selectedMode=m;
+  document.getElementById('btn2p').classList.toggle('active',m==='2p');
+  document.getElementById('btnCpu').classList.toggle('active',m==='cpu');
+  document.getElementById('colorpick').classList.toggle('hidden',m!=='cpu');
+}
+function pickColor(col){
+  humanColor=col; cpuColor=col===RED?BLACK:RED; colorChosen=true;
+  document.getElementById('btnRed').classList.toggle('active',col===RED);
+  document.getElementById('btnBlack').classList.toggle('active',col===BLACK);
+  document.getElementById('modeErr').classList.add('hidden');
+}
+function setMode(m){
+  mode=m;
+  if(m==='2p'){ names[RED]='Vermelho'; names[BLACK]='Preto'; }
+  else{ const cpu=humanColor===RED?BLACK:RED; names[humanColor]='Você'; names[cpu]='Computador'; }
+  updateTurn();
+}
+function showMode(){
+  colorChosen=false; humanColor=null; cpuColor=BLACK;
+  document.getElementById('btnRed').classList.remove('active');
+  document.getElementById('btnBlack').classList.remove('active');
+  document.getElementById('modeErr').classList.add('hidden');
+  selectMode(selectedMode);
+  document.getElementById('modeOverlay').classList.remove('hidden');
+}
+function startGame(){
+  if(selectedMode==='cpu'&&!colorChosen){ document.getElementById('modeErr').classList.remove('hidden'); return; }
+  setMode(selectedMode); document.getElementById('modeOverlay').classList.add('hidden'); init();
+}
+
+document.getElementById('btnCpu').addEventListener('click',()=>selectMode('cpu'));
+document.getElementById('btn2p').addEventListener('click',()=>selectMode('2p'));
+document.getElementById('btnRed').addEventListener('click',()=>pickColor(RED));
+document.getElementById('btnBlack').addEventListener('click',()=>pickColor(BLACK));
+document.getElementById('btnStart').addEventListener('click',startGame);
+document.getElementById('btnNew').addEventListener('click',showMode);
+document.getElementById('btnReset').addEventListener('click',init);
+document.getElementById('btnAgain').addEventListener('click',init);
+document.getElementById('btnMenu').addEventListener('click',()=>location.href='index.html');
+document.getElementById('btnMenu2').addEventListener('click',()=>location.href='index.html');
+
+init();
+showMode();
+</script>
+</body>
+</html>
