@@ -157,6 +157,8 @@ button.gold { background: linear-gradient(135deg, var(--game), var(--game-strong
 
 .err { color: var(--bad); font-size: 13px; margin-top: 10px; }
 
+.theme-btn-sm, .theme-btn { padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+
 @media (max-width: 520px) {
   .app { max-width: 340px; }
 }
