@@ -9,14 +9,18 @@
 <body>
 
 <header class="topbar">
-  <div class="brand">
-    <div class="logo" aria-hidden="true">G</div>
-    <span class="title">GAMEX</span>
+  <div class="topbar-left">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">G</div>
+      <span class="title">GAMEX</span>
+    </div>
+    <nav class="topbar-nav" aria-label="Navegação">
+      <a class="icon-btn" href="../index.html">← Portfólio</a>
+      <a class="icon-btn" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> <span data-i18n="btnHome">Início</span></a>
+      <a class="icon-btn" href="sus.html">SUS</a>
+    </nav>
   </div>
   <div class="topbar-actions">
-    <a class="icon-btn" href="../index.html">← Portfólio</a>
-    <a class="icon-btn" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> <span data-i18n="btnHome">Início</span></a>
-    <a class="icon-btn" href="sus.html">SUS</a>
     <button id="langBtn" class="icon-btn" type="button" aria-label="Alternar idioma"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span data-i18n="btnLang">EN</span></button>
     <button id="themeBtn" class="icon-btn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
   </div>
@@ -33,11 +37,6 @@
     <div id="dimensions"></div>
 
     <div class="actions">
-      <div class="scale-legend" role="group" aria-label="Escala de resposta">
-        <span><b>1</b><span data-i18n="scaleMin">Discordo totalmente</span></span>
-        <span><b>3</b><span data-i18n="scaleMid">Neutro</span></span>
-        <span><b>5</b><span data-i18n="scaleMax">Concordo totalmente</span></span>
-      </div>
       <div class="required-hint" id="requiredHint" data-i18n="requiredHint" hidden>Responda todas as 27 questões para calcular.</div>
       <button type="submit" class="calculate" data-i18n="btnCalc">Calcular Resultado</button>
       <button type="button" class="btn-reset" data-i18n="btnReset" hidden>Limpar respostas</button>
@@ -183,6 +182,16 @@ function buildForm() {
     heading.appendChild(sub);
     header.append(num, heading);
     section.appendChild(header);
+
+    const legend = document.createElement("div");
+    legend.className = "scale-legend";
+    legend.setAttribute("role", "group");
+    legend.setAttribute("aria-label", "Escala de resposta");
+    legend.innerHTML =
+      '<span><b>1</b><span data-i18n="scaleMin">' + scale.labels.pt[0] + '</span></span>' +
+      '<span><b>3</b><span data-i18n="scaleMid">' + scale.labels.pt[2] + '</span></span>' +
+      '<span><b>5</b><span data-i18n="scaleMax">' + scale.labels.pt[4] + '</span></span>';
+    section.appendChild(legend);
 
     qByDim[dim.id].forEach(q => {
       const div = document.createElement("div");
