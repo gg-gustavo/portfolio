@@ -1,24 +1,29 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-accent="teal">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GAMEX — Escala de Experiência Gamificada</title>
+<title>GAMEX · Escala de Experiência Gamificada</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230d9488'/%3E%3Ctext x='50' y='72' font-size='64' font-weight='800' font-family='sans-serif' text-anchor='middle' fill='white'%3EG%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="tcc.css">
 </head>
 <body>
 
 <header class="topbar">
-  <div class="brand">
-    <div class="logo" aria-hidden="true">G</div>
-    <span class="title">GAMEX</span>
+  <div class="topbar-left">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">G</div>
+      <span class="title">GAMEX</span>
+    </div>
+    <nav class="topbar-nav" aria-label="Navegação">
+      <a class="icon-btn" href="../index.html">← Portfólio</a>
+      <a class="icon-btn" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> <span data-i18n="btnHome">Início</span></a>
+      <a class="icon-btn" href="sus.html">SUS</a>
+    </nav>
   </div>
   <div class="topbar-actions">
-    <a class="icon-btn" href="../index.html">← Portfólio</a>
-    <a class="icon-btn" href="index.html">🏠 <span data-i18n="btnHome">Início</span></a>
-    <a class="icon-btn" href="sus.html">SUS</a>
-    <button id="langBtn" class="icon-btn" type="button" aria-label="Alternar idioma">🌐 <span data-i18n="btnLang">EN</span></button>
-    <button id="themeBtn" class="icon-btn" type="button" aria-label="Alternar tema">🌙 <span id="themeLabel">Dark</span></button>
+    <button id="langBtn" class="icon-btn" type="button" aria-label="Alternar idioma"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span data-i18n="btnLang">EN</span></button>
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
   </div>
 </header>
 
@@ -48,12 +53,12 @@
   </div>
 
   <section id="result" aria-live="polite">
-    <h2>📊 <span data-i18n="resTitle">Seu Resultado</span></h2>
+    <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> <span data-i18n="resTitle">Seu Resultado</span></h2>
     <p class="sub" data-i18n="resSub">Pontuação média (1 a 5) em cada dimensão da experiência gamificada.</p>
     <div class="legend">
-      <span><i class="bar-color-ok"></i><span data-i18n="resHigh">3.5 – 5.0 · Alta</span></span>
-      <span><i class="bar-color-mid"></i><span data-i18n="resMid">2.5 – 3.4 · Moderada</span></span>
-      <span><i class="bar-color-low"></i><span data-i18n="resLow">1.0 – 2.4 · Baixa</span></span>
+      <span><i class="bar-color-ok"></i><span data-i18n="resHigh">3.5 a 5.0 · Alta</span></span>
+      <span><i class="bar-color-mid"></i><span data-i18n="resMid">2.5 a 3.4 · Moderada</span></span>
+      <span><i class="bar-color-low"></i><span data-i18n="resLow">1.0 a 2.4 · Baixa</span></span>
     </div>
     <div class="card-grid" id="cards"></div>
     <div class="summary">
@@ -62,7 +67,7 @@
     </div>
   </section>
 
-  <footer>GAMEX · Gameful Experience Scale — Eppmann, Bekk e Klein (2018) · Material didático para avaliação de experiência gamificada. · <a href="index.html#referencias" style="color:var(--accent)">Referências</a></footer>
+  <footer>GAMEX · Gameful Experience Scale · Eppmann, Bekk e Klein (2018) · Material didático para avaliação de experiência gamificada. · <a href="index.html#referencias" style="color:var(--acc)">Referências</a></footer>
 </main>
 
 <script src="tcc.js"></script>
@@ -119,6 +124,7 @@ const i18n = {
     btnLang: "EN", theme: "Dark", btnCalc: "Calcular Resultado", btnReset: "Limpar respostas",
     btnHome: "Início",
     requiredHint: "Responda todas as 27 questões para calcular.",
+    scaleMin: "Discordo totalmente", scaleMid: "Neutro", scaleMax: "Concordo totalmente",
     heroTitle: "O que é a GAMEX?",
     heroDesc: "A <strong>GAMEX</strong> (Gameful Experience Scale) é uma escala validada que mede a experiência gamificada do usuário ao interagir com um sistema, avaliando a intensidade da experiência em <strong>6 dimensões</strong> por meio de <strong>27 questões</strong> respondidas em uma escala Likert de 1 a 5.",
     resTitle: "Seu Resultado",
@@ -134,6 +140,7 @@ const i18n = {
     btnLang: "PT", theme: "Dark", btnCalc: "Calculate Result", btnReset: "Clear answers",
     btnHome: "Home",
     requiredHint: "Answer all 27 questions to calculate.",
+    scaleMin: "Strongly Disagree", scaleMid: "Neutral", scaleMax: "Strongly Agree",
     heroTitle: "What is the GAMEX?",
     heroDesc: "The <strong>GAMEX</strong> (Gameful Experience Scale) is a validated scale that measures the user's gameful experience while interacting with a system, assessing the intensity of the experience across <strong>6 dimensions</strong> through <strong>27 questions</strong> answered on a 1-to-5 Likert scale.",
     resTitle: "Your Result",
@@ -177,6 +184,16 @@ function buildForm() {
     header.append(num, heading);
     section.appendChild(header);
 
+    const legend = document.createElement("div");
+    legend.className = "scale-legend";
+    legend.setAttribute("role", "group");
+    legend.setAttribute("aria-label", "Escala de resposta");
+    legend.innerHTML =
+      '<span><b>1</b><span data-i18n="scaleMin">' + scale.labels.pt[0] + '</span></span>' +
+      '<span><b>3</b><span data-i18n="scaleMid">' + scale.labels.pt[2] + '</span></span>' +
+      '<span><b>5</b><span data-i18n="scaleMax">' + scale.labels.pt[4] + '</span></span>';
+    section.appendChild(legend);
+
     qByDim[dim.id].forEach(q => {
       const div = document.createElement("div");
       div.className = "question";
@@ -200,28 +217,22 @@ function buildForm() {
         input.value = v + 1;
         input.id = "q" + q.id + "_" + (v + 1);
         input.setAttribute("aria-label", (v + 1) + " — " + desc);
-        const lab = document.createElement("label");
-        lab.htmlFor = input.id;
-        const val = document.createElement("span");
-        val.className = "val";
-        val.textContent = v + 1;
-        const descEl = document.createElement("span");
-        descEl.textContent = desc;
-        lab.append(val, descEl);
-        rating.appendChild(input);
-        rating.appendChild(lab);
-        input.addEventListener("change", () => {
-          updateProgress();
-          const resetBtn = document.querySelector(".btn-reset");
-          if (resetBtn) resetBtn.hidden = false;
-        });
+      const lab = document.createElement("label");
+      lab.htmlFor = input.id;
+      const val = document.createElement("span");
+      val.className = "val";
+      val.textContent = v + 1;
+      lab.appendChild(val);
+      rating.appendChild(input);
+      rating.appendChild(lab);
+      input.addEventListener("change", () => {
+        updateProgress();
+        const resetBtn = document.querySelector(".btn-reset");
+        if (resetBtn) resetBtn.hidden = false;
       });
-      const end = document.createElement("span");
-      end.className = "scale-end";
-      end.textContent = "1 — Discordo\n5 — Concordo".split("\n")[0];
-      rating.appendChild(end);
+    });
 
-      div.append(text, rating);
+    div.append(text, rating);
       section.appendChild(div);
     });
 
@@ -338,10 +349,6 @@ function applyLanguage() {
 
   gamexData.questions.forEach(q => {
     document.querySelectorAll(".q-text .q-label")[q.id - 1].textContent = q[lang];
-  });
-
-  document.querySelectorAll(".rating .scale-end").forEach(el => {
-    el.textContent = "1 — " + scale.labels[lang][0] + " | 5 — " + scale.labels[lang][4];
   });
 
   if (document.getElementById("result").classList.contains("visible")) {
