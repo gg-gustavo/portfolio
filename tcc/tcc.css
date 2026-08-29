@@ -57,9 +57,9 @@ body {
   line-height: 1.7;
   transition: background .3s, color .3s;
 }
-a { color: var(--accent); text-decoration: none; }
+a { color: var(--acc); text-decoration: none; }
 a:hover { text-decoration: underline; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
 
 header.topbar {
   position: sticky;
@@ -79,7 +79,7 @@ header.topbar {
 .brand .logo {
   display: grid; place-items: center;
   width: 34px; height: 34px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  background: linear-gradient(135deg, var(--acc), var(--acc-strong));
   color: #fff; border-radius: 10px; font-size: .95rem;
 }
 .topbar-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
@@ -97,7 +97,7 @@ header.topbar {
   text-decoration: none;
   transition: background .2s, transform .1s, border-color .2s;
 }
-.icon-btn:hover { background: var(--accent-soft); border-color: var(--accent); text-decoration: none; }
+.icon-btn:hover { background: var(--acc-soft); border-color: var(--acc); text-decoration: none; }
 .icon-btn:active { transform: scale(.96); }
 
 nav.jump {
@@ -110,7 +110,7 @@ nav.jump a {
   font-size: .82rem; font-weight: 600; color: var(--text-soft);
   text-decoration: none;
 }
-nav.jump a:hover { border-color: var(--accent); color: var(--accent); }
+nav.jump a:hover { border-color: var(--acc); color: var(--acc); }
 
 main { max-width: 860px; margin: 0 auto; padding: 28px 20px 80px; }
 
@@ -118,14 +118,14 @@ main { max-width: 860px; margin: 0 auto; padding: 28px 20px 80px; }
   text-align: center;
   padding: 44px 24px;
   border-radius: var(--radius);
-  background: linear-gradient(160deg, var(--accent-soft), var(--surface) 70%);
+  background: linear-gradient(160deg, var(--acc-soft), var(--surface) 70%);
   border: 1px solid var(--border);
   margin-bottom: 36px;
 }
 .hero h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin-bottom: 10px; letter-spacing: -.02em; }
-.hero h1 span.g { color: var(--accent); }
+.hero h1 span.g { color: var(--acc); }
 .hero h1 span.p { color: var(--accent2); }
-.hero h1 span { color: var(--accent); }
+.hero h1 span { color: var(--acc); }
 .hero p { color: var(--text-soft); max-width: 640px; margin: 0 auto; }
 .dim-chips {
   display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
@@ -151,7 +151,7 @@ section.block > header, section.dimension > header { display: flex; align-items:
   display: grid; place-items: center;
   width: 40px; height: 40px; flex: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  background: linear-gradient(135deg, var(--acc), var(--acc-strong));
   color: #fff;
   font-weight: 800; font-size: 1.05rem;
 }
@@ -260,17 +260,11 @@ ol.refs i { color: var(--text); }
 
 .scale-legend {
   display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
-  width: min(560px, 100%);
-  margin: 0 0 18px;
-  padding: 12px 18px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
+  margin: 0 0 16px;
   font-size: .82rem; font-weight: 600; color: var(--text-soft);
 }
 .scale-legend span { display: inline-flex; align-items: baseline; gap: 6px; }
-.scale-legend b { color: var(--acc); font-size: 1.05rem; font-weight: 800; }
+.scale-legend b { color: var(--acc); font-size: 1rem; font-weight: 800; }
 
 .progress-wrap {
   position: sticky; bottom: 14px; z-index: 40;
@@ -349,7 +343,7 @@ button.calculate:disabled { filter: grayscale(.6) opacity(.55); cursor: not-allo
   display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
   padding: 14px 16px;
   border-radius: 12px;
-  background: var(--accent-soft);
+  background: var(--acc-soft);
   border: 1px solid var(--border);
   font-size: .95rem;
 }
@@ -361,7 +355,7 @@ button.calculate:disabled { filter: grayscale(.6) opacity(.55); cursor: not-allo
 .bar-color-low { background: var(--bad); }
 
 footer { text-align: center; color: var(--text-soft); font-size: .8rem; margin-top: 40px; }
-footer a { color: var(--accent); text-decoration: none; }
+footer a { color: var(--acc); text-decoration: none; }
 
 @media (max-width: 520px) {
   .rating { grid-template-columns: repeat(5, 1fr); }
