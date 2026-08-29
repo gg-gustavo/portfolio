@@ -63,7 +63,7 @@
   .card{
     width:100%; max-width:80px; aspect-ratio:2/3; border-radius:10px; position:relative; cursor:pointer;
     background:#fff; color:#1a1a1a; padding:5px; font-size:16px; font-weight:700;
-    box-shadow:0 3px 8px rgba(0,0,0,.4); user-select:none; transition:transform .12s;
+    box-shadow:0 3px 8px rgba(0,0,0,.4); user-select:none; -webkit-user-select:none; touch-action:manipulation; transition:transform .12s;
   }
   .card.red{color:var(--bad)}
   .card.sel{transform:translateY(-10px); box-shadow:0 0 0 3px var(--acc)}
@@ -96,8 +96,8 @@
   .pips.p7{grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr 1fr}
   .pips.p7 .pip:nth-child(7){position:absolute; inset:0; display:grid; place-items:center}
   .center{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:1.5em}
-  .hand{display:flex; justify-content:center; gap:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius); padding:16px; min-height:120px}
-  .hand .card{max-width:70px}
+  .hand{display:flex; justify-content:center; gap:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius); padding:16px; min-height:120px; touch-action:manipulation; -webkit-user-select:none; user-select:none}
+  .hand .card{max-width:70px; min-width:52px}
   .cpuhand{display:flex; justify-content:center; gap:10px; padding:10px; min-height:80px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); opacity:0.85}
   .cpuhand .card{max-width:62px; opacity:0.75}
   .cpuhand .tag{font-size:11px; color:var(--text-soft); align-self:center}

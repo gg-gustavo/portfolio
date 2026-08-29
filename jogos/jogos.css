@@ -79,6 +79,11 @@ body {
 }
 img { max-width: 100%; display: block; }
 a { color: var(--acc); text-decoration: none; }
+* { -webkit-tap-highlight-color: transparent; }
+button, .clickable { touch-action: manipulation; }
+button { min-height: 44px; }
+.game-surface { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+[draggable="true"] { touch-action: none; }
 a:hover { text-decoration: underline; }
 :focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
 

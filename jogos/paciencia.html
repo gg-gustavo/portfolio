@@ -73,10 +73,10 @@
       </div>
     </div>
     <div class="moves"><div class="lbl">Movimentos</div><span id="moves">0</span></div>
-    <div class="foundations" id="foundations"></div>
+    <div class="foundations game-surface" id="foundations"></div>
   </div>
 
-  <div class="tableau" id="tableau"></div>
+  <div class="tableau game-surface" id="tableau"></div>
 
   <div class="controls">
     <button class="ghost" id="btnReset">Reiniciar</button>
@@ -95,6 +95,7 @@
 </div>
 
 <script src="jogos.js"></script>
+<script src="input.js"></script>
 <script>
 const SUITS=['♠','♥','♦','♣'];
 const RANK=['','A','2','3','4','5','6','7','8','9','10','J','Q','K'];
@@ -170,6 +171,7 @@ function render(){
   for(let i=0;i<4;i++){
     const slot=document.createElement('div');
     slot.className='slot';
+    slot.dataset.found=i;
     const lbl=document.createElement('div');
     lbl.className='lbl';
     lbl.textContent=SUITS[i];
@@ -186,18 +188,19 @@ function render(){
   for(let c=0;c<7;c++){
     const col=document.createElement('div');
     col.className='col';
+    col.dataset.tab=c;
     const lbl=document.createElement('div');
     lbl.className='lbl';
     lbl.textContent=(c+1);
     col.appendChild(lbl);
     if(tableau[c].length===0){
       const e=emptyCardEl();
-      e.addEventListener('click',()=>clickEmptyCol(c));
+      e.dataset.tabempty=c;
       col.appendChild(e);
     }else{
       tableau[c].forEach((card,idx)=>{
         const el=cardEl(card);
-        if(card.up) el.addEventListener('click',()=>clickTableau(c,idx));
+        el.dataset.c=c; el.dataset.idx=idx;
         col.appendChild(el);
       });
     }
@@ -349,6 +352,56 @@ document.getElementById('btnReset').addEventListener('click',init);
 document.getElementById('btnAgain').addEventListener('click',init);
 document.getElementById('btnMenu').addEventListener('click',()=>location.href='index.html');
 document.getElementById('btnMenu2').addEventListener('click',()=>location.href='index.html');
+
+function pickDesc(px,py){
+  const el=document.elementFromPoint(px,py);
+  if(!el) return null;
+  const s=el.closest('#stockCard'); if(s) return {kind:'stock'};
+  const w=el.closest('#wasteCard'); if(w) return {kind:'waste'};
+  const fo=el.closest('[data-found]'); if(fo) return {kind:'found',i:+fo.dataset.found};
+  const te=el.closest('[data-tabempty]'); if(te) return {kind:'tabempty',c:+te.dataset.tabempty};
+  const ca=el.closest('[data-c]'); if(ca) return {kind:'tab',c:+ca.dataset.c,idx:+ca.dataset.idx};
+  return null;
+}
+
+const tableauEl=document.getElementById('tableau');
+let dragFrom=null;
+bindDrag(tableauEl,{
+  onDown:d=>{
+    dragFrom=null;
+    if(!d||d.kind!=='tab') return;
+    const col=tableau[d.c], card=col[d.idx];
+    if(!card||!card.up) return;
+    for(let i=d.idx;i<col.length-1;i++)
+      if(!(col[i+1].r===col[i].r-1 && col[i+1].s!==col[i].s)) return;
+    dragFrom=d;
+  },
+  onTap:d=>{
+    if(!d) return;
+    if(d.kind==='tab') clickTableau(d.c,d.idx);
+    else if(d.kind==='tabempty') clickEmptyCol(d.c);
+  },
+  onDrop:d=>{
+    if(!dragFrom) return;
+    const src=dragFrom, col=tableau[src.c];
+    const moving=col.splice(src.idx);
+    let placed=false;
+    if(d&&d.kind==='found'&&moving.length===1&&canPlaceFoundation(moving[0],d.i)){
+      foundations[d.i].push(moving[0]); placed=true;
+    }else if(d&&(d.kind==='tab'||d.kind==='tabempty')){
+      const tc=d.c;
+      if(tc!==src.c&&canPlaceTableau(moving[0],tc)){ tableau[tc].push(...moving); placed=true; }
+    }
+    if(!placed) tableau[src.c].splice(src.idx,0,...moving);
+    dragFrom=null;
+    if(placed){ revealTop(src.c); moves++; updateMoves(); checkWin(); }
+    render();
+  },
+  onCancel:()=>{ dragFrom=null; },
+},{
+  pick:(e,px,py)=>pickDesc(px,py),
+  ghost:(d)=>{ if(!d||d.kind!=='tab') return null; const el=tableauEl.querySelector(`[data-c="${d.c}"][data-idx="${d.idx}"]`); return el?el.cloneNode(true):null; },
+});
 
 init();
 </script>

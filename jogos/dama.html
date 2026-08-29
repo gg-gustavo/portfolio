@@ -115,6 +115,7 @@
 </div>
 
 <script src="jogos.js"></script>
+<script src="input.js"></script>
 <script>
 const N=8;
 const RED='r', BLACK='b';
@@ -157,7 +158,6 @@ function render(){
         p.className='piece '+(pc.p===RED?'red':'black')+(pc.king?' king':'');
         sq.appendChild(p);
       }
-      sq.addEventListener('click',()=>click(i));
       b.appendChild(sq);
     }
   }
@@ -344,6 +344,18 @@ document.getElementById('btnReset').addEventListener('click',init);
 document.getElementById('btnAgain').addEventListener('click',init);
 document.getElementById('btnMenu').addEventListener('click',()=>location.href='index.html');
 document.getElementById('btnMenu2').addEventListener('click',()=>location.href='index.html');
+
+const boardEl=document.getElementById('board');
+boardEl.classList.add('game-surface');
+bindDrag(boardEl,{
+  onDown:s=>{ if(s>=0) click(s); },
+  onTap:s=>{ if(s>=0) click(s); },
+  onDrop:s=>{ if(s>=0) click(s); },
+  onCancel:()=>{ if(selected!==null){ selected=null; legalMoves=[]; render(); } },
+},{
+  pick:(e,px,py)=>squareFromPoint(boardEl.getBoundingClientRect(),px,py,8,8,10),
+  ghost:(s)=>{ const sq=boardEl.children[s]; if(!sq) return null; const p=sq.querySelector('.piece'); if(!p) return null; const g=p.cloneNode(true); return g; },
+});
 
 init();
 showMode();

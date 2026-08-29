@@ -13,7 +13,7 @@
   .board {
     display: grid; gap: 8px;
     background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 8px; touch-action: manipulation; margin: 0 auto; width: 100%;
+    padding: 8px; margin: 0 auto; width: 100%;
   }
   .tile {
     border-radius: 12px; display: flex; align-items: center; justify-content: center;
@@ -114,6 +114,7 @@
 </div>
 
 <script src="jogos.js"></script>
+<script src="input.js"></script>
 <script>
 const COLORS = ['#4f8cff','#ff6b6b','#f5a623','#20c997','#a55eea','#ff7b54','#45b7d1','#e056fd',
                 '#7bed9f','#ff9ff3','#70a1ff','#ffa502','#2ed573','#ff4757','#1e90ff'];
@@ -236,6 +237,41 @@ function move(i){
   render();
   checkWin();
 }
+
+function moveDir(dir){
+  const [er,ec]=[Math.floor(empty/cols), empty%cols];
+  const target={
+    'up':   (er+1<rows)? (er+1)*cols+ec : -1,
+    'down': (er-1>=0)  ? (er-1)*cols+ec : -1,
+    'left': (ec+1<cols)? er*cols+ec+1 : -1,
+    'right':(ec-1>=0)  ? er*cols+ec-1 : -1,
+  }[dir];
+  if(target>=0) move(target);
+}
+
+boardEl.classList.add('game-surface');
+let p0=null;
+boardEl.addEventListener('pointerdown',e=>{
+  if(e.button>0) return;
+  p0={x:e.clientX,y:e.clientY};
+});
+boardEl.addEventListener('pointerup',e=>{
+  if(!p0) return;
+  const dir=swipeFrom(p0.x,p0.y,e.clientX,e.clientY,24);
+  p0=null;
+  if(dir){
+    const sup=ev=>{ ev.preventDefault(); ev.stopPropagation(); document.removeEventListener('click',sup,true); };
+    document.addEventListener('click',sup,true);
+    moveDir(dir);
+  }
+});
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('menuOverlay').classList.contains('hidden')===false) return;
+  if(e.key==='ArrowUp'){e.preventDefault();moveDir('up');}
+  else if(e.key==='ArrowDown'){e.preventDefault();moveDir('down');}
+  else if(e.key==='ArrowLeft'){e.preventDefault();moveDir('left');}
+  else if(e.key==='ArrowRight'){e.preventDefault();moveDir('right');}
+});
 
 function checkWin(){
   const won=tiles.every((v,i)=> v===0 ? i===total-1 : v===i+1);
