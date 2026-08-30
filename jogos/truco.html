@@ -34,9 +34,10 @@
   .status{text-align:center; font-size:15px; font-weight:600; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:10px}
   .tablearea{display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:stretch}
   .midcol{flex:1; display:flex; flex-direction:column; gap:10px; min-width:0}
-  .sidehand{display:flex; flex-direction:row; align-items:center; justify-content:center; gap:6px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; min-height:72px}
-  .sidehand .card{max-width:52px; box-shadow:0 3px 6px rgba(0,0,0,.45)}
-  .sidehand .sname{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px}
+  .sidehand{display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 14px}
+  .sidehand .sname{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px}
+  .sidehand .card{width:70px; max-width:70px; margin-top:-65px; box-shadow:0 3px 6px rgba(0,0,0,.45)}
+  .sidehand .card:first-of-type{margin-top:0}
   .table{
     background:
       radial-gradient(ellipse at center, rgba(255,255,255,.07), transparent 65%),
@@ -111,13 +112,13 @@
     .table .card{width:70px}
     .playzone .card{width:70px}
     .sidehand{padding:10px 5px}
-    .sidehand .card{max-width:34px}
+    .sidehand .card{max-width:34px; margin-top:-30px}
     .table.dupla .playzone .card{width:52px}
     .table.dupla .vira .card{width:46px}
     .table{min-height:320px}
   }
   @media (max-width:380px){
-    .sidehand .card{max-width:28px}
+    .sidehand .card{max-width:28px; margin-top:-24px}
     .sidehand .card:not(:first-child){display:none}
     .tablearea{gap:6px}
   }
@@ -131,7 +132,7 @@
     .hand .card{max-width:56px; min-width:44px}
     .scorebar{padding:10px}
     .sidehand{padding:8px 5px}
-    .sidehand .card{max-width:30px}
+    .sidehand .card{max-width:30px; margin-top:-26px}
     .status,.pointsbar,.vale,.dots{margin-top:0}
   }
 </style>
