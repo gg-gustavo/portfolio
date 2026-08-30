@@ -38,17 +38,8 @@
   .sidehand .card{max-width:42px; margin-top:-16px; box-shadow:0 3px 6px rgba(0,0,0,.45)}
   .sidehand .card:first-child{margin-top:0}
   .sidehand .sname{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px}
-  .sidehand.left{flex-direction:row; align-items:flex-start}
-  .sidehand.left .card{transform:rotate(90deg); margin-top:-2px; margin-left:-22px}
-  .sidehand.left .card:first-child{margin-left:0}
-  .sidehand.left .sname{transform:rotate(90deg); align-self:center}
-  .sidehand.right{flex-direction:row; align-items:flex-start}
-  .sidehand.right .card{transform:rotate(-90deg); margin-top:-2px; margin-left:-22px}
-  .sidehand.right .card:first-child{margin-left:0}
-  .sidehand.right .sname{transform:rotate(-90deg); align-self:center}
-  .sidehand.top{flex-direction:column; background:none; border:none; padding:0; box-shadow:none}
+  .sidehand.top{background:none; border:none; padding:0; box-shadow:none}
   .sidehand.top .card{max-width:36px; margin-top:-14px}
-  .sidehand.top .sname{transform:none}
   .table{
     background:
       radial-gradient(ellipse at center, rgba(255,255,255,.07), transparent 65%),
@@ -62,12 +53,11 @@
       inset 0 -2px 5px rgba(255,255,255,.05),
       0 6px 16px rgba(0,0,0,.35);
   }
-  .table.dupla{display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-areas:". top ." "left center right" ". bottom ."; align-items:center; justify-items:center; gap:6px; width:100%}
+  .table.dupla{display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:auto auto 1fr auto; grid-template-areas:". top ." ". topcard ." "left center right" ". bottom ."; align-items:center; justify-items:center; gap:4px 6px; width:100%; min-height:340px}
   .table.dupla .playzone .card{width:52px}
   .table.dupla .vira .card{width:48px}
-  #p1Play{grid-area:left} #p2Play{grid-area:top} #p3Play{grid-area:right} #humanPlay{grid-area:bottom} #viraBox{grid-area:center}
-  .table.dupla #p2Hand{grid-area:top; align-self:start; margin-bottom:-18px; z-index:1}
-  .table.dupla #p2Play{align-self:end}
+  #p1Play{grid-area:left} #p2Play{grid-area:topcard} #p3Play{grid-area:right} #humanPlay{grid-area:bottom} #viraBox{grid-area:center}
+  .table.dupla #p2Hand{grid-area:top; margin-bottom:2px}
   .playzone{display:flex; flex-direction:column; align-items:center; gap:6px}
   .playzone .tag{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px}
   .table .card{width:80px}
