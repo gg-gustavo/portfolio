@@ -56,7 +56,7 @@
     border:1px solid #0f2e1d;
     border-radius:18px;
     padding:14px; display:flex; flex-direction:column; justify-content:space-around; gap:8px;
-    align-items:center; min-height:340px; width:fit-content; min-width:280px; margin:0 auto;
+    align-items:center; min-height:340px; width:fit-content; margin:0 auto;
     box-shadow:
       inset 0 5px 14px rgba(0,0,0,.55),
       inset 0 -2px 5px rgba(255,255,255,.05),
@@ -361,6 +361,13 @@ function render(){
   if(maoDeFerro){ v.textContent='Vale a partida'; v.classList.add('gold'); }
   else{ v.textContent='Vale '+stake; v.classList.toggle('gold',stake>1); }
   updateButtons();
+  syncTableWidth();
+}
+
+function syncTableWidth(){
+  const t=document.getElementById('table');
+  const hub=document.getElementById('cpuHand');
+  if(hub.offsetWidth>0) t.style.width=hub.offsetWidth+'px';
 }
 
 function renderPlay(id,seat){
