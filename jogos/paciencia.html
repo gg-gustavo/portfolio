@@ -29,14 +29,17 @@
   .card.red{color:var(--bad)}
   .card .corner{position:absolute; top:4px; left:5px; display:flex; flex-direction:column; align-items:center; line-height:1}
   .card .center{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:1.6em}
-  .card.down{background:linear-gradient(135deg,#2a3550,#1b2333); border:1px solid #3a4a6e}
-  .card.down::after{content:'◆'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#3a4a6e; font-size:1.4em}
+  .card.down{background:linear-gradient(135deg,var(--accent2-soft),#0b1d1c); border:1px solid var(--accent-2)}
+  .card.down::after{content:'◆'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--accent-2); font-size:1.4em}
   .card.sel{box-shadow:0 0 0 3px var(--acc)}
   .card.empty{background:transparent; border:2px dashed var(--border); box-shadow:none; cursor:default}
   .card.empty::after{content:''}
   .slot{display:flex; flex-direction:column; gap:4px; align-items:center}
   .slot .lbl{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px}
-  .col{display:flex; flex-direction:column; gap:4px; align-items:center}
+  .col{position:relative; display:flex; flex-direction:column; align-items:center}
+  .col > .card:not(.empty):not(:first-of-type){margin-top:-72%}
+  .col > .card:first-of-type{margin-top:0}
+  .col > .card.down{margin-top:-45%}
   .col .lbl{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px}
   .status{text-align:center; font-size:14px; color:var(--text-soft)}
   .moves{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 14px; text-align:center; font-weight:700; font-size:14px; min-width:96px}
@@ -400,7 +403,7 @@ bindDrag(tableauEl,{
   onCancel:()=>{ dragFrom=null; },
 },{
   pick:(e,px,py)=>pickDesc(px,py),
-  ghost:(d)=>{ if(!d||d.kind!=='tab') return null; const el=tableauEl.querySelector(`[data-c="${d.c}"][data-idx="${d.idx}"]`); return el?el.cloneNode(true):null; },
+  ghost:(d)=>{ if(!d||d.kind!=='tab') return null; const el=tableauEl.querySelector(`[data-c="${d.c}"][data-idx="${d.idx}"]`); if(!el) return null; const g=el.cloneNode(true); g.style.width='clamp(52px, 12vw, 70px)'; g.style.aspectRatio='2/3'; g.style.maxWidth='none'; return g; },
 });
 
 init();

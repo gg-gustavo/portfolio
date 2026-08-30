@@ -15,7 +15,8 @@ function mkEl(){
     add(x){this._s.add(x)}, remove(x){this._s.delete(x)},
     toggle(x,f){f?this._s.add(x):this._s.delete(x)}, contains(x){return this._s.has(x)} };
   return {
-    classList:cls, children:[], _l:[], dataset:{}, style:{},
+    classList:cls, children:[], _l:[], dataset:{},
+    style:{ setProperty(k,v){this[k]=v;} },
     textContent:'', innerHTML:'', value:'', disabled:false, id:'',
     appendChild(e){this.children.push(e)},
     addEventListener(ev,fn){this._l.push([ev,fn])},

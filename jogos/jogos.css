@@ -65,7 +65,12 @@
 :root[data-accent="gold"]    { --game: #f5a623; --game-strong: #d18a14; --game-soft: #fef2df; }
 :root[data-accent="cyan"]    { --game: #45b7d1; --game-strong: #3197af; --game-soft: #e0f4f9; }
 
-:root[data-accent] { --acc: var(--game); --acc-strong: var(--game-strong); --acc-soft: var(--game-soft); }
+:root[data-theme="dark"][data-accent="blue"]   { --game-strong: #5a8ce0; --game-soft: #16243f; }
+:root[data-theme="dark"][data-accent="purple"] { --game-strong: #b879e8; --game-soft: #271c3c; }
+:root[data-theme="dark"][data-accent="green"]  { --game-strong: #4ede7f; --game-soft: #0e2a1c; }
+:root[data-theme="dark"][data-accent="red"]    { --game-strong: #ff6a77; --game-soft: #381218; }
+:root[data-theme="dark"][data-accent="gold"]   { --game-strong: #f0b34a; --game-soft: #2c2210; }
+:root[data-theme="dark"][data-accent="cyan"]   { --game-strong: #5fc4dc; --game-soft: #0c2430; }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -81,7 +86,7 @@ img { max-width: 100%; display: block; }
 a { color: var(--acc); text-decoration: none; }
 * { -webkit-tap-highlight-color: transparent; }
 button, .clickable { touch-action: manipulation; }
-button { min-height: 44px; }
+button:not(.theme-btn):not(.theme-btn-sm) { min-height: 44px; }
 .game-surface { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
 [draggable="true"] { touch-action: none; }
 a:hover { text-decoration: underline; }
@@ -116,7 +121,7 @@ button {
   transition: filter .12s, transform .08s, border-color .15s, background .15s;
 }
 button:active { transform: scale(.97); }
-button:hover { filter: brightness(1.08); }
+button:not(.theme-btn):not(.theme-btn-sm):hover { filter: brightness(1.08); }
 button.primary { background: linear-gradient(135deg, var(--acc), var(--acc-strong)); color: #fff; flex: 1; box-shadow: 0 4px 14px color-mix(in srgb, var(--acc) 30%, transparent); }
 button.ghost { background: var(--surface); color: var(--text); flex: 1; border: 1px solid var(--border); }
 button.ghost:hover { border-color: var(--acc); color: var(--acc); background: var(--acc-soft); }

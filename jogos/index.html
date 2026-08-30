@@ -16,6 +16,10 @@
     cursor: pointer; transition: border-color .15s, background .15s;
   }
   .theme-btn:hover { border-color: var(--acc); background: var(--acc-soft); }
+  :root {
+    --game-accent-red: #ff4757; --game-accent-purple: #a55eea; --game-accent-green: #2ed573;
+    --game-accent-gold: #f5a623; --game-accent-cyan: #45b7d1; --game-accent-blue: #4f8cff;
+  }
   .apphub h1 { font-size: clamp(28px, 6vw, 44px); font-weight: 800; letter-spacing: -.02em; display: flex; align-items: center; justify-content: center; gap: 10px; }
   .apphub h1 svg { color: var(--acc); }
   .apphub h1 span { color: var(--acc); }
@@ -38,7 +42,7 @@
     width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
     background: var(--surface-2); border: 1px solid var(--border);
   }
-  .card .icon svg { color: var(--acc); }
+  .card .icon svg { color: var(--game, var(--acc)); }
   .card h2 { font-size: 20px; font-weight: 700; }
   .card p { color: var(--text-soft); font-size: 14px; line-height: 1.5; flex: 1; }
   .card .tags { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -105,6 +109,7 @@ GAMES.forEach(g => {
   card.id = g.id;
   card.href = g.href || '#';
   card.setAttribute('data-accent', g.accent);
+  card.style.setProperty('--game', 'var(--game-accent-' + g.accent + ')');
   const badge = g.done ? '<span class="badge">Jogar</span>' : '<span class="badge" style="background:var(--surface-2);color:var(--text-soft)">Em breve</span>';
   card.innerHTML = `
     ${badge}

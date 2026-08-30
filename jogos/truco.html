@@ -22,15 +22,15 @@
   .vs{color:var(--text-soft); font-weight:700}
   .pointsbar{display:flex; justify-content:center; align-items:center; gap:10px; margin-top:8px; font-size:13px; color:var(--text-soft)}
   .pointsbar .pt{font-size:20px; font-weight:800}
-  .pointsbar .pt.human{color:#4ade80}
-  .pointsbar .pt.cpu{color:#60a5fa}
+  .pointsbar .pt.human{color:var(--accent-2)}
+  .pointsbar .pt.cpu{color:var(--accent)}
   .pointsbar .ptlbl{font-weight:600}
   .vale{text-align:center; font-size:15px; font-weight:800; color:var(--text-soft)}
   .vale.gold{color:var(--game)}
   .dots{display:flex; justify-content:center; gap:10px; margin-top:8px; min-height:16px}
   .dots .rmark{width:14px; height:14px; border-radius:50%; background:var(--surface-2); border:1px solid var(--border)}
-  .dots .rmark.human{background:#4ade80; border-color:#4ade80}
-  .dots .rmark.cpu{background:#60a5fa; border-color:#60a5fa}
+  .dots .rmark.human{background:var(--accent-2); border-color:var(--accent-2)}
+  .dots .rmark.cpu{background:var(--accent); border-color:var(--accent)}
   .status{text-align:center; font-size:15px; font-weight:600; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:10px}
   .tablearea{display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:stretch}
   .midcol{flex:1; display:flex; flex-direction:column; gap:10px; min-width:0}
@@ -46,8 +46,8 @@
       radial-gradient(120% 120% at 50% 28%, #2e7d4f 0%, #1e5c38 55%, #143d25 100%);
     border:1px solid #0f2e1d;
     border-radius:18px;
-    padding:14px; display:flex; justify-content:center; gap:24px;
-    align-items:center; aspect-ratio:1/1; width:min(100%,420px); margin:0 auto;
+    padding:14px; display:flex; flex-direction:column; justify-content:space-around; gap:8px;
+    align-items:center; min-height:380px; width:min(100%,420px); margin:0 auto;
     box-shadow:
       inset 0 5px 14px rgba(0,0,0,.55),
       inset 0 -2px 5px rgba(255,255,255,.05),
@@ -116,6 +116,12 @@
     .sidehand .card{max-width:34px; margin-top:-12px}
     .table.dupla .playzone .card{width:52px}
     .table.dupla .vira .card{width:46px}
+    .table{min-height:320px}
+  }
+  @media (max-width:380px){
+    .sidehand .card{max-width:28px}
+    .sidehand .card:not(:first-child){display:none}
+    .tablearea{gap:6px}
   }
 </style>
 <script>document.documentElement.setAttribute("data-theme",(localStorage.getItem("theme")||"dark"));</script>
@@ -333,7 +339,7 @@ function pips(card){
 
 function cardEl(card,faceDown){
   const d=document.createElement('div');
-  if(!card){ d.className='card empty'; d.style.background='transparent'; d.style.border='2px dashed #2a3550'; d.style.boxShadow='none'; return d; }
+  if(!card){ d.className='card empty'; d.style.background='transparent'; d.style.border='2px dashed var(--border)'; d.style.boxShadow='none'; return d; }
   d.className='card'+(card.s==='♥'||card.s==='♦'?' red':'');
   if(faceDown){ d.className='card down'; return d; }
   if(card.r===manilhaRank) d.classList.add('manilha');
