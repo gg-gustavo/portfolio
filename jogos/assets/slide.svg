@@ -1,0 +1,36 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fundo -->
+  <circle cx="50" cy="50" r="48" fill="#F97316" />
+  
+  <!-- Fundo do Grid -->
+  <rect x="22" y="22" width="56" height="56" fill="#78350F" rx="4" />
+  
+  <!-- Blocos -->
+  <rect x="25" y="25" width="16" height="16" fill="#FDE68A" rx="2" />
+  <rect x="42" y="25" width="16" height="16" fill="#FDE68A" rx="2" />
+  <rect x="59" y="25" width="16" height="16" fill="#FDE68A" rx="2" />
+  
+  <rect x="25" y="42" width="16" height="16" fill="#FDE68A" rx="2" />
+  <rect x="42" y="42" width="16" height="16" fill="#FDE68A" rx="2" />
+  <rect x="59" y="42" width="16" height="16" fill="#FDE68A" rx="2" />
+  
+  <rect x="25" y="59" width="16" height="16" fill="#FDE68A" rx="2" />
+  <rect x="42" y="59" width="16" height="16" fill="#FDE68A" rx="2" />
+  
+  <!-- Números -->
+  <g font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#78350F" text-anchor="middle" dominant-baseline="central">
+    <text x="33" y="33">1</text>
+    <text x="50" y="33">2</text>
+    <text x="67" y="33">3</text>
+    
+    <text x="33" y="50">4</text>
+    <text x="50" y="50">5</text>
+    <text x="67" y="50">6</text>
+    
+    <text x="33" y="67">7</text>
+    <text x="50" y="67">8</text>
+  </g>
+  
+  <!-- Seta indicando o movimento no espaço vazio -->
+  <path d="M 62 65.5 H 67 V 63.5 L 72 67.5 L 67 71.5 V 69.5 H 62 Z" fill="#FDE68A" />
+</svg>

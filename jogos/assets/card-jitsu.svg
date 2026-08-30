@@ -1,0 +1,12 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fundo -->
+  <circle cx="50" cy="50" r="48" fill="#58A6FF" />
+  <!-- Carta -->
+  <rect x="25" y="20" width="50" height="60" fill="#FFFFFF" rx="6" stroke="#E5E7EB" stroke-width="1" />
+  <!-- Fogo (topo) -->
+  <path d="M50 24c-3 4-6 6-6 10a6 6 0 0 0 12 0c0-4-3-6-6-10z" fill="#F0883E" />
+  <!-- Água (esquerda embaixo) -->
+  <path d="M38 52c0-5 7-13 7-13s7 8 7 13a7 7 0 0 1-14 0z" fill="#58A6FF" />
+  <!-- Gelo (direita embaixo) -->
+  <path d="M62 47v16M53 51l9 8M71 51l-9 8M71 67l-9-8M53 67l9-8" stroke="#79C0FF" stroke-width="3" stroke-linecap="round" fill="none" />
+</svg>

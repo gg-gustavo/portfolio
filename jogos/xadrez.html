@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-accent="purple">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xadrez</title>
+<link rel="icon" type="image/svg+xml" href="assets/xadrez.svg">
+<link rel="stylesheet" href="jogos.css">
+<style>
+  :root { --light: #e8ecf4; --dark: #5a6b8c; }
+  :root[data-theme="dark"] { --light: #d6dbe6; --dark: #46536e; }
+  .turnbar{display:flex; align-items:center; justify-content:center; gap:10px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px}
+  .chip{width:18px; height:18px; border-radius:50%; transition:all .2s}
+  .chip.white{background:#fff; box-shadow:0 0 12px #fff}
+  .chip.black{background:#232323; box-shadow:0 0 12px #aaa}
+  .chip.dim{opacity:.25; box-shadow:none}
+  .board{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px;
+    display:grid; grid-template-columns:repeat(8,1fr); aspect-ratio:1/1;
+  }
+  .sq{position:relative; display:flex; align-items:center; justify-content:center; cursor:pointer; aspect-ratio:1/1; min-width:0; min-height:0}
+  .sq.light{background:var(--light)}
+  .sq.dark{background:var(--dark)}
+  .sq.sel{box-shadow:inset 0 0 0 3px var(--acc)}
+  .sq.check{background:var(--bad)!important}
+  .sq.last{background:var(--acc-soft)}
+  .sq.hint::after,.sq.cap::after{content:''; position:absolute; border-radius:50%}
+  .sq.hint::after{width:32%; height:32%; background:rgba(165,94,234,.5); background:color-mix(in srgb, var(--acc) 50%, transparent)}
+  .sq.cap::after{width:100%; height:100%; border:4px solid rgba(220,38,38,.6); border-color:color-mix(in srgb, var(--bad) 60%, transparent)}
+  .piece{font-size:clamp(20px,7vw,40px); line-height:1; user-select:none; transition:transform .12s}
+  .piece:active{transform:scale(.9)}
+  .game{display:flex; gap:10px; align-items:stretch}
+  .board{flex:1; min-width:0}
+  .captured{display:flex; flex-direction:column; gap:10px; flex:0 0 46px}
+  .cap{flex:1; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:4px; display:flex; flex-wrap:wrap; align-content:flex-start; gap:2px; min-height:46px}
+  .cap .mini{font-size:15px; line-height:1}
+  .cap.white .mini{color:#1a1a1a; text-shadow:0 0 1px #fff}
+  .cap.black .mini{color:#fff; text-shadow:0 0 1px #000}
+  .colorpick { margin-top: 12px; }
+  .err{color:var(--bad); font-size:13px; margin-top:10px}
+  .theme-btn-sm {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    cursor: pointer; transition: border-color .15s, background .15s;
+  }
+  .theme-btn-sm:hover { border-color: var(--acc); background: var(--acc-soft); }
+  @media (max-width:420px){ .app{max-width:340px} }
+</style>
+<script>document.documentElement.setAttribute("data-theme",(localStorage.getItem("theme")||"dark"));</script>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <h1>Xadrez</h1>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="theme-btn-sm" id="themeBtn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Voltar</a>
+    </div>
+  </header>
+
+  <div class="turnbar">
+    <span>Vez de:</span>
+    <div class="chip white" id="chipWhite"></div>
+    <div class="chip black" id="chipBlack"></div>
+    <span id="turnName">Brancas</span>
+  </div>
+
+  <div class="game">
+    <div class="board" id="board"></div>
+    <div class="captured">
+      <div class="cap white" id="capWhite" title="Peças do preto capturadas"></div>
+      <div class="cap black" id="capBlack" title="Peças do branco capturadas"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="ghost" id="btnNew">Novo Jogo</button>
+    <button class="ghost" id="btnReset">Reiniciar</button>
+    <button class="primary" id="btnMenu">Menu</button>
+  </div>
+</div>
+
+<div class="overlay hidden" id="modeOverlay">
+  <div class="modal">
+    <h2><img src="assets/xadrez.svg" width="26" height="26" alt=""> Xadrez</h2>
+    <p class="sub">Escolha o modo de jogo</p>
+    <div class="modebtns">
+      <button id="btnCpu">vs Computador</button>
+      <button id="btn2p">2 Jogadores</button>
+    </div>
+    <div class="colorpick hidden" id="colorpick">
+      <p class="sub">Suas peças:</p>
+      <div class="modebtns">
+        <button id="btnWhite">Brancas</button>
+        <button id="btnBlack">Pretas</button>
+      </div>
+      <p class="err hidden" id="modeErr">Escolha a cor da peça</p>
+    </div>
+    <button class="primary" id="btnStart">Iniciar</button>
+  </div>
+</div>
+
+<div class="overlay hidden" id="winOverlay">
+  <div class="modal">
+    <h2 id="winTitle"></h2>
+    <p class="sub" id="winSub">Fim de jogo</p>
+    <button class="primary" id="btnAgain">Jogar Novamente</button>
+    <button class="ghost" id="btnMenu2">Menu</button>
+  </div>
+</div>
+
+<script src="jogos.js"></script>
+<script src="input.js"></script>
+<script>
+const N=8;
+const W='w', B='b';
+const GLYPH={
+  K:{w:'♔',b:'♚'}, Q:{w:'♕',b:'♛'}, R:{w:'♖',b:'♜'},
+  B:{w:'♗',b:'♝'}, N:{w:'♘',b:'♞'}, P:{w:'♙',b:'♟'}
+};
+let board, turn, selected, legalMoves, over, lastMove, castling, ep;
+let mode='cpu', selectedMode='cpu', humanColor=null, cpuColor=B, colorChosen=false;
+let names={[W]:'Você',[B]:'Computador'};
+let whiteCap=[], blackCap=[];
+
+function init(){
+  const back=['R','N','B','Q','K','B','N','R'];
+  board=Array.from({length:N},()=>Array(N).fill(null));
+  for(let c=0;c<N;c++){
+    board[0][c]={t:back[c],c:B};
+    board[1][c]={t:'P',c:B};
+    board[6][c]={t:'P',c:W};
+    board[7][c]={t:back[c],c:W};
+  }
+  turn=W; selected=null; legalMoves=[]; over=false; lastMove=null; ep=null;
+  castling={wK:true,wQ:true,bK:true,bQ:true};
+  whiteCap=[]; blackCap=[];
+  updateTurn();
+  render();
+  renderCaptured();
+  document.getElementById('winOverlay').classList.add('hidden');
+  if(mode==='cpu'&&turn===cpuColor) setTimeout(cpuMove,thinkDelay());
+}
+function renderCaptured(){
+  const cw=document.getElementById('capWhite');
+  const cb=document.getElementById('capBlack');
+  cw.innerHTML=''; cb.innerHTML='';
+  whiteCap.forEach(t=>{ const s=document.createElement('span'); s.className='mini'; s.textContent=GLYPH[t][B]; cw.appendChild(s); });
+  blackCap.forEach(t=>{ const s=document.createElement('span'); s.className='mini'; s.textContent=GLYPH[t][W]; cb.appendChild(s); });
+}
+
+function render(){
+  const b=document.getElementById('board');
+  b.innerHTML='';
+  for(let r=0;r<N;r++){
+    for(let c=0;c<N;c++){
+      const sq=document.createElement('div');
+      sq.className='sq '+( (r+c)%2===1 ? 'dark':'light' );
+      const i=r*N+c;
+      if(selected===i) sq.classList.add('sel');
+      if(lastMove && (lastMove.from===i||lastMove.to===i)) sq.classList.add('last');
+      if(legalMoves.some(m=>m.to===i)) sq.classList.add(board[r][c]?'cap':'hint');
+      const pc=board[r][c];
+      if(pc){
+        if(pc.t==='K' && isInCheck(pc.c)) sq.classList.add('check');
+        const p=document.createElement('div');
+        p.className='piece';
+        p.textContent=GLYPH[pc.t][pc.c];
+        p.style.color=pc.c===W?'#fff':'#1a1a1a';
+        p.style.textShadow=pc.c===W?'0 1px 2px rgba(0,0,0,.6)':'0 1px 2px rgba(255,255,255,.3)';
+        sq.appendChild(p);
+      }
+      b.appendChild(sq);
+    }
+  }
+}
+
+function findKing(color,bd){
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++)
+    if(bd[r][c]&&bd[r][c].t==='K'&&bd[r][c].c===color) return r*N+c;
+  return -1;
+}
+
+function isInCheck(color,bd){
+  bd=bd||board;
+  const k=findKing(color,bd);
+  if(k<0) return false;
+  const kr=Math.floor(k/N), kc=k%N;
+  const opp=color===W?B:W;
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+    const p=bd[r][c];
+    if(!p||p.c!==opp) continue;
+    if(attacks(r,c,kr,kc,p,bd)) return true;
+  }
+  return false;
+}
+
+function attacks(r,c,tr,tc,p,bd){
+  const dr=tr-r, dc=tc-c;
+  const step=Math.max(Math.abs(dr),Math.abs(dc));
+  switch(p.t){
+    case 'P':{
+      const dir=p.c===W?-1:1;
+      if(tc===c && tr===r+dir && !bd[tr][tc]) return true;
+      if(Math.abs(tc-c)===1 && tr===r+dir && bd[tr][tc]) return true;
+      if(ep && ep===tr*N+tc && tr===r+dir && Math.abs(tc-c)===1) return true;
+      return false;
+    }
+    case 'N':
+      return (Math.abs(dr)===2&&Math.abs(dc)===1)||(Math.abs(dr)===1&&Math.abs(dc)===2);
+    case 'K':
+      return Math.abs(dr)<=1&&Math.abs(dc)<=1;
+    case 'R': case 'B': case 'Q': {
+      if(p.t==='R'&&!(dr===0||dc===0)) return false;
+      if(p.t==='B'&&!(Math.abs(dr)===Math.abs(dc))) return false;
+      if(p.t==='Q'&&!(dr===0||dc===0||Math.abs(dr)===Math.abs(dc))) return false;
+      const sr=Math.sign(dr), sc=Math.sign(dc);
+      for(let s=1;s<step;s++){
+        if(bd[r+sr*s][c+sc*s]) return false;
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
+function pseudoMoves(color){
+  const moves=[];
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+    const p=board[r][c];
+    if(!p||p.c!==color) continue;
+    const from=r*N+c;
+    if(p.t==='P'){
+      const dir=p.c===W?-1:1;
+      if(r+dir>=0&&r+dir<N&&!board[r+dir][c]) moves.push({from,to:(r+dir)*N+c});
+      if((p.c===W&&r===6)||(p.c===B&&r===1))
+        if(!board[r+dir][c]&&!board[r+2*dir][c]) moves.push({from,to:(r+2*dir)*N+c});
+      for(const dc of [-1,1]){
+        const cc=c+dc;
+        if(cc<0||cc>=N)continue;
+        if(board[r+dir][cc]&&board[r+dir][cc].c!==color)
+          moves.push({from,to:(r+dir)*N+cc,capture:true});
+        if(ep=== (r+dir)*N+cc)
+          moves.push({from,to:(r+dir)*N+cc,enPassant:true});
+      }
+    }
+    else if(p.t==='N'){
+      for(const [dr,dc] of [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]){
+        const rr=r+dr,cc=c+dc;
+        if(rr>=0&&rr<N&&cc>=0&&cc<N&&(!board[rr][cc]||board[rr][cc].c!==color))
+          moves.push({from,to:rr*N+cc,capture:!!board[rr][cc]});
+      }
+    }
+    else if(p.t==='K'){
+      for(const [dr,dc] of [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]]){
+        const rr=r+dr,cc=c+dc;
+        if(rr>=0&&rr<N&&cc>=0&&cc<N&&(!board[rr][cc]||board[rr][cc].c!==color))
+          moves.push({from,to:rr*N+cc,capture:!!board[rr][cc]});
+      }
+      addCastle(moves,color,r,c);
+    }
+    else{
+      const dirs=p.t==='R'?[[-1,0],[1,0],[0,-1],[0,1]]:
+              p.t==='B'?[[-1,-1],[-1,1],[1,-1],[1,1]]:
+              [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[-1,1],[1,-1],[1,1]];
+      for(const [dr,dc] of dirs){
+        let rr=r+dr,cc=c+dc;
+        while(rr>=0&&rr<N&&cc>=0&&cc<N){
+          if(!board[rr][cc]) moves.push({from,to:rr*N+cc});
+          else{ if(board[rr][cc].c!==color) moves.push({from,to:rr*N+cc,capture:true}); break; }
+          rr+=dr;cc+=dc;
+        }
+      }
+    }
+  }
+  return moves;
+}
+
+function addCastle(moves,color,r,c){
+  const home=color===W?7:0;
+  if(r!==home||c!==4||isInCheck(color)) return;
+  const cs=color===W?castling:castling;
+  if(cs[color+'K'] && board[home][5]===null&&board[home][6]===null&&board[home][7]&&board[home][7].t==='R'&&board[home][7].c===color){
+    if(!sqAttacked(home,5,color)&&!sqAttacked(home,6,color))
+      moves.push({from:r*N+c,to:home*N+6,castle:'K'});
+  }
+  if(cs[color+'Q'] && board[home][3]===null&&board[home][2]===null&&board[home][1]===null&&board[home][0]&&board[home][0].t==='R'&&board[home][0].c===color){
+    if(!sqAttacked(home,3,color)&&!sqAttacked(home,2,color))
+      moves.push({from:r*N+c,to:home*N+2,castle:'Q'});
+  }
+}
+
+function sqAttacked(r,c,color){
+  const opp=color===W?B:W;
+  for(let rr=0;rr<N;rr++)for(let cc=0;cc<N;cc++){
+    const p=board[rr][cc];
+    if(p&&p.c===opp&&attacks(rr,cc,r,c,p,board)) return true;
+  }
+  return false;
+}
+
+function legalMovesFor(color){
+  const result=[];
+  for(const m of pseudoMoves(color)){
+    const bd=apply(board,m);
+    if(!isInCheck(color,bd)) result.push(m);
+  }
+  return result;
+}
+
+function apply(bd,m){
+  const nb=bd.map(row=>row.slice());
+  const pc=nb[Math.floor(m.from/N)][m.from%N];
+  nb[Math.floor(m.to/N)][m.to%N]=pc;
+  nb[Math.floor(m.from/N)][m.from%N]=null;
+  if(m.enPassant){
+    const cr=Math.floor(m.from/N);
+    nb[cr][m.to%N]=null;
+  }
+  if(m.castle){
+    const home=Math.floor(m.from/N);
+    if(m.castle==='K'){ nb[home][5]=nb[home][7]; nb[home][7]=null; }
+    else{ nb[home][3]=nb[home][0]; nb[home][0]=null; }
+  }
+  if(pc.t==='P'&&((pc.c===W&&Math.floor(m.to/N)===0)||(pc.c===B&&Math.floor(m.to/N)===7))){
+    nb[Math.floor(m.to/N)][m.to%N]={t:'Q',c:pc.c};
+  }
+  return nb;
+}
+
+function click(i){
+  const r=Math.floor(i/N), c=i%N;
+  const pc=board[r][c];
+  if(!over&&pc&&pc.c===turn){
+    selected=i;
+    legalMoves=legalMovesFor(turn).filter(m=>m.from===i);
+    render();
+    return;
+  }
+  if(selected!==null){
+    const mv=legalMoves.find(m=>m.to===i);
+    if(mv){ doMove(mv); return; }
+  }
+  selected=null; legalMoves=[];
+  render();
+}
+
+function doMove(m){
+  const sr=Math.floor(m.from/N), sc=m.from%N;
+  const pc=board[sr][sc];
+  lastMove=m;
+  if(m.enPassant){ whiteCap.push('P'); }
+  if(m.capture){
+    const cap=board[Math.floor(m.to/N)][m.to%N];
+    if(pc.c===W) whiteCap.push(cap.t); else blackCap.push(cap.t);
+  }
+  if(m.castle){
+    if(m.castle==='K'){ board[sr][5]=board[sr][7]; board[sr][7]=null; }
+    else{ board[sr][3]=board[sr][0]; board[sr][0]=null; }
+  }
+  if(pc.t==='P'&&Math.abs(Math.floor(m.to/N)-sr)===2)
+    ep=(sr+Math.floor(m.to/N))/2*N+sc;
+  else ep=null;
+  board[Math.floor(m.to/N)][m.to%N]=pc;
+  board[sr][sc]=null;
+  if(pc.t==='P'&&((pc.c===W&&Math.floor(m.to/N)===0)||(pc.c===B&&Math.floor(m.to/N)===7)))
+    board[Math.floor(m.to/N)][m.to%N]={t:'Q',c:pc.c};
+  if(pc.t==='K'){
+    if(pc.c===W){ castling.wK=false; castling.wQ=false; }
+    else{ castling.bK=false; castling.bQ=false; }
+  }
+  if(pc.t==='R'){
+    const color=pc.c;
+    if(sc===0) castling[color+'Q']=false;
+    if(sc===7) castling[color+'K']=false;
+  }
+  selected=null; legalMoves=[];
+  turn=turn===W?B:W;
+  updateTurn();
+  checkEnd();
+  render();
+  renderCaptured();
+  if(!over&&mode==='cpu'&&turn===cpuColor) setTimeout(cpuMove,thinkDelay());
+}
+
+function checkEnd(){
+  const moves=legalMovesFor(turn);
+  if(moves.length===0){
+    over=true;
+    if(isInCheck(turn)){
+      const winner=turn===W?B:W;
+      const who=winner===W?'Brancas':'Pretas';
+      document.getElementById('winTitle').innerHTML='<svg class="icon-flag" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4"/><path d="M4 4c2-2 3 1 6 1s4-1 6 0c1 1 0 1 4 1v7c-4 0-3-1-6-1s-4 1-6 0z"/></svg> Xeque-mate!';
+      document.getElementById('winSub').textContent=who+' venceram.';
+    }else{
+      document.getElementById('winTitle').innerHTML='<svg class="icon-flag" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4"/><path d="M4 4c2-2 3 1 6 1s4-1 6 0c1 1 0 1 4 1v7c-4 0-3-1-6-1s-4 1-6 0z"/></svg> Empate!';
+      document.getElementById('winSub').textContent='Afogamento (stalemate).';
+    }
+    document.getElementById('winOverlay').classList.remove('hidden');
+  }
+}
+
+function updateTurn(){
+  document.getElementById('turnName').textContent=names[turn];
+  document.getElementById('turnName').style.color=turn===W?'#fff':'#1a1a1a';
+  document.getElementById('chipWhite').classList.toggle('dim',turn!==W);
+  document.getElementById('chipBlack').classList.toggle('dim',turn!==B);
+}
+
+function thinkDelay(){ return (Math.random()<0.5?500:1500)+Math.floor(Math.random()*500); }
+function cpuMove(){
+  if(over||turn!==cpuColor) return;
+  const moves=legalMovesFor(cpuColor);
+  if(!moves.length) return;
+  let bestScore=-Infinity, best=[];
+  for(const m of moves){
+    let sc=Math.random()*10;
+    if(m.capture) sc+=100;
+    const bd=apply(board,m);
+    if(isInCheck(W,bd)) sc+=60;
+    if(sc>bestScore){bestScore=sc; best=[m];}
+    else if(sc===bestScore) best.push(m);
+  }
+  doMove(best[Math.floor(Math.random()*best.length)]);
+}
+function selectMode(m){
+  selectedMode=m;
+  document.getElementById('btn2p').classList.toggle('active',m==='2p');
+  document.getElementById('btnCpu').classList.toggle('active',m==='cpu');
+  document.getElementById('colorpick').classList.toggle('hidden',m!=='cpu');
+}
+function pickColor(col){
+  humanColor=col; cpuColor=col===W?B:W; colorChosen=true;
+  document.getElementById('btnWhite').classList.toggle('active',col===W);
+  document.getElementById('btnBlack').classList.toggle('active',col===B);
+  document.getElementById('modeErr').classList.add('hidden');
+}
+function setMode(m){
+  mode=m;
+  if(m==='2p'){ names[W]='Brancas'; names[B]='Pretas'; }
+  else{ const cpu=humanColor===W?B:W; names[humanColor]='Você'; names[cpu]='Computador'; }
+  updateTurn();
+}
+function showMode(){
+  colorChosen=false; humanColor=null; cpuColor=B;
+  document.getElementById('btnWhite').classList.remove('active');
+  document.getElementById('btnBlack').classList.remove('active');
+  document.getElementById('modeErr').classList.add('hidden');
+  selectMode(selectedMode);
+  document.getElementById('modeOverlay').classList.remove('hidden');
+}
+function startGame(){
+  if(selectedMode==='cpu'&&!colorChosen){ document.getElementById('modeErr').classList.remove('hidden'); return; }
+  setMode(selectedMode); document.getElementById('modeOverlay').classList.add('hidden'); init();
+}
+
+document.getElementById('btnCpu').addEventListener('click',()=>selectMode('cpu'));
+document.getElementById('btn2p').addEventListener('click',()=>selectMode('2p'));
+document.getElementById('btnWhite').addEventListener('click',()=>pickColor(W));
+document.getElementById('btnBlack').addEventListener('click',()=>pickColor(B));
+document.getElementById('btnStart').addEventListener('click',startGame);
+document.getElementById('btnNew').addEventListener('click',showMode);
+document.getElementById('btnReset').addEventListener('click',init);
+document.getElementById('btnAgain').addEventListener('click',init);
+document.getElementById('btnMenu').addEventListener('click',()=>location.href='index.html');
+document.getElementById('btnMenu2').addEventListener('click',()=>location.href='index.html');
+
+const boardEl=document.getElementById('board');
+boardEl.classList.add('game-surface');
+bindDrag(boardEl,{
+  onDown:s=>{ if(s>=0) click(s); },
+  onTap:s=>{ if(s>=0) click(s); },
+  onDrop:s=>{ if(s>=0) click(s); },
+  onCancel:()=>{ if(selected!==null){ selected=null; legalMoves=[]; render(); } },
+},{
+  pick:(e,px,py)=>squareFromPoint(boardEl.getBoundingClientRect(),px,py,8,8,10),
+  ghost:(s)=>{ const sq=boardEl.children[s]; if(!sq) return null; const p=sq.querySelector('.piece'); if(!p) return null; const g=p.cloneNode(true); return g; },
+});
+
+init();
+showMode();
+</script>
+</body>
+</html>

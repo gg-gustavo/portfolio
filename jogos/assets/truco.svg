@@ -1,0 +1,16 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="50" r="48" fill="#10B981" />
+  <!-- Carta 1 (Esquerda, Rotacionada) -->
+  <g transform="translate(45, 50) rotate(-15) translate(-45, -50)">
+    <rect x="25" y="30" width="30" height="45" fill="#FFFFFF" rx="4" />
+    <!-- Ouros (Vermelho) -->
+    <polygon points="40,45 46,52.5 40,60 34,52.5" fill="#EF4444" />
+  </g>
+  <!-- Carta 2 (Direita, Rotacionada, Sobreposta) -->
+  <g transform="translate(55, 55) rotate(15) translate(-55, -55)">
+    <rect x="45" y="30" width="30" height="45" fill="#FFFFFF" rx="4" stroke="#E5E7EB" stroke-width="1" />
+    <!-- Espadas (Preto) -->
+    <path d="M60 46 C60 46 66 52 66 55 C66 58.5 62 60 60 60 C58 60 54 58.5 54 55 C54 52 60 46 60 46 Z" fill="#1F2937" />
+    <polygon points="60,57 62.5,63 57.5,63" fill="#1F2937" />
+  </g>
+</svg>
