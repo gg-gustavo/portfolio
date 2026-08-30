@@ -34,12 +34,9 @@
   .status{text-align:center; font-size:15px; font-weight:600; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:10px}
   .tablearea{display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:stretch}
   .midcol{flex:1; display:flex; flex-direction:column; gap:10px; min-width:0}
-  .sidehand{display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px 8px}
-  .sidehand .card{max-width:42px; margin-top:-16px; box-shadow:0 3px 6px rgba(0,0,0,.45)}
-  .sidehand .card:first-child{margin-top:0}
-  .sidehand .sname{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px}
-  .sidehand.top{background:none; border:none; padding:0; box-shadow:none}
-  .sidehand.top .card{max-width:36px; margin-top:-14px}
+  .sidehand{display:flex; flex-direction:row; align-items:center; justify-content:center; gap:6px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; min-height:72px}
+  .sidehand .card{max-width:52px; box-shadow:0 3px 6px rgba(0,0,0,.45)}
+  .sidehand .sname{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px}
   .table{
     background:
       radial-gradient(ellipse at center, rgba(255,255,255,.07), transparent 65%),
@@ -53,11 +50,10 @@
       inset 0 -2px 5px rgba(255,255,255,.05),
       0 6px 16px rgba(0,0,0,.35);
   }
-  .table.dupla{display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:auto auto 1fr auto; grid-template-areas:". top ." ". topcard ." "left center right" ". bottom ."; align-items:center; justify-items:center; gap:4px 6px; width:100%; min-height:340px}
+  .table.dupla{display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-areas:". top ." "left center right" ". bottom ."; align-items:center; justify-items:center; gap:6px; width:100%; min-height:340px}
   .table.dupla .playzone .card{width:52px}
   .table.dupla .vira .card{width:48px}
-  #p1Play{grid-area:left} #p2Play{grid-area:topcard} #p3Play{grid-area:right} #humanPlay{grid-area:bottom} #viraBox{grid-area:center}
-  .table.dupla #p2Hand{grid-area:top; margin-bottom:2px}
+  #p1Play{grid-area:left} #p2Play{grid-area:top} #p3Play{grid-area:right} #humanPlay{grid-area:bottom} #viraBox{grid-area:center}
   .playzone{display:flex; flex-direction:column; align-items:center; gap:6px}
   .playzone .tag{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px}
   .table .card{width:80px}
@@ -115,7 +111,7 @@
     .table .card{width:70px}
     .playzone .card{width:70px}
     .sidehand{padding:10px 5px}
-    .sidehand .card{max-width:34px; margin-top:-12px}
+    .sidehand .card{max-width:34px}
     .table.dupla .playzone .card{width:52px}
     .table.dupla .vira .card{width:46px}
     .table{min-height:320px}
@@ -135,8 +131,7 @@
     .hand .card{max-width:56px; min-width:44px}
     .scorebar{padding:10px}
     .sidehand{padding:8px 5px}
-    .sidehand .card{max-width:30px; margin-top:-12px}
-    .sidehand.top .card{max-width:30px}
+    .sidehand .card{max-width:30px}
     .status,.pointsbar,.vale,.dots{margin-top:0}
   }
 </style>
@@ -171,6 +166,7 @@
   <div class="status" id="status">Preparando...</div>
 
   <div class="cpuhand" id="cpuHand"><div class="tag">Computador</div></div>
+  <div class="sidehand hidden" id="p2Hand"><div class="sname">Parceiro</div></div>
   <div class="tablearea">
     <div class="sidehand left hidden" id="p1Hand"><div class="sname">Adv 1</div></div>
     <div class="midcol">
@@ -181,7 +177,6 @@
         <div class="playzone hidden" id="p3Play"><div class="tag">Adv 2</div></div>
         <div class="vira" id="viraBox"><div class="lbl">Vira</div></div>
         <div class="playzone" id="humanPlay"><div class="tag">Você</div></div>
-        <div class="sidehand top hidden" id="p2Hand"><div class="sname">Parceiro</div></div>
       </div>
       <div class="hand" id="hand"></div>
     </div>
@@ -334,7 +329,7 @@ function render(){
     el.addEventListener('click',()=>playCard(idx));
     h.appendChild(el);
   });
-  // mãos dos adversários (dupla): parceiro no topo, laterais rotacionadas
+  // mãos dos adversários (dupla): parceiro no topo, advs nas laterais — todos horizontais
   const p2h=document.getElementById('p2Hand');
   p2h.classList.toggle('hidden',!isDupla);
   p2h.querySelectorAll('.card').forEach(c=>c.remove());
