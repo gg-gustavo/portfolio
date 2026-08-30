@@ -56,13 +56,13 @@
     border:1px solid #0f2e1d;
     border-radius:18px;
     padding:14px; display:flex; flex-direction:column; justify-content:space-around; gap:8px;
-    align-items:center; min-height:340px; width:min(100%,460px); margin:0 auto;
+    align-items:center; min-height:340px; width:100%;
     box-shadow:
       inset 0 5px 14px rgba(0,0,0,.55),
       inset 0 -2px 5px rgba(255,255,255,.05),
       0 6px 16px rgba(0,0,0,.35);
   }
-  .table.dupla{display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-areas:". top ." "left center right" ". bottom ."; align-items:center; justify-items:center; gap:6px; width:min(100%,460px)}
+  .table.dupla{display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-areas:". top ." "left center right" ". bottom ."; align-items:center; justify-items:center; gap:6px; width:100%}
   .table.dupla .playzone .card{width:52px}
   .table.dupla .vira .card{width:48px}
   #p1Play{grid-area:left} #p2Play{grid-area:top} #p3Play{grid-area:right} #humanPlay{grid-area:bottom} #viraBox{grid-area:center}
@@ -71,10 +71,7 @@
   .playzone{display:flex; flex-direction:column; align-items:center; gap:6px}
   .playzone .tag{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px}
   .table .card{width:80px}
-  .cpu-hand{display:flex; align-items:flex-end; justify-content:center; gap:8px}
-  .cpu-hand .sname{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px}
-  .cpu-hand .card{width:44px; max-width:44px; box-shadow:0 3px 6px rgba(0,0,0,.5)}
-  .cpu-hand .card + .card{margin-left:-24px}
+  .cpuhand .tag{font-size:11px; color:var(--text-soft); align-self:center}
   .card{
     width:100%; max-width:80px; aspect-ratio:2/3; border-radius:10px; position:relative; cursor:pointer;
     background:#fff; color:#1a1a1a; padding:5px; font-size:16px; font-weight:700;
@@ -140,9 +137,8 @@
   }
   @media (orientation:landscape) and (max-height:520px){
     .wrap{max-width:760px; gap:8px}
-    .table{min-height:0; width:min(100%,560px); padding:10px}
+    .table{min-height:0; width:100%; padding:10px}
     .table .card{width:64px}
-    .cpu-hand .card{width:38px}
     .table.dupla .playzone .card{width:46px}
     .table.dupla .vira .card{width:42px}
     .hand{padding:10px; min-height:0}
@@ -184,11 +180,11 @@
 
   <div class="status" id="status">Preparando...</div>
 
+  <div class="cpuhand" id="cpuHand"><div class="tag">Computador</div></div>
   <div class="tablearea">
     <div class="sidehand left hidden" id="p1Hand"><div class="sname">Adv 1</div></div>
     <div class="midcol">
       <div class="table" id="table">
-        <div class="cpu-hand" id="cpuHandInTable"></div>
         <div class="playzone" id="cpuPlay"><div class="tag">Computador</div></div>
         <div class="playzone hidden" id="p1Play"><div class="tag">Adv 1</div></div>
         <div class="playzone hidden" id="p2Play"><div class="tag">Parceiro</div></div>
@@ -325,7 +321,7 @@ function render(){
   document.getElementById('table').classList.toggle('dupla',isDupla);
   document.getElementById('p1Hand').classList.toggle('hidden',!isDupla);
   document.getElementById('p3Hand').classList.toggle('hidden',!isDupla);
-  document.getElementById('cpuHandInTable').classList.toggle('hidden',isDupla);
+  document.getElementById('cpuHand').classList.toggle('hidden',isDupla);
   const vb=document.getElementById('viraBox');
   vb.innerHTML='<div class="lbl">Vira</div>';
   if(vira) vb.appendChild(cardEl(vira));
@@ -335,9 +331,9 @@ function render(){
     document.getElementById(id).classList.toggle('hidden',!show);
     renderPlay(id,seat);
   });
-  // mão do CPU (2p): 3 cartas viradas dentro da mesa
-  const ocument = document.getElementById('cpuHandInTable');
-  ocument.innerHTML='';
+  // mão do CPU (2p): 3 cartas viradas no hub acima da mesa
+  const ocument = document.getElementById('cpuHand');
+  ocument.innerHTML='<div class="tag">Computador</div>';
   if(!isDupla){
     if(players[1]) players[1].forEach(card=>{ ocument.appendChild(cardEl(card,true)); });
   }
