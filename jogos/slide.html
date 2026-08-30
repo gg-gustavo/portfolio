@@ -262,6 +262,7 @@ boardEl.addEventListener('pointerup',e=>{
   if(dir){
     const sup=ev=>{ ev.preventDefault(); ev.stopPropagation(); document.removeEventListener('click',sup,true); };
     document.addEventListener('click',sup,true);
+    setTimeout(()=>document.removeEventListener('click',sup,true),300);
     moveDir(dir);
   }
 });

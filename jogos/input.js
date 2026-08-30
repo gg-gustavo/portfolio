@@ -80,6 +80,7 @@ function bindDrag(el,handlers,opts){
   function end(e){
     if(e.pointerId!==pid) return;
     pid=null;
+    try{ el.releasePointerCapture(e.pointerId); }catch(_){}
     if(dragging){
       if(handlers.onDrop){
         const t=opts.pickEnd? opts.pickEnd(e,px,py): (opts.pick? opts.pick(e,px,py): null);
@@ -88,6 +89,7 @@ function bindDrag(el,handlers,opts){
       if(handlers.onCancel&&ghost) handlers.onCancel();
       const sup=ev=>{ ev.preventDefault(); ev.stopPropagation(); document.removeEventListener('click',sup,true); };
       document.addEventListener('click',sup,true);
+      setTimeout(()=>document.removeEventListener('click',sup,true),300);
     }else{
       if(handlers.onTap) handlers.onTap(pickPoint(e),sx,sy);
     }
