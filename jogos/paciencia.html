@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Paciência</title>
+<link rel="icon" type="image/svg+xml" href="assets/paciencia.svg">
 <link rel="stylesheet" href="jogos.css">
 <style>
   .wrap{max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:14px}
@@ -15,8 +16,8 @@
     cursor: pointer; transition: border-color .15s, background .15s;
   }
   .theme-btn-sm:hover { border-color: var(--acc); background: var(--acc-soft); }
-  .top{display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:start}
-  .left{display:flex; flex-direction:column; gap:10px}
+  .top{display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:start; margin-bottom:6px}
+  .left{display:flex; flex-direction:row; align-items:flex-start; gap:10px; margin-bottom:72px}
   .stock{display:flex; flex-direction:column; gap:6px; align-items:center; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px; min-width:96px}
   .stock .lbl{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px}
   .foundations{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
@@ -29,17 +30,29 @@
   .card.red{color:var(--bad)}
   .card .corner{position:absolute; top:4px; left:5px; display:flex; flex-direction:column; align-items:center; line-height:1}
   .card .center{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:1.6em}
-  .card.down{background:linear-gradient(135deg,var(--accent2-soft),#0b1d1c); border:1px solid var(--accent-2)}
-  .card.down::after{content:'◆'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--accent-2); font-size:1.4em}
+  .card.down{
+    background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,.12) 0 1px, transparent 1px 7px),
+      repeating-linear-gradient(-45deg, rgba(255,255,255,.12) 0 1px, transparent 1px 7px),
+      radial-gradient(90% 90% at 50% 35%, rgba(255,255,255,.08), transparent 70%),
+      linear-gradient(160deg,#2c5a8f 0%,#1c3d66 60%,#122a4a 100%);
+    border:4px solid #f7f3e6;
+    box-shadow:inset 0 0 0 4px #f7f3e6, inset 0 0 0 5px #1c3d66, 0 3px 8px rgba(0,0,0,.4);
+    cursor:default;
+  }
+  .card.down::after{
+    content:'◆'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:1.2em; color:rgba(255,255,255,.30); text-shadow:0 1px 2px rgba(0,0,0,.4);
+  }
   .card.sel{box-shadow:0 0 0 3px var(--acc)}
   .card.empty{background:transparent; border:2px dashed var(--border); box-shadow:none; cursor:default}
   .card.empty::after{content:''}
   .slot{display:flex; flex-direction:column; gap:4px; align-items:center}
   .slot .lbl{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px}
   .col{position:relative; display:flex; flex-direction:column; align-items:center}
-  .col > .card:not(.empty):not(:first-of-type){margin-top:-72%}
+  .col > .card:not(.empty):not(:first-of-type){margin-top:-115%}
   .col > .card:first-of-type{margin-top:0}
-  .col > .card.down{margin-top:-45%}
+  .col > .card.down{margin-top:-88%}
   .col .lbl{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px}
   .status{text-align:center; font-size:14px; color:var(--text-soft)}
   .moves{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 14px; text-align:center; font-weight:700; font-size:14px; min-width:96px}
@@ -73,6 +86,7 @@
       <div class="stock" id="wasteArea">
         <span class="lbl">Descarte</span>
         <div class="card empty" id="wasteCard"></div>
+        <span class="lbl" id="wasteCount">0</span>
       </div>
     </div>
     <div class="moves"><div class="lbl">Movimentos</div><span id="moves">0</span></div>
@@ -82,6 +96,7 @@
   <div class="tableau game-surface" id="tableau"></div>
 
   <div class="controls">
+    <button class="ghost" id="btnUndo">Desfazer</button>
     <button class="ghost" id="btnReset">Reiniciar</button>
     <button class="primary" id="btnMenu">Menu</button>
   </div>
@@ -102,7 +117,7 @@
 <script>
 const SUITS=['♠','♥','♦','♣'];
 const RANK=['','A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-let stock, waste, tableau, foundations, selected, moves, over;
+let stock, waste, tableau, foundations, selected, moves, over, history;
 
 function newDeck(){
   const d=[];
@@ -127,11 +142,39 @@ function init(){
   stock=d;
   waste=[];
   foundations=SUITS.map(()=>[]);
-  selected=null; moves=0; over=false;
+  selected=null; moves=0; over=false; history=[];
   updateMoves();
   render();
+  updateUndoButton();
   document.getElementById('winOverlay').classList.add('hidden');
   document.getElementById('status').textContent='Clique no monte para comprar cartas';
+}
+
+function snapshot(){
+  return {
+    stock:stock.map(c=>({...c})),
+    waste:waste.map(c=>({...c})),
+    tableau:tableau.map(col=>col.map(c=>({...c}))),
+    foundations:foundations.map(f=>f.map(c=>({...c}))),
+    moves
+  };
+}
+
+function pushHistory(){ history.push(snapshot()); }
+
+function updateUndoButton(){
+  document.getElementById('btnUndo').disabled = !history.length;
+}
+
+function undo(){
+  if(!history.length) return;
+  const prev=history.pop();
+  stock=prev.stock; waste=prev.waste; tableau=prev.tableau; foundations=prev.foundations; moves=prev.moves;
+  over=false;
+  document.getElementById('winOverlay').classList.add('hidden');
+  updateMoves();
+  render();
+  updateUndoButton();
 }
 
 function cardEl(card){
@@ -156,6 +199,7 @@ function render(){
   document.getElementById('stockCount').textContent=stock.length;
   // waste
   const wasteCard=document.getElementById('wasteCard');
+  document.getElementById('wasteCount').textContent=waste.length;
   if(waste.length){
     const top=waste[waste.length-1];
     const el=cardEl(top);
@@ -213,6 +257,7 @@ function render(){
 
 function clickStock(){
   if(over) return;
+  pushHistory();
   if(stock.length){
     const card=stock.pop();
     card.up=true;
@@ -222,6 +267,7 @@ function clickStock(){
     for(const c of stock) c.up=false;
   }
   render();
+  updateUndoButton();
 }
 
 function clickWaste(){
@@ -230,21 +276,25 @@ function clickWaste(){
   // try foundation
   for(let i=0;i<4;i++){
     if(canPlaceFoundation(card,i)){
+      pushHistory();
       waste.pop();
       foundations[i].push(card);
       moves++; updateMoves();
       checkWin();
       render();
+      updateUndoButton();
       return;
     }
   }
   // try tableau
   for(let c=0;c<7;c++){
     if(canPlaceTableau(card,c)){
+      pushHistory();
       waste.pop();
       tableau[c].push(card);
       moves++; updateMoves();
       render();
+      updateUndoButton();
       return;
     }
   }
@@ -257,18 +307,20 @@ function clickTableau(c,idx){
   if(!card.up) return;
   // valid movable: card and below form descending alternating seq
   for(let i=idx;i<col.length-1;i++){
-    if(!(col[i+1].r===col[i].r-1 && col[i+1].s!==col[i].s)) return;
+    if(!(col[i+1].r===col[i].r-1 && red(col[i+1].s)!==red(col[i].s))) return;
   }
   // try foundation (only top card)
   if(idx===col.length-1){
     for(let i=0;i<4;i++){
       if(canPlaceFoundation(card,i)){
+        pushHistory();
         col.pop();
         foundations[i].push(card);
         revealTop(c);
         moves++; updateMoves();
         checkWin();
         render();
+        updateUndoButton();
         return;
       }
     }
@@ -277,11 +329,13 @@ function clickTableau(c,idx){
   for(let c2=0;c2<7;c2++){
     if(c2===c) continue;
     if(canPlaceTableau(card,c2)){
+      pushHistory();
       const moving=col.splice(idx);
       tableau[c2].push(...moving);
       revealTop(c);
       moves++; updateMoves();
       render();
+      updateUndoButton();
       return;
     }
   }
@@ -312,14 +366,18 @@ function clickFoundation(i){
   const card=f[f.length-1];
   for(let c=0;c<7;c++){
     if(canPlaceTableau(card,c)){
+      pushHistory();
       f.pop();
       tableau[c].push(card);
       moves++; updateMoves();
       render();
+      updateUndoButton();
       return;
     }
   }
 }
+
+function red(s){ return s==='♥'||s==='♦'; }
 
 function canPlaceFoundation(card,i){
   const f=foundations[i];
@@ -332,7 +390,7 @@ function canPlaceTableau(card,c){
   const col=tableau[c];
   if(!col.length) return card.r===13;
   const top=col[col.length-1];
-  return top.up && top.r===card.r+1 && top.s!==card.s;
+  return top.up && top.r===card.r+1 && red(top.s)!==red(card.s);
 }
 
 function revealTop(c){
@@ -351,6 +409,7 @@ function checkWin(){
 }
 
 document.getElementById('stockCard').addEventListener('click',clickStock);
+document.getElementById('btnUndo').addEventListener('click',undo);
 document.getElementById('btnReset').addEventListener('click',init);
 document.getElementById('btnAgain').addEventListener('click',init);
 document.getElementById('btnMenu').addEventListener('click',()=>location.href='index.html');
@@ -376,7 +435,7 @@ bindDrag(tableauEl,{
     const col=tableau[d.c], card=col[d.idx];
     if(!card||!card.up) return;
     for(let i=d.idx;i<col.length-1;i++)
-      if(!(col[i+1].r===col[i].r-1 && col[i+1].s!==col[i].s)) return;
+      if(!(col[i+1].r===col[i].r-1 && red(col[i+1].s)!==red(col[i].s))) return;
     dragFrom=d;
   },
   onTap:d=>{
@@ -386,6 +445,7 @@ bindDrag(tableauEl,{
   },
   onDrop:d=>{
     if(!dragFrom) return;
+    const snap=snapshot();
     const src=dragFrom, col=tableau[src.c];
     const moving=col.splice(src.idx);
     let placed=false;
@@ -397,13 +457,51 @@ bindDrag(tableauEl,{
     }
     if(!placed) tableau[src.c].splice(src.idx,0,...moving);
     dragFrom=null;
-    if(placed){ revealTop(src.c); moves++; updateMoves(); checkWin(); }
+    if(placed){ history.push(snap); revealTop(src.c); moves++; updateMoves(); checkWin(); updateUndoButton(); }
     render();
   },
   onCancel:()=>{ dragFrom=null; },
 },{
   pick:(e,px,py)=>pickDesc(px,py),
   ghost:(d)=>{ if(!d||d.kind!=='tab') return null; const el=tableauEl.querySelector(`[data-c="${d.c}"][data-idx="${d.idx}"]`); if(!el) return null; const g=el.cloneNode(true); g.style.width='clamp(52px, 12vw, 70px)'; g.style.aspectRatio='2/3'; g.style.maxWidth='none'; return g; },
+});
+
+function dropWaste(t){
+  if(!waste.length) return;
+  const card=waste[waste.length-1];
+  const snap=snapshot();
+  let placed=false;
+  if(t&&t.kind==='found'&&canPlaceFoundation(card,t.i)){
+    waste.pop(); foundations[t.i].push(card); placed=true;
+  }else if(t&&(t.kind==='tab'||t.kind==='tabempty')){
+    const tc=t.c;
+    if(canPlaceTableau(card,tc)){ waste.pop(); tableau[tc].push(card); placed=true; }
+  }
+  if(placed){ history.push(snap); moves++; updateMoves(); checkWin(); render(); updateUndoButton(); }
+}
+
+const wasteArea=document.getElementById('wasteArea');
+let wasteDrag=null;
+bindDrag(wasteArea,{
+  onDown:d=>{
+    wasteDrag=null;
+    if(!d||d.kind!=='waste'||!waste.length) return;
+    wasteDrag=d;
+  },
+  onDrop:t=>{ if(!wasteDrag) return; wasteDrag=null; dropWaste(t); },
+  onCancel:()=>{ wasteDrag=null; },
+},{
+  pick:(e,px,py)=>pickDesc(px,py),
+  ghost:d=>{
+    if(!d||d.kind!=='waste') return null;
+    const el=document.getElementById('wasteCard');
+    if(!el) return null;
+    const g=el.cloneNode(true);
+    g.style.width='clamp(52px, 12vw, 70px)';
+    g.style.aspectRatio='2/3';
+    g.style.maxWidth='none';
+    return g;
+  },
 });
 
 init();

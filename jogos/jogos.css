@@ -1,6 +1,6 @@
 /* ============================================================
    Jogos — Design system compartilhado (paleta C: Âmbar Teal)
-   Tokens herdados do portfólio (assets/css/style.css)
+   Tokens herdados do portfólio (style.css)
    data-accent por página: amber | teal | blue | purple | green | red | gold | cyan
    ============================================================ */
 
@@ -86,7 +86,7 @@ img { max-width: 100%; display: block; }
 a { color: var(--acc); text-decoration: none; }
 * { -webkit-tap-highlight-color: transparent; }
 button, .clickable { touch-action: manipulation; }
-button:not(.theme-btn):not(.theme-btn-sm) { min-height: 44px; }
+button:not(.theme-btn):not(.theme-btn-sm):not(.icon-btn) { min-height: 44px; }
 .game-surface { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
 [draggable="true"] { touch-action: none; }
 a:hover { text-decoration: underline; }
@@ -120,8 +120,8 @@ button {
   font-size: 15px; font-weight: 600; cursor: pointer;
   transition: filter .12s, transform .08s, border-color .15s, background .15s;
 }
-button:active { transform: scale(.97); }
-button:not(.theme-btn):not(.theme-btn-sm):hover { filter: brightness(1.08); }
+button:not(.icon-btn):active { transform: scale(.97); }
+button:not(.theme-btn):not(.theme-btn-sm):not(.icon-btn):hover { filter: brightness(1.08); }
 button.primary { background: linear-gradient(135deg, var(--acc), var(--acc-strong)); color: #fff; flex: 1; box-shadow: 0 4px 14px color-mix(in srgb, var(--acc) 30%, transparent); }
 button.ghost { background: var(--surface); color: var(--text); flex: 1; border: 1px solid var(--border); }
 button.ghost:hover { border-color: var(--acc); color: var(--acc); background: var(--acc-soft); }
@@ -171,4 +171,18 @@ button.gold { background: linear-gradient(135deg, var(--game), var(--game-strong
 
 @media (max-width: 520px) {
   .app { max-width: 340px; }
+  .app, .wrap, .container, .game {
+    position: relative;
+    min-height: 100vh; min-height: 100dvh;
+    justify-content: center;
+    justify-content: safe center;
+    padding-top: 56px;
+  }
+  .wrap, .game { display: flex; flex-direction: column; gap: 12px; }
+  .app > header.top, .wrap > header.top, .container > header.top, .game > header.top {
+    position: absolute; top: 0; left: 0; right: 0;
+  }
+}
+@media (min-width: 521px) {
+  .app { padding-top: 28px; }
 }

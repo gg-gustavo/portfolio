@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-accent="cyan">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card-Jitsu — Jogo de Cartas</title>
+<link rel="icon" type="image/svg+xml" href="assets/card-jitsu.svg">
+<link rel="stylesheet" href="jogos.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Element colors */
+    --fogo: #f0883e;
+    --agua: #58a6ff;
+    --gelo: #79c0ff;
+
+    /* Card colors */
+    --c-amarelo: #e3b341;
+    --c-vermelho: #da3633;
+    --c-roxo: #8957e5;
+    --c-verde: #2ea043;
+    --c-azul: #1f6feb;
+    --c-rosa: #db61a2;
+    --c-ciano: #56d4dd;
+    --c-branco: #d2a8ff;
+    --c-prata: #8b949e;
+
+    --card-w: 90px;
+    --card-h: 126px;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  .theme-btn-sm {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    cursor: pointer; transition: border-color .15s, background .15s;
+  }
+  .theme-btn-sm:hover { border-color: var(--acc); background: var(--acc-soft); }
+  header.top { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+
+  /* Snowfall background */
+  .snowfall {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .snowflake {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255,255,255,.25);
+    border-radius: 50%;
+    animation: snowfall linear infinite;
+  }
+
+  @keyframes snowfall {
+    0%   { transform: translateY(-10px) translateX(0); opacity: 1; }
+    100% { transform: translateY(100vh) translateX(40px); opacity: .2; }
+  }
+
+  .game {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* --- Header --- */
+  .header {
+    text-align: center;
+    padding: 8px 0;
+  }
+
+  .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: 2px;
+  }
+
+  .header .subtitle {
+    font-size: 12px;
+    color: var(--game);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  /* --- Win condition info --- */
+  .info-bar {
+    font-size: 11px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    text-align: center;
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  .info-bar strong { color: var(--text); }
+
+  /* --- Score / sets tracker --- */
+  .score-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    gap: 12px;
+  }
+
+  .score-box {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    text-align: center;
+  }
+
+  .score-box .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .score-box .val {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  /* --- ARENA (duel display) --- */
+  .arena {
+    width: 100%;
+    max-width: 600px;
+    min-height: 180px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 20px;
+    position: relative;
+  }
+
+  .arena-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: var(--card-w);
+  }
+
+  .arena-slot .slot-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+
+  .arena-slot .card {
+    transform: scale(1.15);
+  }
+
+  .vs-icon {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--border);
+  }
+
+  .result-text {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 4px 16px;
+    border-radius: 20px;
+    background: var(--bg);
+  }
+
+  .result-text.win  { color: #3fb950; border: 1px solid #3fb950; }
+  .result-text.lose { color: #f85149; border: 1px solid #f85149; }
+  .result-text.draw { color: var(--game); border: 1px solid var(--game); }
+
+  /* --- CARD design --- */
+  .card {
+    width: var(--card-w);
+    height: var(--card-h);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px;
+    cursor: default;
+    transition: transform .15s, box-shadow .15s;
+    position: relative;
+    border: 2px solid transparent;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .card.clickable {
+    cursor: pointer;
+  }
+
+  .card.clickable:hover {
+    transform: translateY(-6px) scale(1.04);
+    box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  }
+
+  .card.selected {
+    transform: translateY(-12px) scale(1.06);
+    box-shadow: 0 0 20px rgba(88,166,255,.5);
+    border-color: var(--game) !important;
+  }
+
+  /* Card top: value + element icon */
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+  }
+
+  .card-val {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .card-icon {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  /* Card center: large element icon */
+  .card-center {
+    font-size: 36px;
+    line-height: 1;
+  }
+
+  /* Card bottom: color label */
+  .card-bottom {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+
+  /* Element backgrounds */
+  .card.fogo { background: linear-gradient(135deg, #2d1b00, #1a1100); border-color: var(--fogo); }
+  .card.fogo .card-val { color: var(--fogo); }
+  .card.fogo .card-bottom { color: var(--fogo); }
+
+  .card.agua { background: linear-gradient(135deg, #0c1a2e, #0a1628); border-color: var(--agua); }
+  .card.agua .card-val { color: var(--agua); }
+  .card.agua .card-bottom { color: var(--agua); }
+
+  .card.gelo { background: linear-gradient(135deg, #0e1a2a, #0d1825); border-color: var(--gelo); }
+  .card.gelo .card-val { color: var(--gelo); }
+  .card.gelo .card-bottom { color: var(--gelo); }
+
+  :root[data-theme="light"] .card.fogo  { background: linear-gradient(135deg, #fde8d7, #fbd7b5); }
+  :root[data-theme="light"] .card.agua  { background: linear-gradient(135deg, #dcebfa, #c9dcf5); }
+  :root[data-theme="light"] .card.gelo  { background: linear-gradient(135deg, #ddf2f8, #cbe9f2); }
+
+  /* Color dots */
+  .color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.2);
+  }
+
+  /* --- HAND --- */
+  .hand-area {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .hand-area .area-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .hand {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* --- GALLERIES --- */
+  .galleries {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .gallery {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px;
+    min-height: 100px;
+  }
+
+  .gallery .area-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .gallery-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .gallery-cards .card {
+    --card-w: 52px;
+    --card-h: 72px;
+    width: var(--card-w);
+    height: var(--card-h);
+    padding: 3px;
+    cursor: default;
+  }
+
+  .gallery-cards .card .card-val { font-size: 13px; }
+  .gallery-cards .card .card-icon { font-size: 11px; }
+  .gallery-cards .card .card-center { font-size: 22px; }
+  .gallery-cards .card .card-bottom { font-size: 7px; }
+
+  /* --- Buttons --- */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn {
+    background: var(--good);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter .15s, transform .1s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .btn:hover { filter: brightness(1.12); }
+  .btn:active { transform: scale(.96); }
+  .btn:disabled { background: var(--border); cursor: not-allowed; }
+
+  /* --- OVERLAY --- */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s;
+    backdrop-filter: blur(6px);
+  }
+
+  .overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .overlay h2 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .overlay p {
+    font-size: 16px;
+    color: var(--text);
+    text-align: center;
+    max-width: 400px;
+    line-height: 1.5;
+  }
+
+  /* --- Element triangle diagram --- */
+  .element-triangle {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 4px 0;
+  }
+
+  .element-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .element-badge.fogo { background: rgba(240,136,62,.15); color: var(--fogo); }
+  .element-badge.agua { background: rgba(88,166,255,.15); color: var(--agua); }
+  .element-badge.gelo { background: rgba(121,192,255,.15); color: var(--gelo); }
+
+  /* --- Responsive --- */
+  @media (max-width: 600px) {
+    :root {
+      --card-w: 70px;
+      --card-h: 98px;
+    }
+    .header h1 { font-size: 22px; }
+    .arena { gap: 12px; padding: 14px; min-height: 150px; }
+    .arena-slot .card { transform: scale(1); }
+    .galleries { flex-direction: column; }
+    .card-center { font-size: 28px !important; }
+  }
+  @media (min-width: 601px) {
+    .game { padding-top: 28px; }
+  }
+</style>
+<script>document.documentElement.setAttribute("data-theme",(localStorage.getItem("theme")||"dark"));</script>
+</head>
+<body>
+
+<!-- Snowfall -->
+<div class="snowfall" id="snowfall"></div>
+
+<!-- Game -->
+<div class="game">
+  <header class="top">
+    <h1>Card-Jitsu</h1>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="theme-btn-sm" id="themeBtn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Voltar</a>
+    </div>
+  </header>
+  <div class="header">
+    <div class="subtitle">Batalha de Cartas</div>
+  </div>
+
+  <!-- Element triangle -->
+  <div class="element-triangle">
+    <div class="element-badge fogo">🔥 Fogo</div>
+    <div class="element-badge gelo">❄️ Gelo</div>
+    <div class="element-badge agua">💧 Água</div>
+  </div>
+
+  <!-- Win condition info -->
+  <div class="info-bar">
+    <strong>Como vencer:</strong> Vença rodadas e coleccione cartas. Ganhe formando um dos conjuntos:<br>
+    ① <strong>3 elementos diferentes</strong> (cores diferentes) — ou — ② <strong>3 cartas do mesmo elemento</strong> (cores diferentes)
+  </div>
+
+  <!-- Scores -->
+  <div class="score-row">
+    <div class="score-box">
+      <div class="label">Rodadas Suas</div>
+      <div class="val" id="playerRounds">0</div>
+    </div>
+    <div class="score-box">
+      <div class="label">Rodadas IA</div>
+      <div class="val" id="aiRounds">0</div>
+    </div>
+    <div class="score-box">
+      <div class="label">Empates</div>
+      <div class="val" id="draws">0</div>
+    </div>
+  </div>
+
+  <!-- Arena -->
+  <div class="arena" id="arena">
+    <div class="arena-slot">
+      <span class="slot-label">Você</span>
+      <div id="arenaPlayer"></div>
+    </div>
+    <div class="vs-icon">⚔️</div>
+    <div class="arena-slot">
+      <span class="slot-label">IA</span>
+      <div id="arenaAI"></div>
+    </div>
+    <div class="result-text" id="resultText" style="display:none;"></div>
+  </div>
+
+  <!-- Player hand -->
+  <div class="hand-area">
+    <div class="area-label">Sua Mão — Escolha uma carta</div>
+    <div class="hand" id="hand"></div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="btn-row">
+    <button class="btn" id="playBtn" disabled>Jogar Carta</button>
+    <button class="btn" id="newGameBtn">Novo Jogo</button>
+  </div>
+
+  <!-- Galleries -->
+  <div class="galleries">
+    <div class="gallery">
+      <div class="area-label">🏆 Suas Cartas Conquistadas</div>
+      <div class="gallery-cards" id="playerGallery"></div>
+    </div>
+    <div class="gallery">
+      <div class="area-label">🤖 Cartas da IA</div>
+      <div class="gallery-cards" id="aiGallery"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay">
+  <h2 id="overlayTitle"></h2>
+  <p id="overlayMsg"></p>
+  <button class="btn" id="overlayBtn">Jogar Novamente</button>
+</div>
+
+<script src="jogos.js"></script>
+<script>
+(() => {
+  'use strict';
+
+  /* ============================
+     CONSTANTES
+  ============================ */
+
+  // Elementos e suas relações: Fogo > Gelo > Água > Fogo
+  const ELEMENTOS = ['fogo', 'agua', 'gelo'];
+  const ICONES = { fogo: '🔥', agua: '💧', gelo: '❄️' };
+
+  // Cada elemento tem 3 cores únicas associadas
+  const CORES_ELEMENTO = {
+    fogo: ['amarelo', 'vermelho', 'roxo'],
+    agua: ['verde', 'azul', 'rosa'],
+    gelo: ['ciano', 'branco', 'prata'],
+  };
+
+  const CSS_CORES = {
+    amarelo: '#e3b341', vermelho: '#da3633', roxo: '#8957e5',
+    verde: '#2ea043', azul: '#1f6feb', rosa: '#db61a2',
+    ciano: '#56d4dd', branco: '#d2a8ff', prata: '#8b949e',
+  };
+
+  const NOMES_CORES = {
+    amarelo: 'Amarelo', vermelho: 'Vermelho', roxo: 'Roxo',
+    verde: 'Verde', azul: 'Azul', rosa: 'Rosa',
+    ciano: 'Ciano', branco: 'Branco', prata: 'Prata',
+  };
+
+  // Triângulo elemental: chave vence valor
+  const VENCE = { fogo: 'gelo', gelo: 'agua', agua: 'fogo' };
+
+  const TAMANHO_MAO = 5;
+  const VALOR_MIN = 1;
+  const VALOR_MAX = 10;
+
+  /* ============================
+     ESTADO DO JOGO
+  ============================ */
+  let baralho = [];       // todas as cartas disponíveis
+  let maoJogador = [];     // cartas na mão do jogador
+  let maoIA = [];          // cartas na mão da IA
+  let cartasJogador = [];  // cartas conquistadas pelo jogador (vitórias)
+  let cartasIA = [];       // cartas conquistadas pela IA (vitórias)
+  let cartaSelecionada = null;
+  let bloqueado = false;
+  let rodada = 0;
+  let vitoriasJogador = 0;
+  let vitoriasIA = 0;
+  let empates = 0;
+
+  /* ============================
+     DOM
+  ============================ */
+  const handEl        = document.getElementById('hand');
+  const arenaPlayer   = document.getElementById('arenaPlayer');
+  const arenaAI       = document.getElementById('arenaAI');
+  const resultText    = document.getElementById('resultText');
+  const playerGallery = document.getElementById('playerGallery');
+  const aiGallery     = document.getElementById('aiGallery');
+  const playBtn       = document.getElementById('playBtn');
+  const overlay       = document.getElementById('overlay');
+  const overlayTitle  = document.getElementById('overlayTitle');
+  const overlayMsg    = document.getElementById('overlayMsg');
+  const playerRoundsEl = document.getElementById('playerRounds');
+  const aiRoundsEl     = document.getElementById('aiRounds');
+  const drawsEl        = document.getElementById('draws');
+
+  /* ============================
+     BARALHO
+     Cria todas as combinações:
+     3 elementos × 3 cores × 10 valores = 90 cartas
+  ============================ */
+  function criarBaralho() {
+    const deck = [];
+    for (const elem of ELEMENTOS) {
+      for (const cor of CORES_ELEMENTO[elem]) {
+        for (let val = VALOR_MIN; val <= VALOR_MAX; val++) {
+          deck.push({ elemento: elem, cor, valor: val });
+        }
+      }
+    }
+    return deck;
+  }
+
+  function embaralhar(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  /* ============================
+     INICIALIZAÇÃO
+  ============================ */
+  function novoJogo() {
+    baralho = embaralhar(criarBaralho());
+    maoJogador = baralho.splice(0, TAMANHO_MAO);
+    maoIA = baralho.splice(0, TAMANHO_MAO);
+    cartasJogador = [];
+    cartasIA = [];
+    cartaSelecionada = null;
+    bloqueado = false;
+    rodada = 0;
+    vitoriasJogador = 0;
+    vitoriasIA = 0;
+    empates = 0;
+
+    overlay.classList.remove('active');
+    resultText.style.display = 'none';
+    arenaPlayer.innerHTML = '';
+    arenaAI.innerHTML = '';
+
+    atualizarPlacar();
+    renderizarMao();
+    renderizarGalerias();
+  }
+
+  /* ============================
+     RENDERIZAÇÃO DE CARTAS
+  ============================ */
+  function criarCartaHTML(carta, clicavel = false) {
+    const el = document.createElement('div');
+    el.className = `card ${carta.elemento}${clicavel ? ' clickable' : ''}`;
+    el.innerHTML = `
+      <div class="card-top">
+        <span class="card-val">${carta.valor}</span>
+        <span class="color-dot" style="background:${CSS_CORES[carta.cor]}"></span>
+      </div>
+      <div class="card-center">${ICONES[carta.elemento]}</div>
+      <div class="card-bottom">${NOMES_CORES[carta.cor]}</div>
+    `;
+    return el;
+  }
+
+  function renderizarMao() {
+    handEl.innerHTML = '';
+    maoJogador.forEach((carta, idx) => {
+      const el = criarCartaHTML(carta, true);
+      if (cartaSelecionada === idx) {
+        el.classList.add('selected');
+      }
+      el.addEventListener('click', () => selecionarCarta(idx));
+      handEl.appendChild(el);
+    });
+  }
+
+  function renderizarGalerias() {
+    playerGallery.innerHTML = '';
+    cartasJogador.forEach(c => playerGallery.appendChild(criarCartaHTML(c)));
+
+    aiGallery.innerHTML = '';
+    cartasIA.forEach(c => aiGallery.appendChild(criarCartaHTML(c)));
+  }
+
+  function atualizarPlacar() {
+    playerRoundsEl.textContent = vitoriasJogador;
+    aiRoundsEl.textContent = vitoriasIA;
+    drawsEl.textContent = empates;
+  }
+
+  /* ============================
+     SELEÇÃO DE CARTA
+  ============================ */
+  function selecionarCarta(idx) {
+    if (bloqueado) return;
+    cartaSelecionada = cartaSelecionada === idx ? null : idx;
+    playBtn.disabled = cartaSelecionada === null;
+    renderizarMao();
+  }
+
+  /* ============================
+     RESOLVER DUELO
+     Aplica a matriz de decisão elemental + pesos
+  ============================ */
+  function resolverDuelo(cJog, cIA) {
+    // Elementos diferentes: verifica triângulo elemental
+    if (cJog.elemento !== cIA.elemento) {
+      if (VENCE[cJog.elemento] === cIA.elemento) return 'jogador';
+      if (VENCE[cIA.elemento] === cJog.elemento) return 'ia';
+    }
+    // Mesmo elemento: compara valores
+    if (cJog.valor > cIA.valor) return 'jogador';
+    if (cIA.valor > cJog.valor) return 'ia';
+    // Empate absoluto (mesmo elemento e mesmo valor)
+    return 'empate';
+  }
+
+  /* ============================
+     INTELIGÊNCIA ARTIFICIAL
+     Prioriza:
+     1) Cartas que completam seu set de vitória
+     2) Cartas que vencem a carta provável do jogador
+     3) Carta de maior valor disponível
+  ============================ */
+  function iaEscolherCarta() {
+    if (maoIA.length === 0) return null;
+
+    // Tentar completar set: verificar se alguma carta da mão
+    // formaria um set vencedor com as cartas já conquistadas
+    for (let i = 0; i < maoIA.length; i++) {
+      const teste = [...cartasIA, maoIA[i]];
+      if (verificarSet(teste)) return i;
+    }
+
+    // Tentar bloquear: se o jogador está perto de completar um set,
+    // jogar carta que vence o elemento que falta
+    // (simplificado: jogar carta do elemento que vence o mais frequente nas cartas do jogador)
+    if (cartasJogador.length > 0) {
+      const elemMaisFreq = elementoMaisFrequente(cartasJogador);
+      const elemVencedor = Object.keys(VENCE).find(k => VENCE[k] === elemMaisFreq);
+      // Encontrar carta da IA com esse elemento e maior valor
+      let bestIdx = -1;
+      let bestVal = -1;
+      for (let i = 0; i < maoIA.length; i++) {
+        if (maoIA[i].elemento === elemVencedor && maoIA[i].valor > bestVal) {
+          bestVal = maoIA[i].valor;
+          bestIdx = i;
+        }
+      }
+      if (bestIdx !== -1) return bestIdx;
+    }
+
+    // Fallback: carta de maior valor
+    let bestIdx = 0;
+    let bestVal = -1;
+    for (let i = 0; i < maoIA.length; i++) {
+      if (maoIA[i].valor > bestVal) {
+        bestVal = maoIA[i].valor;
+        bestIdx = i;
+      }
+    }
+    return bestIdx;
+  }
+
+  function elementoMaisFrequente(cartas) {
+    const contagem = { fogo: 0, agua: 0, gelo: 0 };
+    for (const c of cartas) contagem[c.elemento]++;
+    return Object.keys(contagem).reduce((a, b) => contagem[a] > contagem[b] ? a : b);
+  }
+
+  /* ============================
+     VERIFICAÇÃO DE SET (Condição de Vitória)
+     Percorre as cartas conquistadas e verifica se existe
+     um subconjunto de 3 cartas que satisfaz:
+     - 3 elementos diferentes, cores todas diferentes
+       OU
+     - 3 cartas do mesmo elemento, cores todas diferentes
+  ============================ */
+  function verificarSet(cartas) {
+    if (cartas.length < 3) return false;
+
+    // Gerar todas as combinações de 3 cartas
+    for (let i = 0; i < cartas.length - 2; i++) {
+      for (let j = i + 1; j < cartas.length - 1; j++) {
+        for (let k = j + 1; k < cartas.length; k++) {
+          const a = cartas[i], b = cartas[j], c = cartas[k];
+
+          // Verificar cores todas diferentes
+          const cores = new Set([a.cor, b.cor, c.cor]);
+          if (cores.size !== 3) continue;
+
+          // Condição 1: 3 elementos diferentes
+          const elementos = new Set([a.elemento, b.elemento, c.elemento]);
+          if (elementos.size === 3) return true;
+
+          // Condição 2: mesmo elemento
+          if (a.elemento === b.elemento && b.elemento === c.elemento) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /* ============================
+     COMPRAR CARTA DO BARALHO
+  ============================ */
+  function comprarCarta(mao) {
+    if (baralho.length === 0) return;
+    mao.push(baralho.pop());
+  }
+
+  /* ============================
+     JOGAR CARTA (ação principal)
+  ============================ */
+  function jogarCarta() {
+    if (cartaSelecionada === null || bloqueado) return;
+    bloqueado = true;
+    rodada++;
+
+    const cartaJog = maoJogador.splice(cartaSelecionada, 1)[0];
+    cartaSelecionada = null;
+    playBtn.disabled = true;
+
+    // IA escolhe carta
+    const idxIA = iaEscolherCarta();
+    const cartaIA = maoIA.splice(idxIA, 1)[0];
+
+    // Exibir na arena
+    arenaPlayer.innerHTML = '';
+    arenaAI.innerHTML = '';
+    arenaPlayer.appendChild(criarCartaHTML(cartaJog));
+    arenaAI.appendChild(criarCartaHTML(cartaIA));
+
+    // Resolver duelo
+    const resultado = resolverDuelo(cartaJog, cartaIA);
+
+    setTimeout(() => {
+      resultText.style.display = 'block';
+
+      if (resultado === 'jogador') {
+        resultText.textContent = 'Você venceu esta rodada!';
+        resultText.className = 'result-text win';
+        cartasJogador.push(cartaJog);
+        vitoriasJogador++;
+      } else if (resultado === 'ia') {
+        resultText.textContent = 'A IA ganhou este duelo!';
+        resultText.className = 'result-text lose';
+        cartasIA.push(cartaIA);
+        vitoriasIA++;
+      } else {
+        resultText.textContent = 'Empate! Rodada anulada.';
+        resultText.className = 'result-text draw';
+        empates++;
+      }
+
+      atualizarPlacar();
+      renderizarGalerias();
+
+      // Comprar novas cartas
+      comprarCarta(maoJogador);
+      comprarCarta(maoIA);
+
+      // Verificar vitória por set
+      const jogadorSet = verificarSet(cartasJogador);
+      const iaSet = verificarSet(cartasIA);
+
+      setTimeout(() => {
+        if (jogadorSet && iaSet) {
+          mostrarFimDeJogo('Empate Épico!', 'Ambos completaram um set elemental ao mesmo tempo!');
+          return;
+        }
+        if (jogadorSet) {
+          mostrarFimDeJogo('🏆 Vitória!', 'Você completou um set elemental e venceu a partida!');
+          return;
+        }
+        if (iaSet) {
+          mostrarFimDeJogo('💀 Derrota!', 'A IA completou um set elemental antes de você.');
+          return;
+        }
+
+        // Verificar se ambos ficaram sem cartas e baralho vazio
+        if (maoJogador.length === 0 && maoIA.length === 0 && baralho.length === 0) {
+          // Quem tem mais cartas conquistadas vence
+          if (cartasJogador.length > cartasIA.length) {
+            mostrarFimDeJogo('🏆 Vitória!', `Você venceu com ${cartasJogador.length} cartas conquistadas contra ${cartasIA.length} da IA!`);
+          } else if (cartasIA.length > cartasJogador.length) {
+            mostrarFimDeJogo('💀 Derrota!', `A IA venceu com ${cartasIA.length} cartas contra ${cartasJogador.length} suas.`);
+          } else {
+            mostrarFimDeJogo('Empate!', 'Ambos terminaram com o mesmo número de cartas.');
+          }
+          return;
+        }
+
+        // Próxima rodada
+        renderizarMao();
+        bloqueado = false;
+      }, 1000);
+    }, 400);
+  }
+
+  /* ============================
+     FIM DE JOGO
+  ============================ */
+  function mostrarFimDeJogo(titulo, msg) {
+    overlayTitle.textContent = titulo;
+    overlayMsg.textContent = msg;
+    overlay.classList.add('active');
+  }
+
+  /* ============================
+     EVENTOS
+  ============================ */
+  playBtn.addEventListener('click', jogarCarta);
+  document.getElementById('newGameBtn').addEventListener('click', novoJogo);
+  document.getElementById('overlayBtn').addEventListener('click', novoJogo);
+
+  /* ============================
+     NEVE (decoração)
+  ============================ */
+  function criarNeve() {
+    const container = document.getElementById('snowfall');
+    for (let i = 0; i < 40; i++) {
+      const flake = document.createElement('div');
+      flake.className = 'snowflake';
+      flake.style.left = Math.random() * 100 + '%';
+      flake.style.animationDuration = (3 + Math.random() * 5) + 's';
+      flake.style.animationDelay = Math.random() * 5 + 's';
+      flake.style.width = flake.style.height = (2 + Math.random() * 4) + 'px';
+      container.appendChild(flake);
+    }
+  }
+
+  /* ============================
+     INICIAR
+  ============================ */
+  criarNeve();
+  novoJogo();
+})();
+</script>
+</body>
+</html>

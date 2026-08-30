@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ligue 4</title>
+<link rel="icon" type="image/svg+xml" href="assets/ligue4.svg">
 <link rel="stylesheet" href="jogos.css">
 <style>
   .turnbar{display:flex; align-items:center; justify-content:center; gap:10px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px}
@@ -14,7 +15,7 @@
   .mode{display:flex; flex-direction:column; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:8px}
   .modebtns{display:flex; gap:8px}
   .modebtns button{flex:1; padding:10px; font-size:14px; background:transparent; color:var(--text-soft); border:1px solid transparent; border-radius:10px}
-  .modebtns button.active{background:var(--surface-2); color:var(--text); border-color:var(--border)}
+  .modebtns button.active { background: linear-gradient(135deg, var(--accent), var(--acc-strong)); color:#fff; border-color:transparent; }
   .turnName.red{color:var(--accent)}
   .turnName.yellow{color:var(--accent-2)}
   .hint{aspect-ratio:1/1; border-radius:50%; opacity:0; transition:opacity .1s}
@@ -70,11 +71,18 @@
 
 <div class="overlay hidden" id="modeOverlay">
   <div class="modal">
-    <h2>Ligue 4</h2>
+    <h2><img src="assets/ligue4.svg" width="26" height="26" alt=""> Ligue 4</h2>
     <p class="sub">Escolha o modo de jogo</p>
     <div class="modebtns">
       <button id="btnCpu">vs Computador</button>
       <button id="btn2p">2 Jogadores</button>
+    </div>
+    <div id="starterRow">
+      <p class="sub" style="margin-top:10px">Quem começa?</p>
+      <div class="modebtns">
+        <button id="btnHumanStart">Você começa</button>
+        <button id="btnCpuStart">Computador começa</button>
+      </div>
     </div>
     <button class="primary" id="btnStart">Iniciar</button>
   </div>
@@ -94,6 +102,7 @@
 const ROWS=6, COLS=7;
 const RED=1, YELLOW=2;
 let grid, turn, over, mode='cpu';
+let starter=RED;
 let names={[RED]:'Âmbar',[YELLOW]:'Verde'};
 
 const colsEl=document.getElementById('cols');
@@ -103,10 +112,11 @@ const dotY=document.querySelector('.dot.yellow');
 
 function init(){
   grid=Array.from({length:ROWS},()=>Array(COLS).fill(0));
-  turn=RED; over=false;
+  turn=starter; over=false;
   updateTurn();
   render();
   document.getElementById('winOverlay').classList.add('hidden');
+  if(mode==='cpu'&&turn===YELLOW) setTimeout(aiMove,thinkDelay());
 }
 
 function render(){
@@ -133,8 +143,9 @@ function render(){
   }
 }
 
-function drop(c){
+function drop(c, fromAi){
   if(over) return;
+  if(!fromAi&&mode==='cpu'&&turn===YELLOW) return;
   for(let r=ROWS-1;r>=0;r--){
     if(grid[r][c]===0){
       grid[r][c]=turn;
@@ -181,6 +192,7 @@ function isWinCell(r,c){
 
 function showHint(c){
   if(over) return;
+  if(mode==='cpu'&&turn===YELLOW) return;
   const col=colsEl.children[c];
   const hint=col.querySelector('.hint');
   hint.className='hint show '+(turn===RED?'red':'yellow');
@@ -217,7 +229,7 @@ function thinkDelay(){ return (Math.random()<0.5?500:1500)+Math.floor(Math.rando
 function aiMove(){
   if(over||turn!==YELLOW) return;
   const col=bestMove(YELLOW);
-  if(col>=0) drop(col);
+  if(col>=0) drop(col,true);
 }
 function scoreCell(r,c,p){
   const dirs=[[0,1],[1,0],[1,1],[1,-1]];
@@ -253,6 +265,12 @@ function selectMode(m){
   selected=m;
   document.getElementById('btn2p').classList.toggle('active',m==='2p');
   document.getElementById('btnCpu').classList.toggle('active',m==='cpu');
+  document.getElementById('starterRow').classList.toggle('hidden',m!=='cpu');
+}
+function selectStarter(s){
+  starter=s;
+  document.getElementById('btnHumanStart').classList.toggle('active',s===RED);
+  document.getElementById('btnCpuStart').classList.toggle('active',s===YELLOW);
 }
 function setMode(m){
   mode=m;
@@ -265,11 +283,13 @@ function setMode(m){
   }
   updateTurn();
 }
-function showMode(){ selectMode(selected); document.getElementById('modeOverlay').classList.remove('hidden'); }
+function showMode(){ selectMode(selected); selectStarter(starter); document.getElementById('modeOverlay').classList.remove('hidden'); }
 function startGame(){ setMode(selected); document.getElementById('modeOverlay').classList.add('hidden'); init(); }
 
 document.getElementById('btnCpu').addEventListener('click',()=>selectMode('cpu'));
 document.getElementById('btn2p').addEventListener('click',()=>selectMode('2p'));
+document.getElementById('btnHumanStart').addEventListener('click',()=>selectStarter(RED));
+document.getElementById('btnCpuStart').addEventListener('click',()=>selectStarter(YELLOW));
 document.getElementById('btnStart').addEventListener('click',startGame);
 document.getElementById('btnReset').addEventListener('click',showMode);
 document.getElementById('btnAgain').addEventListener('click',init);

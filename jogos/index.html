@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jogos — Gustavo Ripka</title>
+<title>Jogos de Gustavo Ripka</title>
+<link rel="icon" type="image/svg+xml" href="assets/jogos.svg">
 <link rel="stylesheet" href="jogos.css">
 <style>
   .apphub { max-width: 1000px; }
-  .apphub header { text-align: center; margin-bottom: clamp(20px, 4vw, 36px); position: relative; padding-top: 48px; }
+  .apphub header { text-align: center; margin-bottom: clamp(20px, 4vw, 36px); }
   .theme-btn {
     position: absolute; right: 0; top: 0;
     display: inline-flex; align-items: center; justify-content: center;
@@ -24,16 +25,16 @@
   .apphub h1 svg { color: var(--acc); }
   .apphub h1 span { color: var(--acc); }
   .apphub header p { color: var(--text-soft); margin-top: 8px; font-size: 15px; }
-  nav { display: flex; justify-content: center; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
-  nav a {
+  .apphub nav { display: flex; justify-content: center; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+  .apphub nav a {
     color: var(--text-soft); text-decoration: none; font-size: 13px; font-weight: 600;
     padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; transition: all .15s;
   }
-  nav a:hover { color: var(--acc); border-color: var(--acc); }
+  .apphub nav a:hover { color: var(--acc); border-color: var(--acc); }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
   .card {
     background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
-    padding: 22px; display: flex; flex-direction: column; gap: 12px; position: relative;
+    padding: 64px 22px 22px; display: flex; flex-direction: column; gap: 12px; position: relative;
     transition: transform .15s, border-color .15s, box-shadow .15s;
     text-decoration: none; color: inherit;
   }
@@ -42,7 +43,7 @@
     width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
     background: var(--surface-2); border: 1px solid var(--border);
   }
-  .card .icon svg { color: var(--game, var(--acc)); }
+  .card .icon img { width: 46px; height: 46px; }
   .card h2 { font-size: 20px; font-weight: 700; }
   .card p { color: var(--text-soft); font-size: 14px; line-height: 1.5; flex: 1; }
   .card .tags { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -53,21 +54,80 @@
     padding: 11px; border-radius: 12px; transition: filter .12s;
   }
   .play:hover { filter: brightness(1.12); text-decoration: none; }
-  .badge { position: absolute; top: 18px; right: 18px; font-size: 11px; color: var(--text); background: linear-gradient(135deg, var(--acc), var(--acc-strong)); padding: 3px 9px; border-radius: 999px; font-weight: 700; }
+  .card::before {
+    content: ''; display: block; position: absolute; top: 0; left: 0; right: 0;
+    height: 48px; background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0; z-index: 1;
+  }
+  .card-dots {
+    position: absolute; top: 14px; left: 16px;
+    display: flex; align-items: center; gap: 7px; z-index: 2;
+  }
+  .card-dots .dot { width: 12px; height: 12px; border-radius: 50%; display: block; }
+  .card-dots .dot-green { background: var(--game-accent-green); }
+  .card-dots .dot-amber { background: var(--acc); }
+  .card-dots .dot-black { background: var(--text); }
+  .dot-arrow-wrap {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 5px;
+    background: var(--bg); border: 1px solid var(--border); align-self: center;
+  }
+  .dot-arrow-wrap .dot-arrow { display: block; width: 10px; height: 10px; color: var(--text-soft); }
   .soon { opacity: .55; pointer-events: none; }
   .soon .play { background: var(--surface-2); color: var(--text-soft); }
   footer { text-align: center; color: var(--text-soft); font-size: 13px; margin-top: 36px; }
   footer a { color: var(--acc); text-decoration: none; }
+  footer .footer-logo { font-weight: 800; color: var(--text); }
+  footer .footer-logo span { color: var(--acc); }
+  .nav { position: sticky; top: 0; z-index: 100; height: var(--nav-h); display: flex; align-items: center; background: color-mix(in srgb, var(--bg) 80%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid transparent; transition: border-color .3s, box-shadow .3s; }
+  .nav.scrolled { border-bottom-color: var(--border); box-shadow: var(--shadow-sm); }
+  .nav .container { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 20px; }
+  .nav-logo { font-weight: 800; font-size: 1.2rem; color: var(--text); letter-spacing: .02em; }
+  .nav-logo:hover { text-decoration: none; }
+  .nav-logo span { color: var(--acc); }
+  .nav-links { display: flex; align-items: center; gap: 24px; list-style: none; }
+  .nav-links a { color: var(--text-soft); font-weight: 500; font-size: .95rem; }
+  .nav-links a:hover, .nav-links a.active { color: var(--acc); text-decoration: none; }
+  .nav-actions { display: flex; align-items: center; gap: 12px; }
+  .icon-btn { width: 40px; height: 40px; padding: 0; display: inline-flex; align-items: center; justify-content: center; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); cursor: pointer; transition: border-color .2s, color .2s; }
+  .icon-btn:hover { border-color: var(--acc); color: var(--acc); }
+  .nav-toggle { display: none; }
+  @media (max-width: 768px) {
+    .nav-toggle { display: inline-flex; }
+    .nav-links { position: fixed; inset: var(--nav-h) 0 auto 0; flex-direction: column; align-items: flex-start; gap: 0; background: var(--surface); border-bottom: 1px solid var(--border); padding: 8px 20px 16px; box-shadow: var(--shadow); }
+    .nav-links[hidden] { display: none; }
+    .nav-links a { display: block; padding: 12px 0; width: 100%; }
+  }
   @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
 </style>
 <script>document.documentElement.setAttribute("data-theme",(localStorage.getItem("theme")||"dark"));</script>
 </head>
 <body>
+<nav class="nav" id="nav">
+  <div class="container">
+    <a class="nav-logo" href="../index.html">Gustavo<span>.</span>Ripka</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="../index.html#principal">Principal</a></li>
+      <li><a href="../index.html#sobre">Sobre</a></li>
+      <li><a href="../index.html#habilidades">Habilidades</a></li>
+      <li><a href="../index.html#linguagens">Stack</a></li>
+      <li><a href="../index.html#projetos">Projetos</a></li>
+      <li><a href="../index.html#projetos-anteriores">Anteriores</a></li>
+      <li><a href="index.html" class="active">Jogos</a></li>
+      <li><a href="../tcc/index.html">TCC</a></li>
+      <li><a href="../index.html#contato">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Alternar tema claro e escuro"><svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    </div>
+  </div>
+</nav>
 <div class="wrap apphub">
   <header>
-    <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-    <h1><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="14" height="10" rx="2"/><path d="M5 8V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"/><path d="M8 13h2m3 0h2"/></svg> <span>Jogos</span></h1>
-    <p>Coleção de joguinhos clássicos — escolha e jogue.</p>
+    <h1><span>Jogos</span></h1>
+    <p>Coleção de joguinhos clássicos escolha e jogue.</p>
     <nav>
       <a href="#ligue4">Ligue 4</a>
       <a href="#xadrez">Xadrez</a>
@@ -75,24 +135,64 @@
       <a href="#truco">Truco</a>
       <a href="#paciencia">Paciência</a>
       <a href="#slide">Slide</a>
+      <a href="#2048">2048</a>
+      <a href="#card-jitsu">Card Jitsu</a>
+      <a href="#tetris">Tetris</a>
     </nav>
   </header>
 
   <div class="grid" id="grid"></div>
 
-  <footer>Feito por Gustavo Ripka — mais jogos em breve · <a href="../index.html">← Portfólio</a></footer>
+  <footer>Feito por <a href="../index.html" class="footer-logo">Gustavo<span>.</span>Ripka</a> — mais jogos em breve</footer>
 </div>
 
-<script src="jogos.js"></script>
 <script>
-const ICONS = {
-  ligue4: '<circle cx="12" cy="12" r="9"/>',
-  xadrez: '<circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="7" r="2.5"/><circle cx="12" cy="13" r="2.5"/><path d="M12 3v2m-4 1l-3 5 3 1 4-4m4 3l3 5-3 1-4-4"/>',
-  dama: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>',
-  truco: '<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 6l-2-3m5 3l-2-3m5 3l-2-3m5 3l-2-3"/>',
-  paciencia: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4m8-4v4"/><path d="M7 12h10M7 16h10"/>',
-  slide: '<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h6V4M14 14h6v6"/>'
-};
+const navEl = document.getElementById('nav');
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+const themeBtn = document.getElementById('themeBtn');
+const themeIcon = document.getElementById('themeIcon');
+
+// Garante que o menu mobile inicie fechado se a tela for pequena
+if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+    navLinks.hidden = true;
+}
+
+if (typeof window !== 'undefined') window.addEventListener('scroll', () => navEl.classList.toggle('scrolled', window.scrollY > 10), { passive: true });
+
+navToggle.addEventListener('click', () => {
+  const isHidden = navLinks.hidden;
+  navLinks.hidden = !isHidden;
+  navToggle.setAttribute('aria-expanded', isHidden);
+  navToggle.setAttribute('aria-label', isHidden ? 'Fechar menu' : 'Abrir menu');
+});
+
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  if (window.innerWidth <= 768) {
+    navLinks.hidden = true;
+    navToggle.setAttribute('aria-expanded', 'false');
+  }
+}));
+
+if (document.documentElement.getAttribute('data-theme') === 'dark') {
+    themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+}
+
+themeBtn.addEventListener('click', () => {
+    const root = document.documentElement;
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    const newTheme = isDark ? 'light' : 'dark';
+    
+    root.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    if (newTheme === 'dark') {
+        themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+    } else {
+        themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" stroke="none"/>';
+    }
+});
+
 const GAMES = [
   { id: 'ligue4', title: 'Ligue 4', desc: 'Conecte 4 discos da mesma cor na vertical, horizontal ou diagonal antes do adversário. Jogo de estratégia para 2 jogadores.', tags: ['2 jogadores', 'Estratégia'], href: 'ligue4.html', done: true, accent: 'red' },
   { id: 'xadrez', title: 'Xadrez', desc: 'O clássico jogo de estratégia. Capture o rei adversário com movimentos clássicos de todas as peças. Para 2 jogadores.', tags: ['2 jogadores', 'Estratégia'], href: 'xadrez.html', done: true, accent: 'purple' },
@@ -100,6 +200,9 @@ const GAMES = [
   { id: 'truco', title: 'Truco', desc: 'O tradicional jogo de cartas brasileiro com manilhas, blefes e pedidos de truco. Vença as 3 mãos contra o computador.', tags: ['1 jogador', 'Cartas'], href: 'truco.html', done: true, accent: 'gold' },
   { id: 'paciencia', title: 'Paciência', desc: 'O clássico solitaire Klondike. Empilhe as cartas em ordem e organize as fundações do Ás ao Rei. Jogador único.', tags: ['1 jogador', 'Cartas'], href: 'paciencia.html', done: true, accent: 'cyan' },
   { id: 'slide', title: 'Slide Puzzle', desc: 'Quebra-cabeça deslizante 3x3. Organize os blocos numerados em ordem com o menor número de movimentos e tempo.', tags: ['1 jogador', 'Lógica'], href: 'slide.html', done: true, accent: 'blue' },
+  { id: '2048', title: '2048', desc: 'Deslize e combine os blocos de números até formar o 2048. Teclado ou gestos de swipe no celular.', tags: ['1 jogador', 'Lógica'], href: '2048.html', done: true, accent: 'gold' },
+  { id: 'card-jitsu', title: 'Card Jitsu', desc: 'Batalha de cartas elemental no dojo: Fogo, Gelo e Água. Vença duelos e complete conjuntos antes da IA.', tags: ['1 jogador', 'Cartas'], href: 'card-jitsu.html', done: true, accent: 'cyan' },
+  { id: 'tetris', title: 'Tetris', desc: 'O clássico dos blocos. Gire, mova e encaixe as peças para completar linhas — teclado no desktop, deslize ou botões no celular.', tags: ['1 jogador', 'Arcade'], href: 'tetris.html', done: true, accent: 'green' },
 ];
 
 const grid = document.getElementById('grid');
@@ -110,10 +213,9 @@ GAMES.forEach(g => {
   card.href = g.href || '#';
   card.setAttribute('data-accent', g.accent);
   card.style.setProperty('--game', 'var(--game-accent-' + g.accent + ')');
-  const badge = g.done ? '<span class="badge">Jogar</span>' : '<span class="badge" style="background:var(--surface-2);color:var(--text-soft)">Em breve</span>';
   card.innerHTML = `
-    ${badge}
-    <div class="icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[g.id]}</svg></div>
+    <div class="card-dots"><span class="dot dot-black"></span><span class="dot dot-amber"></span><span class="dot dot-green"></span><span class="dot-arrow-wrap"><svg class="dot-arrow" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 4 6 8 10 4"/></svg></span></div>
+    <div class="icon"><img class="game-icon" src="assets/${g.id}.svg" alt="${g.title}" width="46" height="46"></div>
     <h2>${g.title}</h2>
     <p>${g.desc}</p>
     <div class="tags">${g.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
