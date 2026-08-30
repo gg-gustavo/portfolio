@@ -14,7 +14,7 @@ function mkEl(){
   const cls = { _s:new Set(),
     add(x){this._s.add(x)}, remove(x){this._s.delete(x)},
     toggle(x,f){f?this._s.add(x):this._s.delete(x)}, contains(x){return this._s.has(x)} };
-  return {
+  const el = {
     classList:cls, children:[], _l:[], dataset:{},
     style:{ setProperty(k,v){this[k]=v;} },
     textContent:'', innerHTML:'', value:'', disabled:false, id:'',
@@ -25,6 +25,9 @@ function mkEl(){
     setAttribute(){}, getAttribute(){return null},
     getBoundingClientRect(){ return {left:0,top:0,width:0,height:0}; }
   };
+  el.parentNode = el;
+  el.insertBefore = function(e,r){ this.children.push(e); return e; };
+  return el;
 }
 
 global.localStorage = { getItem:()=>null, setItem:()=>{} };

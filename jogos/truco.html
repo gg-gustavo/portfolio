@@ -37,9 +37,18 @@
   .sidehand{display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px 8px}
   .sidehand .card{max-width:42px; margin-top:-16px; box-shadow:0 3px 6px rgba(0,0,0,.45)}
   .sidehand .card:first-child{margin-top:0}
-  .sidehand .card:nth-child(1){transform:rotate(-8deg)}
-  .sidehand .card:nth-child(2){transform:rotate(0deg)}
-  .sidehand .card:nth-child(3){transform:rotate(8deg)}
+  .sidehand .sname{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px}
+  .sidehand.left{flex-direction:row; align-items:flex-start}
+  .sidehand.left .card{transform:rotate(90deg); margin-top:-2px; margin-left:-22px}
+  .sidehand.left .card:first-child{margin-left:0}
+  .sidehand.left .sname{transform:rotate(90deg); align-self:center}
+  .sidehand.right{flex-direction:row; align-items:flex-start}
+  .sidehand.right .card{transform:rotate(-90deg); margin-top:-2px; margin-left:-22px}
+  .sidehand.right .card:first-child{margin-left:0}
+  .sidehand.right .sname{transform:rotate(-90deg); align-self:center}
+  .sidehand.top{flex-direction:column; background:none; border:none; padding:0; box-shadow:none}
+  .sidehand.top .card{max-width:36px; margin-top:-14px}
+  .sidehand.top .sname{transform:none}
   .table{
     background:
       radial-gradient(ellipse at center, rgba(255,255,255,.07), transparent 65%),
@@ -47,19 +56,25 @@
     border:1px solid #0f2e1d;
     border-radius:18px;
     padding:14px; display:flex; flex-direction:column; justify-content:space-around; gap:8px;
-    align-items:center; min-height:380px; width:min(100%,420px); margin:0 auto;
+    align-items:center; min-height:340px; width:min(100%,460px); margin:0 auto;
     box-shadow:
       inset 0 5px 14px rgba(0,0,0,.55),
       inset 0 -2px 5px rgba(255,255,255,.05),
       0 6px 16px rgba(0,0,0,.35);
   }
-  .table.dupla{display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-areas:". top ." "left center right" ". bottom ."; align-items:center; justify-items:center; gap:6px; width:min(100%,420px)}
-  .table.dupla .playzone .card{width:58px}
-  .table.dupla .vira .card{width:52px}
+  .table.dupla{display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-areas:". top ." "left center right" ". bottom ."; align-items:center; justify-items:center; gap:6px; width:min(100%,460px)}
+  .table.dupla .playzone .card{width:52px}
+  .table.dupla .vira .card{width:48px}
   #p1Play{grid-area:left} #p2Play{grid-area:top} #p3Play{grid-area:right} #humanPlay{grid-area:bottom} #viraBox{grid-area:center}
+  .table.dupla #p2Hand{grid-area:top; align-self:start; margin-bottom:-18px; z-index:1}
+  .table.dupla #p2Play{align-self:end}
   .playzone{display:flex; flex-direction:column; align-items:center; gap:6px}
   .playzone .tag{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px}
   .table .card{width:80px}
+  .cpu-hand{display:flex; align-items:flex-end; justify-content:center; gap:8px}
+  .cpu-hand .sname{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px}
+  .cpu-hand .card{width:44px; max-width:44px; box-shadow:0 3px 6px rgba(0,0,0,.5)}
+  .cpu-hand .card + .card{margin-left:-24px}
   .card{
     width:100%; max-width:80px; aspect-ratio:2/3; border-radius:10px; position:relative; cursor:pointer;
     background:#fff; color:#1a1a1a; padding:5px; font-size:16px; font-weight:700;
@@ -123,6 +138,21 @@
     .sidehand .card:not(:first-child){display:none}
     .tablearea{gap:6px}
   }
+  @media (orientation:landscape) and (max-height:520px){
+    .wrap{max-width:760px; gap:8px}
+    .table{min-height:0; width:min(100%,560px); padding:10px}
+    .table .card{width:64px}
+    .cpu-hand .card{width:38px}
+    .table.dupla .playzone .card{width:46px}
+    .table.dupla .vira .card{width:42px}
+    .hand{padding:10px; min-height:0}
+    .hand .card{max-width:56px; min-width:44px}
+    .scorebar{padding:10px}
+    .sidehand{padding:8px 5px}
+    .sidehand .card{max-width:30px; margin-top:-12px}
+    .sidehand.top .card{max-width:30px}
+    .status,.pointsbar,.vale,.dots{margin-top:0}
+  }
 </style>
 <script>document.documentElement.setAttribute("data-theme",(localStorage.getItem("theme")||"dark"));</script>
 </head>
@@ -154,22 +184,22 @@
 
   <div class="status" id="status">Preparando...</div>
 
-  <div class="cpuhand" id="cpuHand"></div>
   <div class="tablearea">
-    <div class="sidehand hidden" id="p1Hand"></div>
+    <div class="sidehand left hidden" id="p1Hand"><div class="sname">Adv 1</div></div>
     <div class="midcol">
-      <div class="cpuhand hidden" id="p2Hand"></div>
       <div class="table" id="table">
+        <div class="cpu-hand" id="cpuHandInTable"></div>
         <div class="playzone" id="cpuPlay"><div class="tag">Computador</div></div>
         <div class="playzone hidden" id="p1Play"><div class="tag">Adv 1</div></div>
         <div class="playzone hidden" id="p2Play"><div class="tag">Parceiro</div></div>
         <div class="playzone hidden" id="p3Play"><div class="tag">Adv 2</div></div>
         <div class="vira" id="viraBox"><div class="lbl">Vira</div></div>
         <div class="playzone" id="humanPlay"><div class="tag">Você</div></div>
+        <div class="sidehand top hidden" id="p2Hand"><div class="sname">Parceiro</div></div>
       </div>
       <div class="hand" id="hand"></div>
     </div>
-    <div class="sidehand hidden" id="p3Hand"></div>
+    <div class="sidehand right hidden" id="p3Hand"><div class="sname">Adv 2</div></div>
   </div>
 
   <div class="controls">
@@ -293,10 +323,9 @@ function setStatus(t){ document.getElementById('status').textContent=t; }
 function render(){
   const isDupla=mode==='dupla';
   document.getElementById('table').classList.toggle('dupla',isDupla);
-  document.getElementById('cpuHand').classList.toggle('hidden',isDupla);
   document.getElementById('p1Hand').classList.toggle('hidden',!isDupla);
-  document.getElementById('p2Hand').classList.toggle('hidden',!isDupla);
   document.getElementById('p3Hand').classList.toggle('hidden',!isDupla);
+  document.getElementById('cpuHandInTable').classList.toggle('hidden',isDupla);
   const vb=document.getElementById('viraBox');
   vb.innerHTML='<div class="lbl">Vira</div>';
   if(vira) vb.appendChild(cardEl(vira));
@@ -306,6 +335,12 @@ function render(){
     document.getElementById(id).classList.toggle('hidden',!show);
     renderPlay(id,seat);
   });
+  // mão do CPU (2p): 3 cartas viradas dentro da mesa
+  const ocument = document.getElementById('cpuHandInTable');
+  ocument.innerHTML='';
+  if(!isDupla){
+    if(players[1]) players[1].forEach(card=>{ ocument.appendChild(cardEl(card,true)); });
+  }
   const h=document.getElementById('hand');
   h.innerHTML='';
   players[0].forEach((card,idx)=>{
@@ -313,12 +348,18 @@ function render(){
     el.addEventListener('click',()=>playCard(idx));
     h.appendChild(el);
   });
-  const hands=[['cpuHand',1],['p1Hand',1],['p2Hand',2],['p3Hand',3]];
+  // mãos dos adversários (dupla): parceiro no topo, laterais rotacionadas
+  const p2h=document.getElementById('p2Hand');
+  p2h.classList.toggle('hidden',!isDupla);
+  p2h.querySelectorAll('.card').forEach(c=>c.remove());
+  if(isDupla&&players[2]) players[2].forEach(card=>{ p2h.appendChild(cardEl(card,true)); });
+  const hands=[['p1Hand',1],['p3Hand',3]];
   hands.forEach(([id,seat])=>{
-    const ch=document.getElementById(id);
-    ch.innerHTML='';
+    const ocument = document.getElementById(id);
+    ocument.querySelector('.sname').textContent=seatName(seat);
+    ocument.querySelectorAll('.card').forEach(c=>c.remove());
     if(!players[seat]) return;
-    players[seat].forEach(card=>{ ch.appendChild(cardEl(card,true)); });
+    players[seat].forEach(card=>{ ocument.appendChild(cardEl(card,true)); });
   });
   const v=document.getElementById('valeLbl');
   if(maoDeFerro){ v.textContent='Vale a partida'; v.classList.add('gold'); }
