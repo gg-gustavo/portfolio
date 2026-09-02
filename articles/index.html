@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revisão Sistemática · Coleta de Artigos</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23000000'/%3E%3Ctext x='50' y='72' font-size='64' font-weight='800' font-family='sans-serif' text-anchor='middle' fill='white'%3EE%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="articles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">E</div>
+      <span class="title" data-i18n="topbarTitle">Doutorado Elenice</span>
+    </div>
+    <nav class="topbar-nav" aria-label="Navegação">
+      <a class="icon-btn" href="../index.html" data-i18n="btnPortfolio">← Portfólio</a>
+    </nav>
+  </div>
+  <div class="topbar-actions">
+    <button id="langBtn" class="icon-btn" type="button" aria-label="Alternar idioma"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span data-i18n="btnLang">EN</span></button>
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1 data-i18n="heroTitle">Revisão Sistemática <span class="g">Coleta</span> de Artigos</h1>
+    <p data-i18n="heroDesc">Projeto de doutorado — Prof.ª Elenice Novak. Corpus consolidado com duas coletas: OpenAlex (2020–2025) e complementar (Outros).</p>
+    <div class="hero-download" id="download">
+      <a class="btn-download" href="screen.html" aria-label="Abrir página de Screening">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M2 12h20"/></svg>
+        <span data-i18n="btnScreen">Abrir Screening →</span>
+      </a>
+      <a class="btn-download" href="Artigos.zip" download aria-label="Baixar o corpus completo em Artigos.zip">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span data-i18n="btnDownload">Baixar corpus completo (Artigos.zip)</span>
+      </a>
+      <small class="btn-note" data-i18n="btnNote">Tamanho do arquivo: 106 MB</small>
+    </div>
+  </section>
+
+  <nav class="jump" aria-label="Ir para seção">
+    <a href="#coleta-1" data-i18n="jumpColeta1">1ª Coleta — OpenAlex</a>
+    <a href="#coleta-2" data-i18n="jumpColeta2">2ª Coleta — Outros</a>
+    <a href="#coleta-3" data-i18n="jumpScreen">Screening</a>
+    <a href="#download" data-i18n="jumpDownload">Download</a>
+    <a href="#reproduzir" data-i18n="jumpReproduzir">Como Reproduzir</a>
+  </nav>
+
+  <!-- SEÇÃO 1 — COBERTURA OPENALEX -->
+  <div class="group" id="coleta-1">
+    <h2 class="group-title"><span data-i18n="s1Title">1ª Coleta — OpenAlex</span><small data-i18n="s1Sub">Busca na base OpenAlex com recorte temático e temporal (2020–2025)</small></h2>
+
+    <section class="block">
+      <header>
+        <div class="sec-num">1</div>
+        <h2><span data-i18n="s1RecorteTitle">Recorte da busca</span> <small class="sub" data-i18n="recorteSub">Parâmetros e critérios aplicados na API</small></h2>
+      </header>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th data-i18n="thParam">Parâmetro</th><th data-i18n="thCriterio">Critério</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">open_access.is_oa</td><td>true</td></tr>
+            <tr><td class="num">publication_year</td><td>2020–2025</td></tr>
+            <tr><td class="num">type</td><td>article</td></tr>
+            <tr><td class="num">concepts.id</td><td>Sociology · Library science · Business administration · Public administration</td></tr>
+            <tr><td class="num">language</td><td>en · pt</td></tr>
+            <tr><td class="num">title_and_abstract.search</td><td>"information risk" · "informational risk"</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note" data-i18n="s1RecorteDesc">Definido no início do projeto. Query parametrizada aplicada na API /works do OpenAlex:</p>
+      <pre class="code-block"><span class="hl"># Busca na API OpenAlex (Works)</span>
+https://api.openalex.org/works?filter=
+  open_access.is_oa:true,
+  publication_year:2020-2025,
+  type:article,
+  concepts.id:C15744967|C161191863|C144133560|C17744445,   <span class="hl"># Sociology | Library science | Business administration | Public administration</span>
+  language:en|pt,
+  title_and_abstract.search:"information risk"|"informational risk"
+&amp;per-page=100</pre>
+    </section>
+
+    <section class="block">
+      <header>
+        <div class="sec-num">2</div>
+        <h2><span data-i18n="s1VisaoTitle">Visão geral (1ª Coleta)</span> <small class="sub" data-i18n="visaoSub">Etapas e quantidades</small></h2>
+      </header>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th data-i18n="thEtapa">Etapa</th><th data-i18n="thResultado">Resultado</th></tr>
+          </thead>
+          <tbody>
+            <tr><td data-i18n="vg1Row1">Registros no .bib (busca OpenAlex)</td><td class="num">66</td></tr>
+            <tr><td data-i18n="vg1Row2">PDFs baixados via script</td><td class="num">23</td></tr>
+            <tr><td data-i18n="vg1Row3">PDFs coletados manualmente</td><td class="num">37</td></tr>
+            <tr><td data-i18n="vg1Row4">Corpus final</td><td class="num">60</td></tr>
+            <tr><td data-i18n="vg1Row5">Artigos sem PDF</td><td class="num">6</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="block">
+      <header>
+        <div class="sec-num">3</div>
+        <h2><span data-i18n="s1PipelineTitle">Pipeline</span> <small class="sub" data-i18n="pipelineSub">Fluxo de trabalho da coleta</small></h2>
+      </header>
+      <ol class="pipeline">
+        <li data-i18n="pipeStep1"><strong>Busca no OpenAlex</strong> — aplicação dos filtros, exportação do arquivo <code>.bib</code> com 66 registros e salvamento dos dados brutos (JSON).</li>
+        <li data-i18n="pipeStep2"><strong>Download automatizado</strong> — execução do script <code>baixar_pdfs.py</code>, que baixou 23 PDFs e registrou o log em <code>download_log.csv</code>.</li>
+        <li data-i18n="pipeStep3"><strong>Coleta manual</strong> — recuperação ativa de 37 PDFs a partir dos links retornados pela API (quando o download automático falhou ou não cobriu).</li>
+        <li data-i18n="pipeStep4"><strong>Consolidação</strong> — validação de integridade dos arquivos, verificação de duplicatas e organização final do corpus com 60 artigos.</li>
+      </ol>
+    </section>
+
+    <section class="block">
+      <header>
+        <div class="sec-num">4</div>
+        <h2><span data-i18n="s1EstruTitle">Estrutura de pastas</span> <small class="sub" data-i18n="estruSub">Organização dos arquivos da coleta</small></h2>
+      </header>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thPasta">Pasta / arquivo</th><th data-i18n="thConteudo">Conteúdo</th><th data-i18n="thQtd">Qtd.</th><th data-i18n="thOrigem">Origem</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">Artigos_2020_2025.bib</td><td data-i18n="est1Row1C">Referências exportadas da busca no OpenAlex</td><td class="num">66</td><td data-i18n="est1Row1O">Busca OpenAlex</td></tr>
+            <tr><td class="num">PDF/</td><td data-i18n="est1Row2C">PDFs baixados automaticamente pelo script</td><td class="num">23</td><td>Script Python</td></tr>
+            <tr><td class="num">Download Manual/</td><td data-i18n="est1Row3C">PDFs coletados manualmente a partir dos links</td><td class="num">37</td><td data-i18n="est1Row3O">Coleta manual</td></tr>
+            <tr><td class="num">Final/</td><td data-i18n="est1Row4C">Corpus consolidado e validado</td><td class="num">60</td><td data-i18n="est1Row4O">Consolidação</td></tr>
+            <tr><td class="num">OpenAlex/</td><td data-i18n="est1Row5C">Registros brutos (JSON) retornados pela API</td><td class="num">66</td><td data-i18n="est1Row1O">Busca OpenAlex</td></tr>
+            <tr><td class="num">Erros/falhas.md</td><td data-i18n="est1Row6C">Registro de falhas e artigos sem PDF</td><td class="num">6</td><td>Pipeline</td></tr>
+            <tr><td class="num">download_log.csv</td><td data-i18n="est1Row7C">Log do download automatizado (URL, status)</td><td class="num">66</td><td>Script Python</td></tr>
+            <tr><td class="num">erros.csv</td><td data-i18n="est1Row8C">Erros capturados durante o download</td><td class="num">6</td><td>Script Python</td></tr>
+            <tr><td class="num">run.log</td><td data-i18n="est1Row9C">Log de execução do pipeline</td><td><span class="small">—</span></td><td>Script Python</td></tr>
+            <tr><td class="num">baixar_pdfs.py</td><td data-i18n="est1Row10C">Script de download automatizado</td><td class="num">1</td><td>Script Python</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="block">
+      <header>
+        <div class="sec-num">5</div>
+        <h2><span data-i18n="s1ConvTitle">Convenção de nomes</span> <small class="sub" data-i18n="conv1Sub">Padrão de nomeação dos arquivos</small></h2>
+      </header>
+      <ul class="dots">
+        <li data-i18n="s1Conv1">Etapas intermediárias: ID - ANO - Título.pdf (título truncado em ~60 caracteres).</li>
+        <li data-i18n="s1Conv2">Corpus final: NN - ANO - Título.pdf, com NN de 01 a 60 ordenado por ano/título.</li>
+      </ul>
+    </section>
+
+    <section class="block">
+      <header>
+        <div class="sec-num">6</div>
+        <h2><span data-i18n="s1StatusTitle">Status de coleta</span> <small class="sub" data-i18n="statusSub">Situação dos 66 registros</small></h2>
+      </header>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th data-i18n="thStatus">Status</th><th data-i18n="thQtd">Qtd.</th><th data-i18n="thDetalhe">Detalhe</th></tr>
+          </thead>
+          <tbody>
+            <tr><td data-i18n="statRow1">Registros no .bib</td><td class="num">66</td><td data-i18n="statDet1">Exportação inicial da busca OpenAlex</td></tr>
+            <tr><td data-i18n="statRow2">PDF via script</td><td class="num">23</td><td data-i18n="statDet2">Download automatizado em <code>PDF/</code></td></tr>
+            <tr><td data-i18n="statRow3">PDF manual</td><td class="num">37</td><td data-i18n="statDet3">Coleta manual em <code>Download Manual/</code></td></tr>
+            <tr><td data-i18n="statRow4">Corpus final</td><td class="num">60</td><td data-i18n="statDet4">Consolidados e validados em <code>Final/</code></td></tr>
+            <tr><td data-i18n="statRow5">Sem PDF</td><td class="num">6</td><td data-i18n="statDet5">Falhas registradas em <code>Erros/falhas.md</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sub-block">
+        <h3 data-i18n="s1SemPDF">Artigos sem PDF coletado</h3>
+        <div class="table-wrap wide">
+          <table>
+            <thead>
+              <tr><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th><th data-i18n="thDOI">DOI</th><th data-i18n="thMotivo">Motivo</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="ano">2020</td><td>Risk-taking behaviors and exposures among vocational school students in China: a cross-sectional survey</td><td><a href="https://doi.org/10.5249/jivr.v12i3.1278" target="_blank" rel="noopener">10.5249/jivr.v12i3.1278</a></td><td data-i18n="motivo1">HTTP 400 Bad Request</td></tr>
+              <tr><td class="ano">2022</td><td>CO-CREATION MARKETING PADA KEPUASAN MERCHANT GOFOOD BY GOJEK INDONESIA</td><td><a href="https://doi.org/10.24843/ejmunud.2022.v11.i09.p05" target="_blank" rel="noopener">10.24843/ejmunud.2022.v11.i09.p05</a></td><td data-i18n="motivo2">"Database connection failed" (consta OK no log, mas arquivo não localizado)</td></tr>
+              <tr><td class="ano">2022</td><td>Most effective OG0-061 Exam Dumps 2022 To start An IT Career</td><td><a href="https://doi.org/10.5281/zenodo.5895896" target="_blank" rel="noopener">10.5281/zenodo.5895896</a></td><td data-i18n="motivo3">Removido (SPAM)</td></tr>
+              <tr><td class="ano">2022</td><td>Pengaruh Informasi Akuntansi, Persepsi Risiko dan Citra Perusahaan dalam Pengambilan Keputusan Investasi di Masa Pandemi Covid-19</td><td><a href="https://doi.org/10.24036/jea.v4i1.486" target="_blank" rel="noopener">10.24036/jea.v4i1.486</a></td><td data-i18n="motivo4">Erro de proxy</td></tr>
+              <tr><td class="ano">2023</td><td>Information Security's Place in the National Security System: Actual Problems of Information Law</td><td><a href="https://doi.org/10.25136/2409-7543.2023.1.40078" target="_blank" rel="noopener">10.25136/2409-7543.2023.1.40078</a></td><td data-i18n="motivo5">Artigo em russo</td></tr>
+              <tr><td class="ano">2024</td><td>Public Administration and the Institute of the Children's Ombudsman in the Field of Personal Information Security</td><td><a href="https://doi.org/10.24158/pep.2024.6.5" target="_blank" rel="noopener">10.24158/pep.2024.6.5</a></td><td data-i18n="motivo5">Artigo em russo</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" data-accent="teal">
+      <header>
+        <div class="sec-num">7</div>
+        <h2><span data-i18n="s1TabelaLabel">Artigos do corpus — 60</span> <small class="sub" data-i18n="tabela1Sub">Relação completa da 1ª Coleta (OpenAlex)</small></h2>
+      </header>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">01</td><td class="ano">2020</td><td>Ethical Considerations in HIV eHealth Intervention Research: Implications for Informational Risk in Recruitment, Data Maintenance, and Consent Procedures</td></tr>
+            <tr><td class="num">02</td><td class="ano">2020</td><td>Media exposure to COVID-19 information, risk perception, social and geographical proximity, and self-rated anxiety in China</td></tr>
+            <tr><td class="num">03</td><td class="ano">2020</td><td>Personal Cold Protection Behaviour and Its Associated Factors in 2016/17 Cold Days in Hong Kong: A Two-Year Cohort Telephone Survey Study</td></tr>
+            <tr><td class="num">04</td><td class="ano">2021</td><td>Marketing behaviour of sugarcane nursery owners of Maharashtra</td></tr>
+            <tr><td class="num">05</td><td class="ano">2021</td><td>Breast Cancer Risk Perception and Screening Behaviors of Iranian Women</td></tr>
+            <tr><td class="num">06</td><td class="ano">2021</td><td>Ethical and Methodological Considerations Interviewing Dementia Caregivers</td></tr>
+            <tr><td class="num">07</td><td class="ano">2021</td><td>Ethical issues in genomics research on neurodevelopmental disorders: a critical interpretive review</td></tr>
+            <tr><td class="num">08</td><td class="ano">2020</td><td>How Public Transportation Use Social Media Platform during Covid-19: Study on Jakarta Public Transportations' Twitter Accounts</td></tr>
+            <tr><td class="num">09</td><td class="ano">2021</td><td>Information Risks during the Pandemic</td></tr>
+            <tr><td class="num">10</td><td class="ano">2021</td><td>Information Risks in Terms of Risk Society Theory: Social-Philosophical Analysis</td></tr>
+            <tr><td class="num">11</td><td class="ano">2021</td><td>Knowledge of breast cancer among medical students in Syrian Private University, Syria: a cross-sectional study</td></tr>
+            <tr><td class="num">12</td><td class="ano">2021</td><td>Modeling Asset Pricing Using Behavioral Variables: Fama-Macbeth Approach</td></tr>
+            <tr><td class="num">13</td><td class="ano">2021</td><td>Prevalence and associated factors of electrocardiographic left ventricular hypertrophy in a rural community, central Thailand</td></tr>
+            <tr><td class="num">14</td><td class="ano">2021</td><td>The Prevalence of Musculoskeletal Pain Syndrome in 15-80 years old Population of Kerman: The Role of Smart Phone Use and its Related Factors</td></tr>
+            <tr><td class="num">15</td><td class="ano">2021</td><td>The Transformation of Legal Policy in the Context of Digitalization of the Legal Reality</td></tr>
+            <tr><td class="num">16</td><td class="ano">2022</td><td>Decisional Conflict About Kidney Failure Treatment Modalities Among Adults With Advanced CKD</td></tr>
+            <tr><td class="num">17</td><td class="ano">2022</td><td>COVID-19 vaccine hesitancy and resistance in an urban Chinese population of Hong Kong: a cross-sectional study</td></tr>
+            <tr><td class="num">18</td><td class="ano">2022</td><td>Facebook and mosquito-borne disease outbreaks: An analysis of public responses to federal health agencies' posts about dengue and Zika in 2016</td></tr>
+            <tr><td class="num">19</td><td class="ano">2022</td><td>Impact of housing price uncertainty on herding behavior: evidence from UK's regional housing markets</td></tr>
+            <tr><td class="num">20</td><td class="ano">2022</td><td>Informational risks</td></tr>
+            <tr><td class="num">21</td><td class="ano">2022</td><td>Risk management in the system of state management</td></tr>
+            <tr><td class="num">22</td><td class="ano">2022</td><td>Sexual health behavior, health status, and knowledge among queer womxn and trans men in Kenya: An online cross-sectional study</td></tr>
+            <tr><td class="num">23</td><td class="ano">2022</td><td>Teaching &amp; learning guide for disability and climate justice</td></tr>
+            <tr><td class="num">24</td><td class="ano">2022</td><td>The role of management consciousness in the social and information environment in the situation of global instability</td></tr>
+            <tr><td class="num">25</td><td class="ano">2022</td><td>Worth the gamble? Access to information, risks and ethical dilemmas in undertaking research in authoritarian regimes: the case of Zimbabwe</td></tr>
+            <tr><td class="num">26</td><td class="ano">2023</td><td>Corporate Tax Avoidance and the Cost of Debt Capital of Listed Manufacturing Companies in Nigeria</td></tr>
+            <tr><td class="num">27</td><td class="ano">2023</td><td>Emergency management in communication incidents</td></tr>
+            <tr><td class="num">28</td><td class="ano">2023</td><td>ESG Rating and Cost of Capital</td></tr>
+            <tr><td class="num">29</td><td class="ano">2023</td><td>Functional and Semantic Dominants of the Digital Transmedia Language in the Context of Topical Problems of Intercultural Communication</td></tr>
+            <tr><td class="num">30</td><td class="ano">2023</td><td>Influencing air force logisticians' information seeking during the COVID-19 pandemic: the role of organizational meetings in an expanded PRISM framework</td></tr>
+            <tr><td class="num">31</td><td class="ano">2023</td><td>Model Construction of Chinese Preservice Physical Education Teachers' Perception of Social Media: A Grounded Theory Approach</td></tr>
+            <tr><td class="num">32</td><td class="ano">2023</td><td>Perception and use of social media by Indonesian adolescents and parents: A qualitative study</td></tr>
+            <tr><td class="num">33</td><td class="ano">2023</td><td>Reducing the risk of bias in academic publishing</td></tr>
+            <tr><td class="num">34</td><td class="ano">2023</td><td>Risky (information) business: an informational risk research agenda</td></tr>
+            <tr><td class="num">35</td><td class="ano">2023</td><td>The Impact of Climate Information Disclosure on Audit Fees: A Study Based on Principal Component Analysis</td></tr>
+            <tr><td class="num">36</td><td class="ano">2024</td><td>Adoption behaviour of farmers towards improved mustard cultivation practices in Kakching district of Manipur</td></tr>
+            <tr><td class="num">37</td><td class="ano">2024</td><td>Does media coverage of firms' environment, social, and governance (ESG) incidents affect analyst coverage and forecasts? A risk perspective</td></tr>
+            <tr><td class="num">38</td><td class="ano">2024</td><td>Effect of Audit Quality on Earnings Management Practices</td></tr>
+            <tr><td class="num">39</td><td class="ano">2024</td><td>Examining government officials' perceived risk management and internal control in combating fraud in the public sector</td></tr>
+            <tr><td class="num">40</td><td class="ano">2024</td><td>Galactica's dis-assemblage: Meta's beta and the omega of post-human science</td></tr>
+            <tr><td class="num">41</td><td class="ano">2024</td><td>Menciptakan Pengalaman Bersama: Peran Value Co-Creation dalam Meningkatkan Kepuasan Pengunjung di Museum Pasifika</td></tr>
+            <tr><td class="num">42</td><td class="ano">2024</td><td>Patterns of diabetes mellitus by age, sex, and province among Iranian Hajj pilgrims and health care delivery during 2012–2022: A retrospective study of 469,581 participants</td></tr>
+            <tr><td class="num">43</td><td class="ano">2024</td><td>Peacebuilding strategy in training of young scientists in conditions of information risks</td></tr>
+            <tr><td class="num">44</td><td class="ano">2024</td><td>Tax Avoidance by Public Firms: Unveiling the Overlooked Economic Consequences</td></tr>
+            <tr><td class="num">45</td><td class="ano">2024</td><td>The influence of the author's content of students in social networks on the processes of promoting the brand of an educational organization</td></tr>
+            <tr><td class="num">46</td><td class="ano">2024</td><td>The role of value co-creation in building trust and reputation in the digital banking era</td></tr>
+            <tr><td class="num">47</td><td class="ano">2024</td><td>What does it mean to "do your own research?" A comparative content analysis of DYOR messages in Instagram and Facebook posts about reproductive health, food, and vaccines</td></tr>
+            <tr><td class="num">48</td><td class="ano">2024</td><td>Addressing disinformation in public health: politics, policy, and collaborative solutions</td></tr>
+            <tr><td class="num">49</td><td class="ano">2025</td><td>AI and Epistemic Agency: How AI Influences Belief Revision and Its Normative Implications</td></tr>
+            <tr><td class="num">50</td><td class="ano">2025</td><td>AI Concerns Among Educators: A Thematic Analysis</td></tr>
+            <tr><td class="num">51</td><td class="ano">2025</td><td>Athlete data sovereignty: addressing the legal and policy gaps in sports technology</td></tr>
+            <tr><td class="num">52</td><td class="ano">2023</td><td>Entertaining tensions: teaching with and learning from popular culture in professional education</td></tr>
+            <tr><td class="num">53</td><td class="ano">2025</td><td>Epidemiology and economic burden of end-stage kidney disease by age, gender, and province among Iranian Hajj pilgrims in 2012-22: a retrospective study of 469,581 participants</td></tr>
+            <tr><td class="num">54</td><td class="ano">2025</td><td>Explanatory Journalism as a Means of Adapting a Complex Socio-Political Agenda for a Mass Audience</td></tr>
+            <tr><td class="num">55</td><td class="ano">2025</td><td>Game Narratives as Tools for Shaping Political Discourse Amidst Information Wars: The Case of the Ukrainian Conflict</td></tr>
+            <tr><td class="num">56</td><td class="ano">2025</td><td>Narrative engagement with direct-to-consumer advertising: a qualitative assessment of attention to narrative and non-narrative content</td></tr>
+            <tr><td class="num">57</td><td class="ano">2025</td><td>Navigating Risks with ISO 31000 for A Sustainable Future: A Strategic Approach in The Indonesia Textile Industry</td></tr>
+            <tr><td class="num">58</td><td class="ano">2025</td><td>Pengaruh Kesadaran dan Implementasi Manajemen Risiko terhadap Kinerja Perusahaan Start-Up</td></tr>
+            <tr><td class="num">59</td><td class="ano">2025</td><td>Perceptions of cancer risk communication in individuals with overweight or obesity — a qualitative interview study</td></tr>
+            <tr><td class="num">60</td><td class="ano">2025</td><td>Research on the Legal Mechanism of Personal Information Protection in Cross-border Data Flows Based on Numerical Analysis Methods</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- SEÇÃO 2 — COBERTURA "OUTROS" -->
+  <div class="group" id="coleta-2">
+    <h2 class="group-title"><span data-i18n="s2Title">2ª Coleta — Outros</span><small data-i18n="s2Sub">Coleta complementar em outras bases, sem recorte temporal restritivo</small></h2>
+
+    <section class="block" data-accent="teal">
+      <header>
+        <div class="sec-num">8</div>
+        <h2><span data-i18n="s2VisaoTitle">Visão geral (2ª Coleta)</span> <small class="sub" data-i18n="visaoSub">Etapas e quantidades</small></h2>
+      </header>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th data-i18n="thEtapa">Etapa</th><th data-i18n="thResultado">Resultado</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Others1</td><td class="num">68</td></tr>
+            <tr><td>Others2</td><td class="num">55</td></tr>
+            <tr><td data-i18n="vg2Row3">Duplicatas com a 1ª Coleta</td><td class="num">0</td></tr>
+            <tr><td data-i18n="vg2Row4">Duplicatas internas removidas</td><td class="num">7</td></tr>
+            <tr><td data-i18n="vg2Row5">Consolidado</td><td class="num">116</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="block" data-accent="teal">
+      <header>
+        <div class="sec-num">9</div>
+        <h2><span data-i18n="s2EstruTitle">Estrutura de pastas</span> <small class="sub" data-i18n="estruSub">Organização dos arquivos da coleta</small></h2>
+      </header>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thPasta">Pasta / arquivo</th><th data-i18n="thConteudo">Conteúdo</th><th data-i18n="thQtd">Qtd.</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">Others1/</td><td data-i18n="est2Row1C">1ª rodada complementar de coleta</td><td class="num">68</td></tr>
+            <tr><td class="num">Others2/</td><td data-i18n="est2Row2C">2ª rodada complementar de coleta</td><td class="num">55</td></tr>
+            <tr><td class="num">Duplicatas/</td><td data-i18n="est2Row3C">Cruzamento com a 1ª Coleta — removidas</td><td class="num">0</td></tr>
+            <tr><td class="num">Duplicatas internas/</td><td data-i18n="est2Row4C">Repetições dentro da própria coleta — removidas</td><td class="num">7</td></tr>
+            <tr><td class="num">Final/</td><td data-i18n="est2Row5C">Corpus consolidado (2ª Coleta)</td><td class="num">116</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="block" data-accent="teal">
+      <header>
+        <div class="sec-num">10</div>
+        <h2><span data-i18n="s2ConvTitle">Convenção de nomes</span> <small class="sub" data-i18n="conv2Sub">Padrão de numeração</small></h2>
+      </header>
+      <ul class="dots">
+        <li data-i18n="s2Conv1">Corpus consolidado: NN - ANO - Título.pdf, com NN de 61 a 176, em sequência à numeração da 1ª Coleta.</li>
+      </ul>
+    </section>
+
+    <section class="block" data-accent="teal">
+      <header>
+        <div class="sec-num">11</div>
+        <h2><span data-i18n="s2TabelaLabel">Artigos do corpus — 116</span> <small class="sub" data-i18n="tabela2Sub">Relação completa da 2ª Coleta (Outros)</small></h2>
+      </header>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">61</td><td class="ano">1996</td><td>Risks in the use of information technology within organizations</td></tr>
+            <tr><td class="num">62</td><td class="ano">2006</td><td>Towards an ontological foundation of information ethics</td></tr>
+            <tr><td class="num">63</td><td class="ano">2008</td><td>An economic modelling approach to information security risk man...</td></tr>
+            <tr><td class="num">64</td><td class="ano">2008</td><td>On Floridi's metaphysical foundation of information ecology</td></tr>
+            <tr><td class="num">65</td><td class="ano">2008</td><td>Quantitatively assessing the vulnerability of critical informat...</td></tr>
+            <tr><td class="num">66</td><td class="ano">2008</td><td>Sobre a Fundacao Metafisica da Ecologia da Informacao...(trad.)</td></tr>
+            <tr><td class="num">67</td><td class="ano">2009</td><td>IT-IS implementation risks and their impact on firm performance</td></tr>
+            <tr><td class="num">68</td><td class="ano">2009</td><td>Learning Processes and Information Management Operations Utilis...</td></tr>
+            <tr><td class="num">69</td><td class="ano">2009</td><td>Strategic alignment of participant motivations in e-government...</td></tr>
+            <tr><td class="num">70</td><td class="ano">2010</td><td>A Etica da Informacao (Cap. 8, trad.)- Informacao- Uma Introduc...</td></tr>
+            <tr><td class="num">71</td><td class="ano">2010</td><td>Capitulo 1- Ambientes e Fluxos de Informa...(livro de Valentim)</td></tr>
+            <tr><td class="num">72</td><td class="ano">2010</td><td>Collaborative risk method for information security management p...</td></tr>
+            <tr><td class="num">73</td><td class="ano">2010</td><td>Preservacion documental digital y seguridad informatica</td></tr>
+            <tr><td class="num">74</td><td class="ano">2010</td><td>The Ethics of Information (Cap. 8)- Information- A Very Short I...</td></tr>
+            <tr><td class="num">75</td><td class="ano">2011</td><td>The Philosophy of Information (Floridi)</td></tr>
+            <tr><td class="num">76</td><td class="ano">2011</td><td>The Risk of Information Management Without Knowledge Management...</td></tr>
+            <tr><td class="num">77</td><td class="ano">2012</td><td>Can enterprise architectures reduce failure in development proj...</td></tr>
+            <tr><td class="num">78</td><td class="ano">2012</td><td>Estrategias para Disseminacao do Conhecimento Organizacional- O...</td></tr>
+            <tr><td class="num">79</td><td class="ano">2012</td><td>Knowledge-Based Risk Management framework for Information Techn...</td></tr>
+            <tr><td class="num">80</td><td class="ano">2013</td><td>Ambientes e Fluxos de Informacao em Contextos Empresariais- O C...</td></tr>
+            <tr><td class="num">81</td><td class="ano">2013</td><td>Information culture and organizational effectiveness</td></tr>
+            <tr><td class="num">82</td><td class="ano">2014</td><td>A multidimensional approach to information security risk manage...</td></tr>
+            <tr><td class="num">83</td><td class="ano">2014</td><td>As Politicas Globais de Governanca e Regulamentacao da Privacid...</td></tr>
+            <tr><td class="num">84</td><td class="ano">2014</td><td>Countering user risk in information system development projects</td></tr>
+            <tr><td class="num">85</td><td class="ano">2014</td><td>Public Value Governance- Moving beyond Traditional Public Admin...</td></tr>
+            <tr><td class="num">86</td><td class="ano">2014</td><td>SPACE- Infosphere- Technology's In-betweenness (Cap. 2)- The 4t...</td></tr>
+            <tr><td class="num">87</td><td class="ano">2014</td><td>TIME- Hyperhistory- The Three Ages of Human Development (Cap. 1...</td></tr>
+            <tr><td class="num">88</td><td class="ano">2014</td><td>Um Aprofundamento para o Conceito de Etica Digital</td></tr>
+            <tr><td class="num">89</td><td class="ano">2015</td><td>Blissfully ignorant- The effects of general privacy concerns, g...</td></tr>
+            <tr><td class="num">90</td><td class="ano">2015</td><td>Classification- The understudied concept</td></tr>
+            <tr><td class="num">91</td><td class="ano">2015</td><td>Fluxos de Informacao na Perspectiva Organizacional</td></tr>
+            <tr><td class="num">92</td><td class="ano">2015</td><td>Information Security- Risks Related to the Cultural...(Review)</td></tr>
+            <tr><td class="num">93</td><td class="ano">2015</td><td>The Digital Environment- The Trends and Risks of Development</td></tr>
+            <tr><td class="num">94</td><td class="ano">2016</td><td>Information security management needs more holistic approach- A...</td></tr>
+            <tr><td class="num">95</td><td class="ano">2016</td><td>Information security risk analysis model using fuzzy decision t...</td></tr>
+            <tr><td class="num">96</td><td class="ano">2016</td><td>Protection of the Information Resources of a Library Based on A...</td></tr>
+            <tr><td class="num">97</td><td class="ano">2016</td><td>Risk assessment of digital library information security- A case...</td></tr>
+            <tr><td class="num">98</td><td class="ano">2016</td><td>The 4th Revolution- How the Infosphere is Reshaping...(review)</td></tr>
+            <tr><td class="num">99</td><td class="ano">2016</td><td>The Moral Value of Information and Information Ethics</td></tr>
+            <tr><td class="num">100</td><td class="ano">2016</td><td>Understanding antecedents to perceived information risks- An em...</td></tr>
+            <tr><td class="num">101</td><td class="ano">2016</td><td>Understanding antecedents to perceived information risks...(PT)</td></tr>
+            <tr><td class="num">102</td><td class="ano">2017</td><td>Etica da Informacao- Perspectivas e Desafios (livro)</td></tr>
+            <tr><td class="num">103</td><td class="ano">2017</td><td>Fluxos de Informacao em Projetos de Inovacao- Estudo em Tres Or...</td></tr>
+            <tr><td class="num">104</td><td class="ano">2017</td><td>Information governance in digitized public administration</td></tr>
+            <tr><td class="num">105</td><td class="ano">2017</td><td>Privacidade, Etica e Informacao- Uma Reflexao Filosofica sobre...</td></tr>
+            <tr><td class="num">106</td><td class="ano">2017</td><td>Risk information system- The visibility factor</td></tr>
+            <tr><td class="num">107</td><td class="ano">2017</td><td>What is Data Justice- The Case for Connecting Digital Rights an...</td></tr>
+            <tr><td class="num">108</td><td class="ano">2018</td><td>Avaliacao de Politicas Publicas- Guia Pratico de Anali...(IPEA)</td></tr>
+            <tr><td class="num">109</td><td class="ano">2018</td><td>Narrativa no Fluxo de Informacao durante o Compartilhamento de...</td></tr>
+            <tr><td class="num">110</td><td class="ano">2018</td><td>Seeing Information- Visual Methods as Entry Points to Informati...</td></tr>
+            <tr><td class="num">111</td><td class="ano">2018</td><td>The impact of relational leadership and social alignment on inf...</td></tr>
+            <tr><td class="num">112</td><td class="ano">2018</td><td>The impact of relational leadership and social alignment...(PT)</td></tr>
+            <tr><td class="num">113</td><td class="ano">2018</td><td>The interstitiality of IT risk- An inquiry into information sys...</td></tr>
+            <tr><td class="num">114</td><td class="ano">2019</td><td>An integrated framework to elevate information governance to a...</td></tr>
+            <tr><td class="num">115</td><td class="ano">2019</td><td>Assessing information security risks in the cloud- A case study...</td></tr>
+            <tr><td class="num">116</td><td class="ano">2019</td><td>Building Intercultural Teachers- Designing Information Literacy...</td></tr>
+            <tr><td class="num">117</td><td class="ano">2019</td><td>Factor identification and computation in the assessment of info...</td></tr>
+            <tr><td class="num">118</td><td class="ano">2019</td><td>Incentives and risk-sharing in procurement of innovations- Towa...</td></tr>
+            <tr><td class="num">119</td><td class="ano">2019</td><td>Mitigating Risk- Mediating Transition through the Enactment of...</td></tr>
+            <tr><td class="num">120</td><td class="ano">2019</td><td>Prioritization of multi-dimensional risk for digital services u...</td></tr>
+            <tr><td class="num">121</td><td class="ano">2019</td><td>The impact of new public management through outsourcing on the...</td></tr>
+            <tr><td class="num">122</td><td class="ano">2020</td><td>Information Management of the Risks and Threats of the Covid-19...</td></tr>
+            <tr><td class="num">123</td><td class="ano">2020</td><td>O Paradigma das Politicas Publicas Baseadas em Evidencias na Ge...</td></tr>
+            <tr><td class="num">124</td><td class="ano">2020</td><td>Optimum spending on cybersecurity measures</td></tr>
+            <tr><td class="num">125</td><td class="ano">2020</td><td>Politicas Publicas Baseadas em Evidencias- Uma Avaliacao Critic...</td></tr>
+            <tr><td class="num">126</td><td class="ano">2020</td><td>Risk Personalization- Governing Uncertain Collective Risk Throu...</td></tr>
+            <tr><td class="num">127</td><td class="ano">2020</td><td>TCU Auditoria LGPD e Servicos Publicos (TC 039.606-2020-1)</td></tr>
+            <tr><td class="num">128</td><td class="ano">2020</td><td>The dearest of our possessions- Applying Floridi's Information...</td></tr>
+            <tr><td class="num">129</td><td class="ano">2020</td><td>The Validity of Information Security Risk Assessment Methods fo...</td></tr>
+            <tr><td class="num">130</td><td class="ano">2021</td><td>Algorithms and Decision-Making in the...(Levy, Chasalow, Riley)</td></tr>
+            <tr><td class="num">131</td><td class="ano">2021</td><td>Algorithms and Decision-Making in...(Levy, Chasalow, Riley, EN)</td></tr>
+            <tr><td class="num">132</td><td class="ano">2021</td><td>Algoritmos e Tomada de Decisao no Setor Publico (trad.)</td></tr>
+            <tr><td class="num">133</td><td class="ano">2021</td><td>Implications of the use of artificial intelligence in public go...</td></tr>
+            <tr><td class="num">134</td><td class="ano">2021</td><td>Information and communications security management ergonomic as...</td></tr>
+            <tr><td class="num">135</td><td class="ano">2021</td><td>Information Privacy, Cultural Values, and Regulatory Preference...</td></tr>
+            <tr><td class="num">136</td><td class="ano">2021</td><td>Risk Reflexity and the Information Interpretation Conflict unde...</td></tr>
+            <tr><td class="num">137</td><td class="ano">2021</td><td>Transformation of Strategic Models for Managing Human Risks of...</td></tr>
+            <tr><td class="num">138</td><td class="ano">2022</td><td>A Dilemma of Self-interest vs. Ethical Responsibilities in Insi...</td></tr>
+            <tr><td class="num">139</td><td class="ano">2022</td><td>Determinants of cyber-incidents among small and medium US citie...</td></tr>
+            <tr><td class="num">140</td><td class="ano">2022</td><td>Digital Transformation- Exploring big data Governance in Public...</td></tr>
+            <tr><td class="num">141</td><td class="ano">2022</td><td>From Threat to Risk- Changing Rationales and Practices of Secre...</td></tr>
+            <tr><td class="num">142</td><td class="ano">2022</td><td>Public Management- The Rise, Progress an...(Elgar Encyclopedia)</td></tr>
+            <tr><td class="num">143</td><td class="ano">2023</td><td>A Aplicacao da Inteligencia Artificial na Busca de Eficiencia p...</td></tr>
+            <tr><td class="num">144</td><td class="ano">2023</td><td>Atlas da Violencia 2023</td></tr>
+            <tr><td class="num">145</td><td class="ano">2023</td><td>Enhancing public sector enterprise risk management through inte...</td></tr>
+            <tr><td class="num">146</td><td class="ano">2023</td><td>Genres of online COVID-19 information and government informatio...</td></tr>
+            <tr><td class="num">147</td><td class="ano">2023</td><td>Opacidade dos Algoritmos e a Necessidade de Transparencia- Gara...</td></tr>
+            <tr><td class="num">148</td><td class="ano">2023</td><td>Personal Information Protection in Government Data Openness Usi...</td></tr>
+            <tr><td class="num">149</td><td class="ano">2023</td><td>Privacidade no seculo 21- Protecao de dados, democracia e model...</td></tr>
+            <tr><td class="num">150</td><td class="ano">2023</td><td>Risky (Information) Business- An Informational Risk Research Ag...</td></tr>
+            <tr><td class="num">151</td><td class="ano">2024</td><td>A framework for cyber-risk insurance against ransomware- A mixe...</td></tr>
+            <tr><td class="num">152</td><td class="ano">2024</td><td>Big Data e Inteligencia Artificial na Administracao...(Cap. 5)</td></tr>
+            <tr><td class="num">153</td><td class="ano">2024</td><td>Direito Comparado- LGPD e o Marco Civil da Internet</td></tr>
+            <tr><td class="num">154</td><td class="ano">2024</td><td>Disposal strategies for personal identification information in...</td></tr>
+            <tr><td class="num">155</td><td class="ano">2024</td><td>Emerging South African smart cities- Data security and privacy...</td></tr>
+            <tr><td class="num">156</td><td class="ano">2024</td><td>Integrating facets of information technology governance at a pr...</td></tr>
+            <tr><td class="num">157</td><td class="ano">2024</td><td>On Informational Injustice and Epistemic Exclusions</td></tr>
+            <tr><td class="num">158</td><td class="ano">2024</td><td>Overcoming intergovernmental data sharing challenges with feder...</td></tr>
+            <tr><td class="num">159</td><td class="ano">2024</td><td>POLITICS- The Rise of the Multi-Agent Systems (Cap. 8)- The 4th...</td></tr>
+            <tr><td class="num">160</td><td class="ano">2024</td><td>Revista do TCU- Ano 55 Jan-Jun 2024</td></tr>
+            <tr><td class="num">161</td><td class="ano">2024</td><td>Tipos de vieses em Dados</td></tr>
+            <tr><td class="num">162</td><td class="ano">2024</td><td>Transformacao Digital- Explorando a Governanca de Big...(trad.)</td></tr>
+            <tr><td class="num">163</td><td class="ano">2024</td><td>Uma Reflexao Filosofica-Interdisciplinar sobre Etica da Informa...</td></tr>
+            <tr><td class="num">164</td><td class="ano">2025</td><td>Application of Big Data Technology in Enterprise Information Se...</td></tr>
+            <tr><td class="num">165</td><td class="ano">2025</td><td>Citizen-centricity in digital government- A theoretical and emp...</td></tr>
+            <tr><td class="num">166</td><td class="ano">2025</td><td>Decisoes Algoritmicas na Administracao Publica- Entre a Opacida...</td></tr>
+            <tr><td class="num">167</td><td class="ano">2025</td><td>Digital Transformation in Governance- The Impact of e-governanc...</td></tr>
+            <tr><td class="num">168</td><td class="ano">2025</td><td>Governanca da Informacao e a Perspectiva do Valor da Informacao...</td></tr>
+            <tr><td class="num">169</td><td class="ano">2025</td><td>Governing Artificial Intelligence Means Governing Data- (Re)set...</td></tr>
+            <tr><td class="num">170</td><td class="ano">2025</td><td>Guia CLEAR- Monitoramento e Avaliacao de Politicas Publ...(FGV)</td></tr>
+            <tr><td class="num">171</td><td class="ano">2025</td><td>Revista do TCU- Ano 56 Jul-Dez 2025</td></tr>
+            <tr><td class="num">172</td><td class="ano">2025</td><td>Risk Management in Document Preservation- Challenges and Contro...</td></tr>
+            <tr><td class="num">173</td><td class="ano">2025</td><td>TCU Lista de Alto Risco da Administracao Publica Federal 2025</td></tr>
+            <tr><td class="num">174</td><td class="ano">2026</td><td>Conditions of Benefits and Risks when Algorithmic Technology is...</td></tr>
+            <tr><td class="num">175</td><td class="ano">2026</td><td>Direito Administrativo, Gestao e Decisao Baseada em Dados- Pers...</td></tr>
+            <tr><td class="num">176</td><td class="ano">2026</td><td>Governamentalidade Algoritmica e os Riscos Constitucionais a Ig...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- SEÇÃO — COMO REPRODUZIR -->
+  <section class="block" id="reproduzir">
+    <header>
+      <div class="sec-num">12</div>
+      <h2><span data-i18n="reproduzirTitle">Como reproduzir</span> <small class="sub" data-i18n="reproduzirSub">Reexecutando o pipeline de coleta</small></h2>
+    </header>
+    <p data-i18n="reproduzirDesc">O download automatizado da 1ª Coleta é reproduzível a partir do script baixar_pdfs.py, executado na raiz da pasta de coleta:</p>
+    <pre class="code-block">python3 baixar_pdfs.py</pre>
+    <p class="note" data-i18n="reproduzirReq">Requer requests (pip install requests).</p>
+  </section>
+
+  <!-- SEÇÃO 3 — SCREEN (filtragem por keywords) -->
+  <section class="block" data-accent="teal" id="coleta-3">
+    <header>
+      <div class="sec-num">13</div>
+      <h2><span data-i18n="s3Title">Screening</span> <small class="sub" data-i18n="s3Sub">Filtragem por keywords no resumo (abstract)</small></h2>
+    </header>
+    <p data-i18n="s3Desc">Os artigos das duas coletas foram filtrados por keywords no resumo (abstract), utilizando OR entre as keywords. Objetivo: selecionar artigos relevantes às temáticas do projeto. Resultado: 54 artigos selecionados.</p>
+    <div class="hero-download">
+      <a class="btn-download" href="screen.html" data-i18n="s3Link">Abrir página de Screening →</a>
+    </div>
+  </section>
+
+  <footer><span data-i18n="footer">Revisão Sistemática · Coleta de Artigos ·</span> <a href="../index.html" class="footer-logo">Gustavo<span>.</span>Ripka</a></footer>
+</main>
+
+<script>
+  const root = document.documentElement;
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const savedTheme = localStorage.getItem("theme");
+
+  function applyTheme(theme) {
+    root.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+    const icon = document.getElementById("themeIcon");
+    if (icon) {
+      icon.innerHTML = theme === "dark"
+        ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+        : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" stroke="none"/>';
+    }
+  }
+  applyTheme(savedTheme || (prefersDark ? "dark" : "light"));
+
+  document.getElementById("themeBtn").addEventListener("click", () => {
+    applyTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
+  });
+
+  const i18n = {
+    pt: {
+      btnDownload: "Baixar corpus completo (Artigos.zip)",
+      btnLang: "EN",
+      btnNote: "Tamanho do arquivo: 106 MB",
+      btnPortfolio: "← Portfólio",
+      btnScreen: "Abrir Screening →",
+      conv1Sub: "Padrão de nomeação dos arquivos",
+      conv2Sub: "Padrão de numeração",
+      est1Row10C: "Script de download automatizado",
+      est1Row1C: "Referências exportadas da busca no OpenAlex",
+      est1Row1O: "Busca OpenAlex",
+      est1Row2C: "PDFs baixados automaticamente pelo script",
+      est1Row3C: "PDFs coletados manualmente a partir dos links",
+      est1Row3O: "Coleta manual",
+      est1Row4C: "Corpus consolidado e validado",
+      est1Row4O: "Consolidação",
+      est1Row5C: "Registros brutos (JSON) retornados pela API",
+      est1Row6C: "Registro de falhas e artigos sem PDF",
+      est1Row7C: "Log do download automatizado (URL, status)",
+      est1Row8C: "Erros capturados durante o download",
+      est1Row9C: "Log de execução do pipeline",
+      est2Row1C: "1ª rodada complementar de coleta",
+      est2Row2C: "2ª rodada complementar de coleta",
+      est2Row3C: "Cruzamento com a 1ª Coleta — removidas",
+      est2Row4C: "Repetições dentro da própria coleta — removidas",
+      est2Row5C: "Corpus consolidado (2ª Coleta)",
+      estruSub: "Organização dos arquivos da coleta",
+      footer: "Revisão Sistemática · Coleta de Artigos ·",
+      jumpScreen: "Screening",
+      s3Desc: "Os artigos das duas coletas foram filtrados por keywords no resumo (abstract), utilizando OR entre as keywords. Objetivo: selecionar artigos relevantes às temáticas do projeto. Resultado: 54 artigos selecionados.",
+      s3Link: "Abrir página de Screening →",
+      s3Sub: "Filtragem por keywords no resumo (abstract)",
+      s3Title: "Screening",
+      heroDesc: "Projeto de doutorado — Prof.ª Elenice Novak. Corpus consolidado com duas coletas: OpenAlex (2020–2025) e complementar (Outros).",
+      heroTitle: "Revisão Sistemática <span class=\"g\">Coleta</span> de Artigos",
+      jumpColeta1: "1ª Coleta — OpenAlex",
+      jumpColeta2: "2ª Coleta — Outros",
+      jumpDownload: "Download",
+      jumpReproduzir: "Como Reproduzir",
+      motivo1: "HTTP 400 Bad Request",
+      motivo2: "\"Database connection failed\" (consta OK no log, mas arquivo não localizado)",
+      motivo3: "Removido (SPAM)",
+      motivo4: "Erro de proxy",
+      motivo5: "Artigo em russo",
+      pipeStep1: "<strong>Busca no OpenAlex</strong> — aplicação dos filtros, exportação do arquivo <code>.bib</code> com 66 registros e salvamento dos dados brutos (JSON).",
+      pipeStep2: "<strong>Download automatizado</strong> — execução do script <code>baixar_pdfs.py</code>, que baixou 23 PDFs e registrou o log em <code>download_log.csv</code>.",
+      pipeStep3: "<strong>Coleta manual</strong> — recuperação ativa de 37 PDFs a partir dos links retornados pela API (quando o download automático falhou ou não cobriu).",
+      pipeStep4: "<strong>Consolidação</strong> — validação de integridade dos arquivos, verificação de duplicatas e organização final do corpus com 60 artigos.",
+      pipelineSub: "Fluxo de trabalho da coleta",
+      recorteSub: "Parâmetros e critérios aplicados na API",
+      reproduzirDesc: "O download automatizado da 1ª Coleta é reproduzível a partir do script baixar_pdfs.py, executado na raiz da pasta de coleta:",
+      reproduzirReq: "Requer requests (pip install requests).",
+      reproduzirSub: "Reexecutando o pipeline de coleta",
+      reproduzirTitle: "Como reproduzir",
+      s1Conv1: "Etapas intermediárias: ID - ANO - Título.pdf (título truncado em ~60 caracteres).",
+      s1Conv2: "Corpus final: NN - ANO - Título.pdf, com NN de 01 a 60 ordenado por ano/título.",
+      s1ConvTitle: "Convenção de nomes",
+      s1EstruTitle: "Estrutura de pastas",
+      s1PipelineTitle: "Pipeline",
+      s1RecorteDesc: "Definido no início do projeto. Query parametrizada aplicada na API /works do OpenAlex:",
+      s1RecorteTitle: "Recorte da busca",
+      s1SemPDF: "Artigos sem PDF coletado",
+      s1StatusTitle: "Status de coleta",
+      s1Sub: "Busca na base OpenAlex com recorte temático e temporal (2020–2025)",
+      s1TabelaLabel: "Artigos do corpus — 60",
+      s1Title: "1ª Coleta — OpenAlex",
+      s1VisaoTitle: "Visão geral (1ª Coleta)",
+      s2Conv1: "Corpus consolidado: NN - ANO - Título.pdf, com NN de 61 a 176, em sequência à numeração da 1ª Coleta.",
+      s2ConvTitle: "Convenção de nomes",
+      s2EstruTitle: "Estrutura de pastas",
+      s2Sub: "Coleta complementar em outras bases, sem recorte temporal restritivo",
+      s2TabelaLabel: "Artigos do corpus — 116",
+      s2Title: "2ª Coleta — Outros",
+      s2VisaoTitle: "Visão geral (2ª Coleta)",
+      statDet1: "Exportação inicial da busca OpenAlex",
+      statDet2: "Download automatizado em <code>PDF/</code>",
+      statDet3: "Coleta manual em <code>Download Manual/</code>",
+      statDet5: "Falhas registradas em <code>Erros/falhas.md</code>",
+      statRow1: "Registros no .bib",
+      statRow2: "PDF via script",
+      statRow3: "PDF manual",
+      statDet4: "Consolidados e validados em <code>Final/</code>",
+      statRow4: "Corpus final",
+      statRow5: "Sem PDF",
+      statusSub: "Situação dos 66 registros",
+      tabela1Sub: "Relação completa da 1ª Coleta (OpenAlex)",
+      tabela2Sub: "Relação completa da 2ª Coleta (Outros)",
+      thAno: "Ano",
+      thConteudo: "Conteúdo",
+      thCriterio: "Critério",
+      thDOI: "DOI",
+      thDetalhe: "Detalhe",
+      thEtapa: "Etapa",
+      thID: "ID",
+      thMotivo: "Motivo",
+      thOrigem: "Origem",
+      thParam: "Parâmetro",
+      thPasta: "Pasta / arquivo",
+      thQtd: "Qtd.",
+      thResultado: "Resultado",
+      thStatus: "Status",
+      thTitulo: "Título",
+      topbarTitle: "Doutorado Elenice",
+      vg1Row1: "Registros no .bib (busca OpenAlex)",
+      vg1Row2: "PDFs baixados via script",
+      vg1Row3: "PDFs coletados manualmente",
+      vg1Row4: "Corpus final",
+      vg1Row5: "Artigos sem PDF",
+      vg2Row3: "Duplicatas com a 1ª Coleta",
+      vg2Row4: "Duplicatas internas removidas",
+      vg2Row5: "Consolidado",
+      visaoSub: "Etapas e quantidades"
+    },
+    
+    en: {
+      btnDownload: "Download full corpus (Artigos.zip)",
+      btnLang: "PT",
+      btnNote: "File size: 106 MB",
+      btnPortfolio: "← Portfolio",
+      btnScreen: "Open Screening →",
+      conv1Sub: "File naming pattern",
+      conv2Sub: "Numbering pattern",
+      est1Row10C: "Automated download script",
+      est1Row1C: "References exported from the OpenAlex search",
+      est1Row1O: "OpenAlex search",
+      est1Row2C: "PDFs downloaded automatically by the script",
+      est1Row3C: "PDFs collected manually from the links",
+      est1Row3O: "Manual collection",
+      est1Row4C: "Consolidated and validated corpus",
+      est1Row4O: "Consolidation",
+      est1Row5C: "Raw records (JSON) returned by the API",
+      est1Row6C: "Log of failures and articles without PDF",
+      est1Row7C: "Automated download log (URL, status)",
+      est1Row8C: "Errors captured during download",
+      est1Row9C: "Pipeline execution log",
+      est2Row1C: "1st supplementary collection round",
+      est2Row2C: "2nd supplementary collection round",
+      est2Row3C: "Cross-check with the 1st Collection — removed",
+      est2Row4C: "Duplicates within the collection itself — removed",
+      est2Row5C: "Consolidated corpus (2nd Collection)",
+      estruSub: "Collection file organization",
+      footer: "Systematic Review · Article Collection ·",
+      jumpScreen: "Screening",
+      s3Desc: "Articles from both collections were screened by keywords in the abstract, using OR between keywords. Goal: select articles relevant to the project's themes. Result: 54 selected articles.",
+      s3Link: "Open Screening page →",
+      s3Sub: "Keyword screening of the abstract",
+      s3Title: "Screening",
+      heroDesc: "PhD project — Prof.ª Elenice Novak. Consolidated corpus from two collections: OpenAlex (2020–2025) and supplementary (Others).",
+      heroTitle: "Systematic Review <span class=\"g\">Article</span> Collection",
+      jumpColeta1: "1st Collection — OpenAlex",
+      jumpColeta2: "2nd Collection — Others",
+      jumpDownload: "Download",
+      jumpReproduzir: "How to Reproduce",
+      motivo1: "HTTP 400 Bad Request",
+      motivo2: "\"Database connection failed\" (OK in log, but file not found)",
+      motivo3: "Removed (SPAM)",
+      motivo4: "Proxy error",
+      motivo5: "Article in Russian",
+      pipeStep1: "<strong>OpenAlex Search</strong> — applying filters, exporting the <code>.bib</code> file with 66 records and saving the raw data (JSON).",
+      pipeStep2: "<strong>Automated download</strong> — running the <code>baixar_pdfs.py</code> script, which downloaded 23 PDFs and logged the run in <code>download_log.csv</code>.",
+      pipeStep3: "<strong>Manual collection</strong> — actively retrieving 37 PDFs from the links returned by the API (when the automated download failed or did not cover them).",
+      pipeStep4: "<strong>Consolidation</strong> — validating file integrity, checking duplicates and final organization of the corpus with 60 articles.",
+      pipelineSub: "Collection workflow",
+      recorteSub: "Parameters and criteria applied to the API",
+      reproduzirDesc: "The automated download of the 1st Collection is reproducible via the baixar_pdfs.py script, run from the collection root folder:",
+      reproduzirReq: "Requires requests (pip install requests).",
+      reproduzirSub: "Re-running the collection pipeline",
+      reproduzirTitle: "How to reproduce",
+      s1Conv1: "Intermediate steps: ID - YEAR - Title.pdf (title truncated to ~60 characters).",
+      s1Conv2: "Final corpus: NN - YEAR - Title.pdf, with NN from 01 to 60 ordered by year/title.",
+      s1ConvTitle: "Naming convention",
+      s1EstruTitle: "Folder structure",
+      s1PipelineTitle: "Pipeline",
+      s1RecorteDesc: "Defined at project start. Parameterized query applied to the OpenAlex /works API:",
+      s1RecorteTitle: "Search Query",
+      s1SemPDF: "Articles without collected PDF",
+      s1StatusTitle: "Collection status",
+      s1Sub: "OpenAlex database search with thematic and temporal scope (2020–2025)",
+      s1TabelaLabel: "Corpus articles — 60",
+      s1Title: "1st Collection — OpenAlex",
+      s1VisaoTitle: "Overview (1st Collection)",
+      s2Conv1: "Consolidated corpus: NN - YEAR - Title.pdf, with NN from 61 to 176, following the numbering of the 1st Collection.",
+      s2ConvTitle: "Naming convention",
+      s2EstruTitle: "Folder structure",
+      s2Sub: "Supplementary collection in other databases, without restrictive time scope",
+      s2TabelaLabel: "Corpus articles — 116",
+      s2Title: "2nd Collection — Others",
+      s2VisaoTitle: "Overview (2nd Collection)",
+      statDet1: "Initial export from the OpenAlex search",
+      statDet2: "Automated download into <code>PDF/</code>",
+      statDet3: "Manual collection into <code>Download Manual/</code>",
+      statDet5: "Failures logged in <code>Erros/falhas.md</code>",
+      statRow1: "Records in the .bib",
+      statRow2: "PDF via script",
+      statRow3: "Manual PDF",
+      statDet4: "Consolidated and validated in <code>Final/</code>",
+      statRow4: "Final corpus",
+      statRow5: "Without PDF",
+      statusSub: "Status of the 66 records",
+      tabela1Sub: "Complete list of the 1st Collection (OpenAlex)",
+      tabela2Sub: "Complete list of the 2nd Collection (Others)",
+      thAno: "Year",
+      thConteudo: "Content",
+      thCriterio: "Criterion",
+      thDOI: "DOI",
+      thDetalhe: "Detail",
+      thEtapa: "Step",
+      thID: "ID",
+      thMotivo: "Reason",
+      thOrigem: "Origin",
+      thParam: "Parameter",
+      thPasta: "Folder / file",
+      thQtd: "Qty.",
+      thResultado: "Result",
+      thStatus: "Status",
+      thTitulo: "Title",
+      topbarTitle: "Elenice's Doctorate",
+      vg1Row1: "Records in the .bib (OpenAlex search)",
+      vg1Row2: "PDFs downloaded via script",
+      vg1Row3: "PDFs collected manually",
+      vg1Row4: "Final corpus",
+      vg1Row5: "Articles without PDF",
+      vg2Row3: "Duplicates with the 1st Collection",
+      vg2Row4: "Internal duplicates removed",
+      vg2Row5: "Consolidated",
+      visaoSub: "Steps and quantities"
+    }
+  };
+  let lang = "pt";
+
+  document.getElementById("langBtn").addEventListener("click", () => {
+    lang = lang === "pt" ? "en" : "pt";
+    applyLanguage();
+  });
+
+  function applyLanguage() {
+    const t = i18n[lang];
+    document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      el.innerHTML = t[el.dataset.i18n];
+    });
+  }
+</script>
+</body>
+</html>

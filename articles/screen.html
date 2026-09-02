@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revisão Sistemática · Screening</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23000000'/%3E%3Ctext x='50' y='72' font-size='64' font-weight='800' font-family='sans-serif' text-anchor='middle' fill='white'%3EE%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="articles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">E</div>
+      <span class="title" data-i18n="topbarTitle">Doutorado Elenice</span>
+    </div>
+    <nav class="topbar-nav" aria-label="Navegação">
+      <a class="icon-btn" href="../index.html" data-i18n="btnPortfolio">← Portfólio</a>
+      <a class="icon-btn" href="index.html" data-i18n="btnColeta">Coleta</a>
+    </nav>
+  </div>
+  <div class="topbar-actions">
+    <button id="langBtn" class="icon-btn" type="button" aria-label="Alternar idioma"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span data-i18n="btnLang">EN</span></button>
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1 data-i18n="heroTitle">Screening</h1>
+    <p data-i18n="heroDesc">Filtragem dos artigos das duas coletas por keywords no resumo (abstract), utilizando OR entre as keywords. Objetivo: selecionar artigos relevantes às temáticas do projeto.</p>
+    <div class="hero-download" id="download">
+      <a class="btn-download" href="Screen.zip" download aria-label="Baixar os artigos selecionados em Screen.zip">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span data-i18n="btnDownload">Baixar selecionados (Screen.zip)</span>
+      </a>
+      <small class="btn-note" data-i18n="btnNote">Arquivo hospedado no servidor</small>
+    </div>
+  </section>
+
+  <nav class="jump" aria-label="Ir para seção">
+    <a href="#metodologia" data-i18n="jumpMetodologia">Metodologia</a>
+    <a href="#keywords" data-i18n="jumpKeywords">Palavras-chave</a>
+    <a href="#visao" data-i18n="jumpVisao">Visão geral</a>
+    <a href="#frequencia" data-i18n="jumpFrequencia">Frequência das keywords</a>
+    <a href="#por-pasta" data-i18n="jumpPorPasta">Selecionados por pasta</a>
+    <a href="#download" data-i18n="jumpDownload">Download</a>
+  </nav>
+
+  <!-- SEÇÃO 1 — METODOLOGIA -->
+  <section class="block" id="metodologia">
+    <header>
+      <div class="sec-num">1</div>
+      <h2><span data-i18n="metTitle">Metodologia</span> <small class="sub" data-i18n="metSub">Fluxo de filtragem em 4 etapas</small></h2>
+    </header>
+    <ol class="pipeline">
+      <li data-i18n="metStep1">Merge — 176 PDFs de <code>1 Coleta - OpenAlex/Final/</code> e <code>2 Coleta - Total/</code> unificados em <code>Screen/</code>.</li>
+      <li data-i18n="metStep2">Extração de abstracts — 1ª Coleta via campo <code>abstract</code> do <code>.bib</code> (OpenAlex); 2ª Coleta via <code>pdftotext</code> com localização do marcador “Abstract”/“Resumo”.</li>
+      <li data-i18n="metStep3">Filtro — busca literal (frase exata, normalizada) de cada keyword no texto do abstract, operando em OR.</li>
+      <li data-i18n="metStep4">Resultado — 54 artigos selecionados, copiados para <code>Screen/Selecionados/</code>.</li>
+    </ol>
+  </section>
+
+  <!-- SEÇÃO 2 — PALAVRAS-CHAVE -->
+  <section class="block" data-accent="teal" id="keywords">
+    <header>
+      <div class="sec-num">2</div>
+      <h2><span data-i18n="kwTitle">Palavras-chave utilizadas</span> <small class="sub" data-i18n="kwSub">Lista completa aplicada aos abstracts</small></h2>
+    </header>
+    <pre class="code-block">ethics, governance, legislation, systems security, organizational culture,
+team, technology and systems, information technology, artificial intelligence,
+algorithms, knowledge management, electronic government and digital government,
+communication culture, information flows, security protocols, fiscal responsibility,
+accountability, social control, transparency, public policies, power culture,
+contracts and systems outsourcing, information management area, data governance
+structure, cybersecurity</pre>
+  </section>
+
+  <!-- SEÇÃO 3 — VISÃO GERAL -->
+  <section class="block" id="visao">
+    <header>
+      <div class="sec-num">3</div>
+      <h2><span data-i18n="visaoTitle">Visão geral</span> <small class="sub" data-i18n="visaoSub">Etapas e quantidades</small></h2>
+    </header>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th data-i18n="thEtapa">Etapa</th><th data-i18n="thResultado">Resultado</th></tr>
+        </thead>
+        <tbody>
+          <tr><td data-i18n="vg3Row1">PDFs analisados</td><td class="ano">176</td></tr>
+          <tr><td data-i18n="vg3Row2">Com abstract extraído</td><td class="ano">175</td></tr>
+          <tr><td data-i18n="vg3Row3">Selecionados (match keywords)</td><td class="ano">54</td></tr>
+          <tr><td data-i18n="vg3Row4">Sem abstract (PDF escaneado)</td><td class="ano">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 4 — FREQUÊNCIA DAS KEYWORDS -->
+  <section class="block" data-accent="teal" id="frequencia">
+    <header>
+      <div class="sec-num">4</div>
+      <h2><span data-i18n="freqTitle">Frequência das keywords</span> <small class="sub" data-i18n="freqSub">Artigos selecionados por keyword</small></h2>
+    </header>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th data-i18n="thKeyword">Keyword</th><th data-i18n="thArtigos">Artigos</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="num">governance</td><td class="ano">17</td></tr>
+          <tr><td class="num">ethics</td><td class="ano">11</td></tr>
+          <tr><td class="num">information technology</td><td class="ano">8</td></tr>
+          <tr><td class="num">artificial intelligence</td><td class="ano">8</td></tr>
+          <tr><td class="num">transparency</td><td class="ano">7</td></tr>
+          <tr><td class="num">legislation</td><td class="ano">6</td></tr>
+          <tr><td class="num">algorithms</td><td class="ano">4</td></tr>
+          <tr><td class="num">accountability</td><td class="ano">4</td></tr>
+          <tr><td class="num">team</td><td class="ano">3</td></tr>
+          <tr><td class="num">information flows</td><td class="ano">3</td></tr>
+          <tr><td class="num">cybersecurity</td><td class="ano">3</td></tr>
+          <tr><td class="num">knowledge management</td><td class="ano">2</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 5 — ARTIGOS SELECIONADOS POR PASTA -->
+  <section class="block" id="por-pasta">
+    <header>
+      <div class="sec-num">5</div>
+      <h2><span data-i18n="pastaTitle">Artigos selecionados por pasta (keyword)</span> <small class="sub" data-i18n="pastaSub">Distribuição por pasta de keyword</small></h2>
+    </header>
+    <p data-i18n="pastaDesc">Cada artigo selecionado foi copiado para a pasta da(s) keyword(s) que matchearam no resumo, podendo aparecer em mais de uma pasta.</p>
+    <div class="folder">
+      <h3 class="folder-head"><code>Screen/governance/</code> — Governance (17)</h3>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">26</td><td class="ano">2023</td><td>Corporate Tax Avoidance and the Cost of Debt Capital</td></tr>
+            <tr><td class="num">37</td><td class="ano">2024</td><td>Does media coverage of firms&#x27; environment, social, and go...</td></tr>
+            <tr><td class="num">51</td><td class="ano">2025</td><td>Athlete data sovereignty_ addressing the legal and policy...</td></tr>
+            <tr><td class="num">77</td><td class="ano">2012</td><td>Can enterprise architectures reduce failure in developmen...</td></tr>
+            <tr><td class="num">85</td><td class="ano">2014</td><td>Public Value Governance- Moving beyond Traditional Public...</td></tr>
+            <tr><td class="num">104</td><td class="ano">2017</td><td>Information governance in digitized public administration</td></tr>
+            <tr><td class="num">114</td><td class="ano">2019</td><td>An integrated framework to elevate information governance...</td></tr>
+            <tr><td class="num">126</td><td class="ano">2020</td><td>Risk Personalization- Governing Uncertain Collective Risk...</td></tr>
+            <tr><td class="num">133</td><td class="ano">2021</td><td>Implications of the use of artificial intelligence in pub...</td></tr>
+            <tr><td class="num">146</td><td class="ano">2023</td><td>Genres of online COVID-19 information and government info...</td></tr>
+            <tr><td class="num">156</td><td class="ano">2024</td><td>Integrating facets of information technology governance a...</td></tr>
+            <tr><td class="num">165</td><td class="ano">2025</td><td>Citizen-centricity in digital government- A theoretical a...</td></tr>
+            <tr><td class="num">167</td><td class="ano">2025</td><td>Digital Transformation in Governance- The Impact of e-gov...</td></tr>
+            <tr><td class="num">168</td><td class="ano">2025</td><td>Governanca da Informacao e a Perspectiva do Valor da Info...</td></tr>
+            <tr><td class="num">169</td><td class="ano">2025</td><td>Governing Artificial Intelligence Means Governing Data- (...</td></tr>
+            <tr><td class="num">171</td><td class="ano">2025</td><td>Revista do TCU- Ano 56 Jul-Dez 2025</td></tr>
+            <tr><td class="num">174</td><td class="ano">2026</td><td>Conditions of Benefits and Risks when Algorithmic Technol...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="folder">
+      <h3 class="folder-head"><code>Screen/ethics/</code> — Ethics (11)</h3>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">7</td><td class="ano">2021</td><td>Ethical issues in genomics research on neurodevelopmental...</td></tr>
+            <tr><td class="num">49</td><td class="ano">2025</td><td>AI and Epistemic Agency: How AI Influences Belief Revisio...</td></tr>
+            <tr><td class="num">62</td><td class="ano">2006</td><td>Towards an ontological foundation of information ethics</td></tr>
+            <tr><td class="num">64</td><td class="ano">2008</td><td>On Floridi&#x27;s metaphysical foundation of information ecology</td></tr>
+            <tr><td class="num">70</td><td class="ano">2010</td><td>A Etica da Informacao (Cap. 8, trad.)- Informacao- Uma In...</td></tr>
+            <tr><td class="num">74</td><td class="ano">2010</td><td>The Ethics of Information (Cap. 8)- Information- A Very S...</td></tr>
+            <tr><td class="num">99</td><td class="ano">2016</td><td>The Moral Value of Information and Information Ethics</td></tr>
+            <tr><td class="num">105</td><td class="ano">2017</td><td>Privacidade, Etica e Informacao- Uma Reflexao Filosofica ...</td></tr>
+            <tr><td class="num">107</td><td class="ano">2017</td><td>What is Data Justice- The Case for Connecting Digital Rig...</td></tr>
+            <tr><td class="num">128</td><td class="ano">2020</td><td>The dearest of our possessions- Applying Floridi&#x27;s Inform...</td></tr>
+            <tr><td class="num">138</td><td class="ano">2022</td><td>A Dilemma of Self-interest vs. Ethical Responsibilities i...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="folder">
+      <h3 class="folder-head"><code>Screen/information-technology/</code> — Information Technology (8)</h3>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">20</td><td class="ano">2022</td><td>Informational risks</td></tr>
+            <tr><td class="num">61</td><td class="ano">1996</td><td>Risks in the use of information technology within organiz...</td></tr>
+            <tr><td class="num">67</td><td class="ano">2009</td><td>IT-IS implementation risks and their impact on firm perfo...</td></tr>
+            <tr><td class="num">69</td><td class="ano">2009</td><td>Strategic alignment of participant motivations in e-gover...</td></tr>
+            <tr><td class="num">79</td><td class="ano">2012</td><td>Knowledge-Based Risk Management framework for Information...</td></tr>
+            <tr><td class="num">82</td><td class="ano">2014</td><td>A multidimensional approach to information security risk ...</td></tr>
+            <tr><td class="num">95</td><td class="ano">2016</td><td>Information security risk analysis model using fuzzy deci...</td></tr>
+            <tr><td class="num">156</td><td class="ano">2024</td><td>Integrating facets of information technology governance a...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="folder">
+      <h3 class="folder-head"><code>Screen/artificial-intelligence/</code> — Artificial Intelligence (8)</h3>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">49</td><td class="ano">2025</td><td>AI and Epistemic Agency: How AI Influences Belief Revisio...</td></tr>
+            <tr><td class="num">50</td><td class="ano">2025</td><td>AI Concerns Among Educators: A Thematic Analysis</td></tr>
+            <tr><td class="num">133</td><td class="ano">2021</td><td>Implications of the use of artificial intelligence in pub...</td></tr>
+            <tr><td class="num">158</td><td class="ano">2024</td><td>Overcoming intergovernmental data sharing challenges with...</td></tr>
+            <tr><td class="num">167</td><td class="ano">2025</td><td>Digital Transformation in Governance- The Impact of e-gov...</td></tr>
+            <tr><td class="num">169</td><td class="ano">2025</td><td>Governing Artificial Intelligence Means Governing Data- (...</td></tr>
+            <tr><td class="num">174</td><td class="ano">2026</td><td>Conditions of Benefits and Risks when Algorithmic Technol...</td></tr>
+            <tr><td class="num">176</td><td class="ano">2026</td><td>Governamentalidade Algoritmica e os Riscos Constitucionai...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="folder">
+      <h3 class="folder-head"><code>Screen/transparency/</code> — Transparency (7)</h3>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">26</td><td class="ano">2023</td><td>Corporate Tax Avoidance and the Cost of Debt Capital</td></tr>
+            <tr><td class="num">41</td><td class="ano">2024</td><td>Menciptakan Pengalaman Bersama_ Peran Value Co-Creation d...</td></tr>
+            <tr><td class="num">46</td><td class="ano">2024</td><td>The role of value co-creation in building trust and reput...</td></tr>
+            <tr><td class="num">51</td><td class="ano">2025</td><td>Athlete data sovereignty_ addressing the legal and policy...</td></tr>
+            <tr><td class="num">104</td><td class="ano">2017</td><td>Information governance in digitized public administration</td></tr>
+            <tr><td class="num">105</td><td class="ano">2017</td><td>Privacidade, Etica e Informacao- Uma Reflexao Filosofica ...</td></tr>
+            <tr><td class="num">167</td><td class="ano">2025</td><td>Digital Transformation in Governance- The Impact of e-gov...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="folder">
+      <h3 class="folder-head"><code>Screen/legislation/</code> — Legislation (6)</h3>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">15</td><td class="ano">2021</td><td>The Transformation of Legal Policy in the Context of Digi...</td></tr>
+            <tr><td class="num">43</td><td class="ano">2024</td><td>Peacebuilding strategy in training of young scientists In...</td></tr>
+            <tr><td class="num">45</td><td class="ano">2024</td><td>The influence of the author&#x27;s content of students in soci...</td></tr>
+            <tr><td class="num">51</td><td class="ano">2025</td><td>Athlete data sovereignty_ addressing the legal and policy...</td></tr>
+            <tr><td class="num">72</td><td class="ano">2010</td><td>Collaborative risk method for information security manage...</td></tr>
+            <tr><td class="num">105</td><td class="ano">2017</td><td>Privacidade, Etica e Informacao- Uma Reflexao Filosofica ...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="folder">
+      <h3 class="folder-head"><code>Screen/algorithms/</code> — Algorithms (4)</h3>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">51</td><td class="ano">2025</td><td>Athlete data sovereignty_ addressing the legal and policy...</td></tr>
+            <tr><td class="num">130</td><td class="ano">2021</td><td>Algorithms and Decision-Making in the...(Levy, Chasalow, ...</td></tr>
+            <tr><td class="num">131</td><td class="ano">2021</td><td>Algorithms and Decision-Making in...(Levy, Chasalow, Rile...</td></tr>
+            <tr><td class="num">164</td><td class="ano">2025</td><td>Application of Big Data Technology in Enterprise Informat...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="folder">
+      <h3 class="folder-head"><code>Screen/accountability/</code> — Accountability (4)</h3>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">104</td><td class="ano">2017</td><td>Information governance in digitized public administration</td></tr>
+            <tr><td class="num">130</td><td class="ano">2021</td><td>Algorithms and Decision-Making in the...(Levy, Chasalow, ...</td></tr>
+            <tr><td class="num">131</td><td class="ano">2021</td><td>Algorithms and Decision-Making in...(Levy, Chasalow, Rile...</td></tr>
+            <tr><td class="num">167</td><td class="ano">2025</td><td>Digital Transformation in Governance- The Impact of e-gov...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="folder">
+      <h3 class="folder-head"><code>Screen/team/</code> — Team (3)</h3>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">16</td><td class="ano">2022</td><td>Decisional Conflict About Kidney Failure Treatment Modali...</td></tr>
+            <tr><td class="num">51</td><td class="ano">2025</td><td>Athlete data sovereignty_ addressing the legal and policy...</td></tr>
+            <tr><td class="num">84</td><td class="ano">2014</td><td>Countering user risk in information system development pr...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="folder">
+      <h3 class="folder-head"><code>Screen/information-flows/</code> — Information Flows (3)</h3>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">45</td><td class="ano">2024</td><td>The influence of the author&#x27;s content of students in soci...</td></tr>
+            <tr><td class="num">54</td><td class="ano">2025</td><td>Explanatory Journalism as a Means of Adapting a Complex S...</td></tr>
+            <tr><td class="num">136</td><td class="ano">2021</td><td>Risk Reflexity and the Information Interpretation Conflic...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="folder">
+      <h3 class="folder-head"><code>Screen/cybersecurity/</code> — Cybersecurity (3)</h3>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">65</td><td class="ano">2008</td><td>Quantitatively assessing the vulnerability of critical in...</td></tr>
+            <tr><td class="num">151</td><td class="ano">2024</td><td>A framework for cyber-risk insurance against ransomware- ...</td></tr>
+            <tr><td class="num">167</td><td class="ano">2025</td><td>Digital Transformation in Governance- The Impact of e-gov...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="folder">
+      <h3 class="folder-head"><code>Screen/knowledge-management/</code> — Knowledge Management (2)</h3>
+      <div class="table-wrap wide">
+        <table>
+          <thead>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">76</td><td class="ano">2011</td><td>The Risk of Information Management Without Knowledge Mana...</td></tr>
+            <tr><td class="num">79</td><td class="ano">2012</td><td>Knowledge-Based Risk Management framework for Information...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer><span data-i18n="footer">Screening ·</span> <a href="../index.html" class="footer-logo">Gustavo<span>.</span>Ripka</a></footer>
+</main>
+
+<script>
+  const root = document.documentElement;
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const savedTheme = localStorage.getItem("theme");
+
+  function applyTheme(theme) {
+    root.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+    const icon = document.getElementById("themeIcon");
+    if (icon) {
+      icon.innerHTML = theme === "dark"
+        ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="5.64"/><line x1="12" y1="5" x2="12" y2="7"/>'
+        : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    }
+  }
+
+  applyTheme(savedTheme || (prefersDark ? "dark" : "light"));
+
+  document.getElementById("themeBtn").addEventListener("click", () => {
+    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(next);
+  });
+
+  const i18n = {
+    pt: {
+      btnColeta: "Coleta",
+      btnDownload: "Baixar selecionados (Screen.zip)",
+      btnLang: "EN",
+      btnNote: "Arquivo hospedado no servidor",
+      btnPortfolio: "← Portfólio",
+      footer: "Screening ·",
+      freqSub: "Artigos selecionados por keyword",
+      freqTitle: "Frequência das keywords",
+      heroDesc: "Filtragem dos artigos das duas coletas por keywords no resumo (abstract), utilizando OR entre as keywords. Objetivo: selecionar artigos relevantes às temáticas do projeto.",
+      heroTitle: "Screening",
+      jumpDownload: "Download",
+      jumpFrequencia: "Frequência das keywords",
+      jumpKeywords: "Palavras-chave",
+      jumpMetodologia: "Metodologia",
+      jumpPorPasta: "Selecionados por pasta",
+      jumpVisao: "Visão geral",
+      kwSub: "Lista completa aplicada aos abstracts",
+      kwTitle: "Palavras-chave utilizadas",
+      metStep1: "Merge — 176 PDFs de <code>1 Coleta - OpenAlex/Final/</code> e <code>2 Coleta - Total/</code> unificados em <code>Screen/</code>.",
+      metStep2: "Extração de abstracts — 1ª Coleta via campo <code>abstract</code> do <code>.bib</code> (OpenAlex); 2ª Coleta via <code>pdftotext</code> com localização do marcador “Abstract”/“Resumo”.",
+      metStep3: "Filtro — busca literal (frase exata, normalizada) de cada keyword no texto do abstract, operando em OR.",
+      metStep4: "Resultado — 54 artigos selecionados, copiados para <code>Screen/Selecionados/</code>.",
+      metSub: "Fluxo de filtragem em 4 etapas",
+      metTitle: "Metodologia",
+      pastaDesc: "Cada artigo selecionado foi copiado para a pasta da(s) keyword(s) que matchearam no resumo, podendo aparecer em mais de uma pasta.",
+      pastaSub: "Distribuição por pasta de keyword",
+      pastaTitle: "Artigos selecionados por pasta (keyword)",
+      thAno: "Ano",
+      thArtigos: "Artigos",
+      thEtapa: "Etapa",
+      thID: "ID",
+      thKeyword: "Keyword",
+      thResultado: "Resultado",
+      thTitulo: "Título",
+      topbarTitle: "Doutorado Elenice",
+      vg3Row1: "PDFs analisados",
+      vg3Row2: "Com abstract extraído",
+      vg3Row3: "Selecionados (match keywords)",
+      vg3Row4: "Sem abstract (PDF escaneado)",
+      visaoSub: "Etapas e quantidades",
+      visaoTitle: "Visão geral",
+    },
+    en: {
+      btnColeta: "Collection",
+      btnDownload: "Download selected (Screen.zip)",
+      btnLang: "PT",
+      btnNote: "File hosted on the server",
+      btnPortfolio: "← Portfolio",
+      footer: "Screening ·",
+      freqSub: "Selected articles per keyword",
+      freqTitle: "Keyword frequency",
+      heroDesc: "Screening of articles from both collections by keywords in the abstract, using OR between keywords. Goal: select articles relevant to the project's themes.",
+      heroTitle: "Screening",
+      jumpDownload: "Download",
+      jumpFrequencia: "Keyword frequency",
+      jumpKeywords: "Keywords",
+      jumpMetodologia: "Methodology",
+      jumpPorPasta: "Selected by folder",
+      jumpVisao: "Overview",
+      kwSub: "Full list applied to abstracts",
+      kwTitle: "Keywords used",
+      metStep1: "Merge — 176 PDFs from <code>1 Coleta - OpenAlex/Final/</code> and <code>2 Coleta - Total/</code> unified into <code>Screen/</code>.",
+      metStep2: "Abstract extraction — 1st Collection via the <code>abstract</code> field of the <code>.bib</code> (OpenAlex); 2nd Collection via <code>pdftotext</code>, locating the “Abstract”/“Resumo” marker.",
+      metStep3: "Filter — literal search (exact, normalized phrase) of each keyword in the abstract text, operating in OR.",
+      metStep4: "Result — 54 selected articles, copied to <code>Screen/Selecionados/</code>.",
+      metSub: "4-step screening workflow",
+      metTitle: "Methodology",
+      pastaDesc: "Each selected article was copied to the folder of the keyword(s) that matched in the abstract, and may appear in more than one folder.",
+      pastaSub: "Distribution by keyword folder",
+      pastaTitle: "Selected articles by folder (keyword)",
+      thAno: "Year",
+      thArtigos: "Articles",
+      thEtapa: "Step",
+      thID: "ID",
+      thKeyword: "Keyword",
+      thResultado: "Result",
+      thTitulo: "Title",
+      topbarTitle: "Elenice's Doctorate",
+      vg3Row1: "PDFs analyzed",
+      vg3Row2: "With abstract extracted",
+      vg3Row3: "Selected (keyword match)",
+      vg3Row4: "Without abstract (scanned PDF)",
+      visaoSub: "Steps and quantities",
+      visaoTitle: "Overview",
+    }
+  };
+  let lang = "pt";
+
+  document.getElementById("langBtn").addEventListener("click", () => {
+    lang = lang === "pt" ? "en" : "pt";
+    applyLanguage();
+  });
+
+  function applyLanguage() {
+    document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.dataset.i18n;
+      if (i18n[lang][key] !== undefined) el.innerHTML = i18n[lang][key];
+    });
+  }
+
+  applyLanguage();
+</script>
+</body>
+</html>
