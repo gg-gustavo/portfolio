@@ -1,4 +1,5 @@
 .opencode/
 teste.txt
-# zip grande hospedado no servidor local (nao versionado)
+# zips grandes hospedados no servidor local (nao versionados)
 articles/Artigos.zip
+articles/Screen.zip
