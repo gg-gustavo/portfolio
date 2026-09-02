@@ -356,7 +356,7 @@ button.calculate:disabled { filter: grayscale(.6) opacity(.55); cursor: not-allo
 
 footer { text-align: center; color: var(--text-soft); font-size: .8rem; margin-top: 40px; }
 footer a { color: var(--acc); text-decoration: none; }
-footer .footer-logo { color: #fff; font-weight: 800; }
+footer .footer-logo { color: var(--text); font-weight: 800; }
 footer .footer-logo span { color: var(--acc); }
 
 @media (max-width: 520px) {
