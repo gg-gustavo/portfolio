@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Revisão Sistemática · Coleta de Artigos</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23000000'/%3E%3Ctext x='50' y='72' font-size='64' font-weight='800' font-family='sans-serif' text-anchor='middle' fill='white'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23000000'/%3E%3Ctext x='50' y='72' font-size='64' font-weight='800' font-family='sans-serif' text-anchor='middle' fill='white'%3EE%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="articles.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
 <header class="topbar">
   <div class="topbar-left">
     <div class="brand">
-      <div class="logo" aria-hidden="true">A</div>
+      <div class="logo" aria-hidden="true">E</div>
       <span class="title" data-i18n="topbarTitle">Revisão Sistemática</span>
     </div>
     <nav class="topbar-nav" aria-label="Navegação">
@@ -59,7 +59,7 @@
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>Parâmetro</th><th>Critério</th></tr>
+            <tr><th data-i18n="thParam">Parâmetro</th><th data-i18n="thCriterio">Critério</th></tr>
           </thead>
           <tbody>
             <tr><td class="num">open_access.is_oa</td><td>true</td></tr>
@@ -91,14 +91,14 @@ https://api.openalex.org/works?filter=
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>Etapa</th><th>Resultado</th></tr>
+            <tr><th data-i18n="thEtapa">Etapa</th><th data-i18n="thResultado">Resultado</th></tr>
           </thead>
           <tbody>
-            <tr><td>Registros no .bib (busca OpenAlex)</td><td class="num">66</td></tr>
-            <tr><td>PDFs baixados via script</td><td class="num">23</td></tr>
-            <tr><td>PDFs coletados manualmente</td><td class="num">37</td></tr>
-            <tr><td>Corpus final</td><td class="num">60</td></tr>
-            <tr><td>Artigos sem PDF</td><td class="num">6</td></tr>
+            <tr><td data-i18n="vg1Row1">Registros no .bib (busca OpenAlex)</td><td class="num">66</td></tr>
+            <tr><td data-i18n="vg1Row2">PDFs baixados via script</td><td class="num">23</td></tr>
+            <tr><td data-i18n="vg1Row3">PDFs coletados manualmente</td><td class="num">37</td></tr>
+            <tr><td data-i18n="vg1Row4">Corpus final</td><td class="num">60</td></tr>
+            <tr><td data-i18n="vg1Row5">Artigos sem PDF</td><td class="num">6</td></tr>
           </tbody>
         </table>
       </div>
@@ -110,10 +110,10 @@ https://api.openalex.org/works?filter=
         <h2><span data-i18n="s1PipelineTitle">Pipeline</span> <small class="sub" data-i18n="pipelineSub">Fluxo de trabalho da coleta</small></h2>
       </header>
       <ol class="pipeline">
-        <li><strong>Busca no OpenAlex</strong> — aplicação dos filtros, exportação do arquivo <code>.bib</code> com 66 registros e salvamento dos dados brutos (JSON).</li>
-        <li><strong>Download automatizado</strong> — execução do script <code>baixar_pdfs.py</code>, que baixou 23 PDFs e registrou o log em <code>download_log.csv</code>.</li>
-        <li><strong>Coleta manual</strong> — recuperação ativa de 37 PDFs a partir dos links retornados pela API (quando o download automático falhou ou não cobriu).</li>
-        <li><strong>Consolidação</strong> — validação de integridade dos arquivos, verificação de duplicatas e organização final do corpus com 60 artigos.</li>
+        <li data-i18n="pipeStep1"><strong>Busca no OpenAlex</strong> — aplicação dos filtros, exportação do arquivo <code>.bib</code> com 66 registros e salvamento dos dados brutos (JSON).</li>
+        <li data-i18n="pipeStep2"><strong>Download automatizado</strong> — execução do script <code>baixar_pdfs.py</code>, que baixou 23 PDFs e registrou o log em <code>download_log.csv</code>.</li>
+        <li data-i18n="pipeStep3"><strong>Coleta manual</strong> — recuperação ativa de 37 PDFs a partir dos links retornados pela API (quando o download automático falhou ou não cobriu).</li>
+        <li data-i18n="pipeStep4"><strong>Consolidação</strong> — validação de integridade dos arquivos, verificação de duplicatas e organização final do corpus com 60 artigos.</li>
       </ol>
     </section>
 
@@ -125,19 +125,19 @@ https://api.openalex.org/works?filter=
       <div class="table-wrap wide">
         <table>
           <thead>
-            <tr><th>Pasta / arquivo</th><th>Conteúdo</th><th>Qtd.</th><th>Origem</th></tr>
+            <tr><th data-i18n="thPasta">Pasta / arquivo</th><th data-i18n="thConteudo">Conteúdo</th><th data-i18n="thQtd">Qtd.</th><th data-i18n="thOrigem">Origem</th></tr>
           </thead>
           <tbody>
-            <tr><td class="num">Artigos_2020_2025.bib</td><td>Referências exportadas da busca no OpenAlex</td><td class="num">66</td><td>Busca OpenAlex</td></tr>
-            <tr><td class="num">PDF/</td><td>PDFs baixados automaticamente pelo script</td><td class="num">23</td><td>Script Python</td></tr>
-            <tr><td class="num">Download Manual/</td><td>PDFs coletados manualmente a partir dos links</td><td class="num">37</td><td>Coleta manual</td></tr>
-            <tr><td class="num">Final/</td><td>Corpus consolidado e validado</td><td class="num">60</td><td>Consolidação</td></tr>
-            <tr><td class="num">OpenAlex/</td><td>Registros brutos (JSON) retornados pela API</td><td class="num">66</td><td>Busca OpenAlex</td></tr>
-            <tr><td class="num">Erros/falhas.md</td><td>Registro de falhas e artigos sem PDF</td><td class="num">6</td><td>Pipeline</td></tr>
-            <tr><td class="num">download_log.csv</td><td>Log do download automatizado (URL, status)</td><td class="num">66</td><td>Script Python</td></tr>
-            <tr><td class="num">erros.csv</td><td>Erros capturados durante o download</td><td class="num">6</td><td>Script Python</td></tr>
-            <tr><td class="num">run.log</td><td>Log de execução do pipeline</td><td><span class="small">—</span></td><td>Script Python</td></tr>
-            <tr><td class="num">baixar_pdfs.py</td><td>Script de download automatizado</td><td class="num">1</td><td>Script Python</td></tr>
+            <tr><td class="num">Artigos_2020_2025.bib</td><td data-i18n="est1Row1C">Referências exportadas da busca no OpenAlex</td><td class="num">66</td><td data-i18n="est1Row1O">Busca OpenAlex</td></tr>
+            <tr><td class="num">PDF/</td><td data-i18n="est1Row2C">PDFs baixados automaticamente pelo script</td><td class="num">23</td><td>Script Python</td></tr>
+            <tr><td class="num">Download Manual/</td><td data-i18n="est1Row3C">PDFs coletados manualmente a partir dos links</td><td class="num">37</td><td data-i18n="est1Row3O">Coleta manual</td></tr>
+            <tr><td class="num">Final/</td><td data-i18n="est1Row4C">Corpus consolidado e validado</td><td class="num">60</td><td data-i18n="est1Row4O">Consolidação</td></tr>
+            <tr><td class="num">OpenAlex/</td><td data-i18n="est1Row5C">Registros brutos (JSON) retornados pela API</td><td class="num">66</td><td data-i18n="est1Row1O">Busca OpenAlex</td></tr>
+            <tr><td class="num">Erros/falhas.md</td><td data-i18n="est1Row6C">Registro de falhas e artigos sem PDF</td><td class="num">6</td><td>Pipeline</td></tr>
+            <tr><td class="num">download_log.csv</td><td data-i18n="est1Row7C">Log do download automatizado (URL, status)</td><td class="num">66</td><td>Script Python</td></tr>
+            <tr><td class="num">erros.csv</td><td data-i18n="est1Row8C">Erros capturados durante o download</td><td class="num">6</td><td>Script Python</td></tr>
+            <tr><td class="num">run.log</td><td data-i18n="est1Row9C">Log de execução do pipeline</td><td><span class="small">—</span></td><td>Script Python</td></tr>
+            <tr><td class="num">baixar_pdfs.py</td><td data-i18n="est1Row10C">Script de download automatizado</td><td class="num">1</td><td>Script Python</td></tr>
           </tbody>
         </table>
       </div>
@@ -162,14 +162,14 @@ https://api.openalex.org/works?filter=
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>Status</th><th>Qtd.</th><th>Detalhe</th></tr>
+            <tr><th data-i18n="thStatus">Status</th><th data-i18n="thQtd">Qtd.</th><th data-i18n="thDetalhe">Detalhe</th></tr>
           </thead>
           <tbody>
-            <tr><td>Registros no .bib</td><td class="num">66</td><td>Exportação inicial da busca OpenAlex</td></tr>
-            <tr><td>PDF via script</td><td class="num">23</td><td>Download automatizado em <code>PDF/</code></td></tr>
-            <tr><td>PDF manual</td><td class="num">37</td><td>Coleta manual em <code>Download Manual/</code></td></tr>
-            <tr><td>Corpus final</td><td class="num">60</td><td>Consolidados e validados em <code>Final/</code></td></tr>
-            <tr><td>Sem PDF</td><td class="num">6</td><td>Falhas registradas em <code>Erros/falhas.md</code></td></tr>
+            <tr><td data-i18n="statRow1">Registros no .bib</td><td class="num">66</td><td data-i18n="statDet1">Exportação inicial da busca OpenAlex</td></tr>
+            <tr><td data-i18n="statRow2">PDF via script</td><td class="num">23</td><td data-i18n="statDet2">Download automatizado em <code>PDF/</code></td></tr>
+            <tr><td data-i18n="statRow3">PDF manual</td><td class="num">37</td><td data-i18n="statDet3">Coleta manual em <code>Download Manual/</code></td></tr>
+            <tr><td data-i18n="statRow4">Corpus final</td><td class="num">60</td><td data-i18n="statDet4">Consolidados e validados em <code>Final/</code></td></tr>
+            <tr><td data-i18n="statRow5">Sem PDF</td><td class="num">6</td><td data-i18n="statDet5">Falhas registradas em <code>Erros/falhas.md</code></td></tr>
           </tbody>
         </table>
       </div>
@@ -178,15 +178,15 @@ https://api.openalex.org/works?filter=
         <div class="table-wrap wide">
           <table>
             <thead>
-              <tr><th>Ano</th><th>Título</th><th>DOI</th><th>Motivo</th></tr>
+              <tr><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th><th data-i18n="thDOI">DOI</th><th data-i18n="thMotivo">Motivo</th></tr>
             </thead>
             <tbody>
-              <tr><td class="ano">2020</td><td>Risk-taking behaviors and exposures among vocational school students in China: a cross-sectional survey</td><td><a href="https://doi.org/10.5249/jivr.v12i3.1278" target="_blank" rel="noopener">10.5249/jivr.v12i3.1278</a></td><td>HTTP 400 Bad Request</td></tr>
-              <tr><td class="ano">2022</td><td>CO-CREATION MARKETING PADA KEPUASAN MERCHANT GOFOOD BY GOJEK INDONESIA</td><td><a href="https://doi.org/10.24843/ejmunud.2022.v11.i09.p05" target="_blank" rel="noopener">10.24843/ejmunud.2022.v11.i09.p05</a></td><td>"Database connection failed" (consta OK no log, mas arquivo não localizado)</td></tr>
-              <tr><td class="ano">2022</td><td>Most effective OG0-061 Exam Dumps 2022 To start An IT Career</td><td><a href="https://doi.org/10.5281/zenodo.5895896" target="_blank" rel="noopener">10.5281/zenodo.5895896</a></td><td>Removido (SPAM)</td></tr>
-              <tr><td class="ano">2022</td><td>Pengaruh Informasi Akuntansi, Persepsi Risiko dan Citra Perusahaan dalam Pengambilan Keputusan Investasi di Masa Pandemi Covid-19</td><td><a href="https://doi.org/10.24036/jea.v4i1.486" target="_blank" rel="noopener">10.24036/jea.v4i1.486</a></td><td>Erro de proxy</td></tr>
-              <tr><td class="ano">2023</td><td>Information Security's Place in the National Security System: Actual Problems of Information Law</td><td><a href="https://doi.org/10.25136/2409-7543.2023.1.40078" target="_blank" rel="noopener">10.25136/2409-7543.2023.1.40078</a></td><td>Artigo em russo</td></tr>
-              <tr><td class="ano">2024</td><td>Public Administration and the Institute of the Children's Ombudsman in the Field of Personal Information Security</td><td><a href="https://doi.org/10.24158/pep.2024.6.5" target="_blank" rel="noopener">10.24158/pep.2024.6.5</a></td><td>Artigo em russo</td></tr>
+              <tr><td class="ano">2020</td><td>Risk-taking behaviors and exposures among vocational school students in China: a cross-sectional survey</td><td><a href="https://doi.org/10.5249/jivr.v12i3.1278" target="_blank" rel="noopener">10.5249/jivr.v12i3.1278</a></td><td data-i18n="motivo1">HTTP 400 Bad Request</td></tr>
+              <tr><td class="ano">2022</td><td>CO-CREATION MARKETING PADA KEPUASAN MERCHANT GOFOOD BY GOJEK INDONESIA</td><td><a href="https://doi.org/10.24843/ejmunud.2022.v11.i09.p05" target="_blank" rel="noopener">10.24843/ejmunud.2022.v11.i09.p05</a></td><td data-i18n="motivo2">"Database connection failed" (consta OK no log, mas arquivo não localizado)</td></tr>
+              <tr><td class="ano">2022</td><td>Most effective OG0-061 Exam Dumps 2022 To start An IT Career</td><td><a href="https://doi.org/10.5281/zenodo.5895896" target="_blank" rel="noopener">10.5281/zenodo.5895896</a></td><td data-i18n="motivo3">Removido (SPAM)</td></tr>
+              <tr><td class="ano">2022</td><td>Pengaruh Informasi Akuntansi, Persepsi Risiko dan Citra Perusahaan dalam Pengambilan Keputusan Investasi di Masa Pandemi Covid-19</td><td><a href="https://doi.org/10.24036/jea.v4i1.486" target="_blank" rel="noopener">10.24036/jea.v4i1.486</a></td><td data-i18n="motivo4">Erro de proxy</td></tr>
+              <tr><td class="ano">2023</td><td>Information Security's Place in the National Security System: Actual Problems of Information Law</td><td><a href="https://doi.org/10.25136/2409-7543.2023.1.40078" target="_blank" rel="noopener">10.25136/2409-7543.2023.1.40078</a></td><td data-i18n="motivo5">Artigo em russo</td></tr>
+              <tr><td class="ano">2024</td><td>Public Administration and the Institute of the Children's Ombudsman in the Field of Personal Information Security</td><td><a href="https://doi.org/10.24158/pep.2024.6.5" target="_blank" rel="noopener">10.24158/pep.2024.6.5</a></td><td data-i18n="motivo5">Artigo em russo</td></tr>
             </tbody>
           </table>
         </div>
@@ -201,7 +201,7 @@ https://api.openalex.org/works?filter=
       <div class="table-wrap wide">
         <table>
           <thead>
-            <tr><th>ID</th><th>Ano</th><th>Título</th></tr>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
           </thead>
           <tbody>
             <tr><td class="num">01</td><td class="ano">2020</td><td>Ethical Considerations in HIV eHealth Intervention Research: Implications for Informational Risk in Recruitment, Data Maintenance, and Consent Procedures</td></tr>
@@ -284,14 +284,14 @@ https://api.openalex.org/works?filter=
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>Etapa</th><th>Resultado</th></tr>
+            <tr><th data-i18n="thEtapa">Etapa</th><th data-i18n="thResultado">Resultado</th></tr>
           </thead>
           <tbody>
             <tr><td>Others1</td><td class="num">68</td></tr>
             <tr><td>Others2</td><td class="num">55</td></tr>
-            <tr><td>Duplicatas com a 1ª Coleta</td><td class="num">0</td></tr>
-            <tr><td>Duplicatas internas removidas</td><td class="num">7</td></tr>
-            <tr><td>Consolidado</td><td class="num">116</td></tr>
+            <tr><td data-i18n="vg2Row3">Duplicatas com a 1ª Coleta</td><td class="num">0</td></tr>
+            <tr><td data-i18n="vg2Row4">Duplicatas internas removidas</td><td class="num">7</td></tr>
+            <tr><td data-i18n="vg2Row5">Consolidado</td><td class="num">116</td></tr>
           </tbody>
         </table>
       </div>
@@ -305,14 +305,14 @@ https://api.openalex.org/works?filter=
       <div class="table-wrap wide">
         <table>
           <thead>
-            <tr><th>Pasta / arquivo</th><th>Conteúdo</th><th>Qtd.</th></tr>
+            <tr><th data-i18n="thPasta">Pasta / arquivo</th><th data-i18n="thConteudo">Conteúdo</th><th data-i18n="thQtd">Qtd.</th></tr>
           </thead>
           <tbody>
-            <tr><td class="num">Others1/</td><td>1ª rodada complementar de coleta</td><td class="num">68</td></tr>
-            <tr><td class="num">Others2/</td><td>2ª rodada complementar de coleta</td><td class="num">55</td></tr>
-            <tr><td class="num">Duplicatas/</td><td>Cruzamento com a 1ª Coleta — removidas</td><td class="num">0</td></tr>
-            <tr><td class="num">Duplicatas internas/</td><td>Repetições dentro da própria coleta — removidas</td><td class="num">7</td></tr>
-            <tr><td class="num">Final/</td><td>Corpus consolidado (2ª Coleta)</td><td class="num">116</td></tr>
+            <tr><td class="num">Others1/</td><td data-i18n="est2Row1C">1ª rodada complementar de coleta</td><td class="num">68</td></tr>
+            <tr><td class="num">Others2/</td><td data-i18n="est2Row2C">2ª rodada complementar de coleta</td><td class="num">55</td></tr>
+            <tr><td class="num">Duplicatas/</td><td data-i18n="est2Row3C">Cruzamento com a 1ª Coleta — removidas</td><td class="num">0</td></tr>
+            <tr><td class="num">Duplicatas internas/</td><td data-i18n="est2Row4C">Repetições dentro da própria coleta — removidas</td><td class="num">7</td></tr>
+            <tr><td class="num">Final/</td><td data-i18n="est2Row5C">Corpus consolidado (2ª Coleta)</td><td class="num">116</td></tr>
           </tbody>
         </table>
       </div>
@@ -336,7 +336,7 @@ https://api.openalex.org/works?filter=
       <div class="table-wrap wide">
         <table>
           <thead>
-            <tr><th>ID</th><th>Ano</th><th>Título</th></tr>
+            <tr><th data-i18n="thID">ID</th><th data-i18n="thAno">Ano</th><th data-i18n="thTitulo">Título</th></tr>
           </thead>
           <tbody>
             <tr><td class="num">61</td><td class="ano">1996</td><td>Risks in the use of information technology within organizations</td></tr>
@@ -500,98 +500,218 @@ https://api.openalex.org/works?filter=
 
   const i18n = {
     pt: {
-      btnLang: "EN",
-      topbarTitle: "Revisão Sistemática",
-      btnPortfolio: "← Portfólio",
-      heroTitle: "Revisão Sistemática <span class=\"g\">Coleta</span> de Artigos",
-      heroDesc: "Projeto de doutorado — Prof.ª Elenice Novak. Corpus consolidado com duas coletas: OpenAlex (2020–2025) e complementar (Outros).",
       btnDownload: "Baixar corpus completo (Artigos.zip)",
+      btnLang: "EN",
       btnNote: "Tamanho do arquivo: 106 MB",
+      btnPortfolio: "← Portfólio",
+      conv1Sub: "Padrão de nomeação dos arquivos",
+      conv2Sub: "Padrão de numeração",
+      est1Row10C: "Script de download automatizado",
+      est1Row1C: "Referências exportadas da busca no OpenAlex",
+      est1Row1O: "Busca OpenAlex",
+      est1Row2C: "PDFs baixados automaticamente pelo script",
+      est1Row3C: "PDFs coletados manualmente a partir dos links",
+      est1Row3O: "Coleta manual",
+      est1Row4C: "Corpus consolidado e validado",
+      est1Row4O: "Consolidação",
+      est1Row5C: "Registros brutos (JSON) retornados pela API",
+      est1Row6C: "Registro de falhas e artigos sem PDF",
+      est1Row7C: "Log do download automatizado (URL, status)",
+      est1Row8C: "Erros capturados durante o download",
+      est1Row9C: "Log de execução do pipeline",
+      est2Row1C: "1ª rodada complementar de coleta",
+      est2Row2C: "2ª rodada complementar de coleta",
+      est2Row3C: "Cruzamento com a 1ª Coleta — removidas",
+      est2Row4C: "Repetições dentro da própria coleta — removidas",
+      est2Row5C: "Corpus consolidado (2ª Coleta)",
+      estruSub: "Organização dos arquivos da coleta",
+      footer: "Revisão Sistemática · Coleta de Artigos ·",
+      heroDesc: "Projeto de doutorado — Prof.ª Elenice Novak. Corpus consolidado com duas coletas: OpenAlex (2020–2025) e complementar (Outros).",
+      heroTitle: "Revisão Sistemática <span class=\"g\">Coleta</span> de Artigos",
       jumpColeta1: "1ª Coleta — OpenAlex",
       jumpColeta2: "2ª Coleta — Outros",
       jumpDownload: "Download",
       jumpReproduzir: "Como Reproduzir",
-      s1Title: "1ª Coleta — OpenAlex",
-      s1Sub: "Busca na base OpenAlex com recorte temático e temporal (2020–2025)",
-      s1RecorteTitle: "Recorte da busca",
-      s1RecorteDesc: "Definido no início do projeto. Query parametrizada aplicada na API /works do OpenAlex:",
-      recorteSub: "Parâmetros e critérios aplicados na API",
-      s1VisaoTitle: "Visão geral (1ª Coleta)",
-      visaoSub: "Etapas e quantidades",
-      s1PipelineTitle: "Pipeline",
+      motivo1: "HTTP 400 Bad Request",
+      motivo2: "\"Database connection failed\" (consta OK no log, mas arquivo não localizado)",
+      motivo3: "Removido (SPAM)",
+      motivo4: "Erro de proxy",
+      motivo5: "Artigo em russo",
+      pipeStep1: "<strong>Busca no OpenAlex</strong> — aplicação dos filtros, exportação do arquivo <code>.bib</code> com 66 registros e salvamento dos dados brutos (JSON).",
+      pipeStep2: "<strong>Download automatizado</strong> — execução do script <code>baixar_pdfs.py</code>, que baixou 23 PDFs e registrou o log em <code>download_log.csv</code>.",
+      pipeStep3: "<strong>Coleta manual</strong> — recuperação ativa de 37 PDFs a partir dos links retornados pela API (quando o download automático falhou ou não cobriu).",
+      pipeStep4: "<strong>Consolidação</strong> — validação de integridade dos arquivos, verificação de duplicatas e organização final do corpus com 60 artigos.",
       pipelineSub: "Fluxo de trabalho da coleta",
-      s1EstruTitle: "Estrutura de pastas",
-      estruSub: "Organização dos arquivos da coleta",
-      s1ConvTitle: "Convenção de nomes",
-      conv1Sub: "Padrão de nomeação dos arquivos",
-      s1Conv1: "Etapas intermediárias: ID - ANO - Título.pdf (título truncado em ~60 caracteres).",
-      s1Conv2: "Corpus final: NN - ANO - Título.pdf, com NN de 01 a 60 ordenado por ano/título.",
-      s1StatusTitle: "Status de coleta",
-      statusSub: "Situação dos 66 registros",
-      s1TabelaLabel: "Artigos do corpus — 60",
-      tabela1Sub: "Relação completa da 1ª Coleta (OpenAlex)",
-      s1SemPDF: "Artigos sem PDF coletado",
-      s2Title: "2ª Coleta — Outros",
-      s2Sub: "Coleta complementar em outras bases, sem recorte temporal restritivo",
-      s2VisaoTitle: "Visão geral (2ª Coleta)",
-      s2EstruTitle: "Estrutura de pastas",
-      s2ConvTitle: "Convenção de nomes",
-      conv2Sub: "Padrão de numeração",
-      s2Conv1: "Corpus consolidado: NN - ANO - Título.pdf, com NN de 61 a 176, em sequência à numeração da 1ª Coleta.",
-      s2TabelaLabel: "Artigos do corpus — 116",
-      tabela2Sub: "Relação completa da 2ª Coleta (Outros)",
-      reproduzirTitle: "Como reproduzir",
-      reproduzirSub: "Reexecutando o pipeline de coleta",
+      recorteSub: "Parâmetros e critérios aplicados na API",
       reproduzirDesc: "O download automatizado da 1ª Coleta é reproduzível a partir do script baixar_pdfs.py, executado na raiz da pasta de coleta:",
       reproduzirReq: "Requer requests (pip install requests).",
-      footer: "Revisão Sistemática · Coleta de Artigos ·"
+      reproduzirSub: "Reexecutando o pipeline de coleta",
+      reproduzirTitle: "Como reproduzir",
+      s1Conv1: "Etapas intermediárias: ID - ANO - Título.pdf (título truncado em ~60 caracteres).",
+      s1Conv2: "Corpus final: NN - ANO - Título.pdf, com NN de 01 a 60 ordenado por ano/título.",
+      s1ConvTitle: "Convenção de nomes",
+      s1EstruTitle: "Estrutura de pastas",
+      s1PipelineTitle: "Pipeline",
+      s1RecorteDesc: "Definido no início do projeto. Query parametrizada aplicada na API /works do OpenAlex:",
+      s1RecorteTitle: "Recorte da busca",
+      s1SemPDF: "Artigos sem PDF coletado",
+      s1StatusTitle: "Status de coleta",
+      s1Sub: "Busca na base OpenAlex com recorte temático e temporal (2020–2025)",
+      s1TabelaLabel: "Artigos do corpus — 60",
+      s1Title: "1ª Coleta — OpenAlex",
+      s1VisaoTitle: "Visão geral (1ª Coleta)",
+      s2Conv1: "Corpus consolidado: NN - ANO - Título.pdf, com NN de 61 a 176, em sequência à numeração da 1ª Coleta.",
+      s2ConvTitle: "Convenção de nomes",
+      s2EstruTitle: "Estrutura de pastas",
+      s2Sub: "Coleta complementar em outras bases, sem recorte temporal restritivo",
+      s2TabelaLabel: "Artigos do corpus — 116",
+      s2Title: "2ª Coleta — Outros",
+      s2VisaoTitle: "Visão geral (2ª Coleta)",
+      statDet1: "Exportação inicial da busca OpenAlex",
+      statDet2: "Download automatizado em <code>PDF/</code>",
+      statDet3: "Coleta manual em <code>Download Manual/</code>",
+      statDet5: "Falhas registradas em <code>Erros/falhas.md</code>",
+      statRow1: "Registros no .bib",
+      statRow2: "PDF via script",
+      statRow3: "PDF manual",
+      statDet4: "Consolidados e validados em <code>Final/</code>",
+      statRow4: "Corpus final",
+      statRow5: "Sem PDF",
+      statusSub: "Situação dos 66 registros",
+      tabela1Sub: "Relação completa da 1ª Coleta (OpenAlex)",
+      tabela2Sub: "Relação completa da 2ª Coleta (Outros)",
+      thAno: "Ano",
+      thConteudo: "Conteúdo",
+      thCriterio: "Critério",
+      thDOI: "DOI",
+      thDetalhe: "Detalhe",
+      thEtapa: "Etapa",
+      thID: "ID",
+      thMotivo: "Motivo",
+      thOrigem: "Origem",
+      thParam: "Parâmetro",
+      thPasta: "Pasta / arquivo",
+      thQtd: "Qtd.",
+      thResultado: "Resultado",
+      thStatus: "Status",
+      thTitulo: "Título",
+      topbarTitle: "Revisão Sistemática",
+      vg1Row1: "Registros no .bib (busca OpenAlex)",
+      vg1Row2: "PDFs baixados via script",
+      vg1Row3: "PDFs coletados manualmente",
+      vg1Row4: "Corpus final",
+      vg1Row5: "Artigos sem PDF",
+      vg2Row3: "Duplicatas com a 1ª Coleta",
+      vg2Row4: "Duplicatas internas removidas",
+      vg2Row5: "Consolidado",
+      visaoSub: "Etapas e quantidades"
     },
     en: {
-      btnLang: "PT",
-      topbarTitle: "Systematic Review",
-      btnPortfolio: "← Portfolio",
-      heroTitle: "Systematic Review <span class=\"g\">Article</span> Collection",
-      heroDesc: "PhD project — Prof.ª Elenice Novak. Consolidated corpus from two collections: OpenAlex (2020–2025) and supplementary (Others).",
       btnDownload: "Download full corpus (Artigos.zip)",
+      btnLang: "PT",
       btnNote: "File size: 106 MB",
+      btnPortfolio: "← Portfolio",
+      conv1Sub: "File naming pattern",
+      conv2Sub: "Numbering pattern",
+      est1Row10C: "Automated download script",
+      est1Row1C: "References exported from the OpenAlex search",
+      est1Row1O: "OpenAlex search",
+      est1Row2C: "PDFs downloaded automatically by the script",
+      est1Row3C: "PDFs collected manually from the links",
+      est1Row3O: "Manual collection",
+      est1Row4C: "Consolidated and validated corpus",
+      est1Row4O: "Consolidation",
+      est1Row5C: "Raw records (JSON) returned by the API",
+      est1Row6C: "Log of failures and articles without PDF",
+      est1Row7C: "Automated download log (URL, status)",
+      est1Row8C: "Errors captured during download",
+      est1Row9C: "Pipeline execution log",
+      est2Row1C: "1st supplementary collection round",
+      est2Row2C: "2nd supplementary collection round",
+      est2Row3C: "Cross-check with the 1st Collection — removed",
+      est2Row4C: "Duplicates within the collection itself — removed",
+      est2Row5C: "Consolidated corpus (2nd Collection)",
+      estruSub: "Collection file organization",
+      footer: "Systematic Review · Article Collection ·",
+      heroDesc: "PhD project — Prof.ª Elenice Novak. Consolidated corpus from two collections: OpenAlex (2020–2025) and supplementary (Others).",
+      heroTitle: "Systematic Review <span class=\"g\">Article</span> Collection",
       jumpColeta1: "1st Collection — OpenAlex",
       jumpColeta2: "2nd Collection — Others",
       jumpDownload: "Download",
       jumpReproduzir: "How to Reproduce",
-      s1Title: "1st Collection — OpenAlex",
-      s1Sub: "Search in the OpenAlex database with thematic and temporal scope (2020–2025)",
-      s1RecorteTitle: "Search Query",
-      s1RecorteDesc: "Defined at project start. Parameterized query applied to the OpenAlex /works API:",
-      recorteSub: "Parameters and criteria applied to the API",
-      s1VisaoTitle: "Overview (1st Collection)",
-      visaoSub: "Steps and quantities",
-      s1PipelineTitle: "Pipeline",
+      motivo1: "HTTP 400 Bad Request",
+      motivo2: "\"Database connection failed\" (OK in log, but file not found)",
+      motivo3: "Removed (SPAM)",
+      motivo4: "Proxy error",
+      motivo5: "Article in Russian",
+      pipeStep1: "<strong>OpenAlex Search</strong> — applying filters, exporting the <code>.bib</code> file with 66 records and saving the raw data (JSON).",
+      pipeStep2: "<strong>Automated download</strong> — running the <code>baixar_pdfs.py</code> script, which downloaded 23 PDFs and logged the run in <code>download_log.csv</code>.",
+      pipeStep3: "<strong>Manual collection</strong> — actively retrieving 37 PDFs from the links returned by the API (when the automated download failed or did not cover them).",
+      pipeStep4: "<strong>Consolidation</strong> — validating file integrity, checking duplicates and final organization of the corpus with 60 articles.",
       pipelineSub: "Collection workflow",
-      s1EstruTitle: "Folder structure",
-      estruSub: "Collection file organization",
-      s1ConvTitle: "Naming convention",
-      conv1Sub: "File naming standard",
-      s1Conv1: "Intermediate steps: ID - YEAR - Title.pdf (title truncated to ~60 characters).",
-      s1Conv2: "Final corpus: NN - YEAR - Title.pdf, with NN from 01 to 60 ordered by year/title.",
-      s1StatusTitle: "Collection status",
-      statusSub: "Status of the 66 records",
-      s1TabelaLabel: "Corpus articles — 60",
-      tabela1Sub: "Complete list of the 1st Collection (OpenAlex)",
-      s1SemPDF: "Articles without collected PDF",
-      s2Title: "2nd Collection — Others",
-      s2Sub: "Supplementary collection from other databases, without restrictive time scope",
-      s2VisaoTitle: "Overview (2nd Collection)",
-      s2EstruTitle: "Folder structure",
-      s2ConvTitle: "Naming convention",
-      conv2Sub: "Numbering standard",
-      s2Conv1: "Consolidated corpus: NN - YEAR - Title.pdf, with NN from 61 to 176, following the 1st Collection numbering.",
-      s2TabelaLabel: "Corpus articles — 116",
-      tabela2Sub: "Complete list of the 2nd Collection (Others)",
-      reproduzirTitle: "How to reproduce",
-      reproduzirSub: "Re-running the collection pipeline",
+      recorteSub: "Parameters and criteria applied to the API",
       reproduzirDesc: "The automated download of the 1st Collection is reproducible via the baixar_pdfs.py script, run from the collection root folder:",
       reproduzirReq: "Requires requests (pip install requests).",
-      footer: "Systematic Review · Article Collection ·"
+      reproduzirSub: "Re-running the collection pipeline",
+      reproduzirTitle: "How to reproduce",
+      s1Conv1: "Intermediate steps: ID - YEAR - Title.pdf (title truncated to ~60 characters).",
+      s1Conv2: "Final corpus: NN - YEAR - Title.pdf, with NN from 01 to 60 ordered by year/title.",
+      s1ConvTitle: "Naming convention",
+      s1EstruTitle: "Folder structure",
+      s1PipelineTitle: "Pipeline",
+      s1RecorteDesc: "Defined at project start. Parameterized query applied to the OpenAlex /works API:",
+      s1RecorteTitle: "Search Query",
+      s1SemPDF: "Articles without collected PDF",
+      s1StatusTitle: "Collection status",
+      s1Sub: "OpenAlex database search with thematic and temporal scope (2020–2025)",
+      s1TabelaLabel: "Corpus articles — 60",
+      s1Title: "1st Collection — OpenAlex",
+      s1VisaoTitle: "Overview (1st Collection)",
+      s2Conv1: "Consolidated corpus: NN - YEAR - Title.pdf, with NN from 61 to 176, following the numbering of the 1st Collection.",
+      s2ConvTitle: "Naming convention",
+      s2EstruTitle: "Folder structure",
+      s2Sub: "Supplementary collection in other databases, without restrictive time scope",
+      s2TabelaLabel: "Corpus articles — 116",
+      s2Title: "2nd Collection — Others",
+      s2VisaoTitle: "Overview (2nd Collection)",
+      statDet1: "Initial export from the OpenAlex search",
+      statDet2: "Automated download into <code>PDF/</code>",
+      statDet3: "Manual collection into <code>Download Manual/</code>",
+      statDet5: "Failures logged in <code>Erros/falhas.md</code>",
+      statRow1: "Records in the .bib",
+      statRow2: "PDF via script",
+      statRow3: "Manual PDF",
+      statDet4: "Consolidated and validated in <code>Final/</code>",
+      statRow4: "Final corpus",
+      statRow5: "Without PDF",
+      statusSub: "Status of the 66 records",
+      tabela1Sub: "Complete list of the 1st Collection (OpenAlex)",
+      tabela2Sub: "Complete list of the 2nd Collection (Others)",
+      thAno: "Year",
+      thConteudo: "Content",
+      thCriterio: "Criterion",
+      thDOI: "DOI",
+      thDetalhe: "Detail",
+      thEtapa: "Step",
+      thID: "ID",
+      thMotivo: "Reason",
+      thOrigem: "Origin",
+      thParam: "Parameter",
+      thPasta: "Folder / file",
+      thQtd: "Qty.",
+      thResultado: "Result",
+      thStatus: "Status",
+      thTitulo: "Title",
+      topbarTitle: "Systematic Review",
+      vg1Row1: "Records in the .bib (OpenAlex search)",
+      vg1Row2: "PDFs downloaded via script",
+      vg1Row3: "PDFs collected manually",
+      vg1Row4: "Final corpus",
+      vg1Row5: "Articles without PDF",
+      vg2Row3: "Duplicates with the 1st Collection",
+      vg2Row4: "Internal duplicates removed",
+      vg2Row5: "Consolidated",
+      visaoSub: "Steps and quantities"
     }
   };
   let lang = "pt";
