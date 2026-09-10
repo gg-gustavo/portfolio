@@ -1,4 +1,4 @@
-/* Tema compartilhado com o portfólio (localStorage "theme") */
+/* Tema compartilhado com o portfólio (localStorage "theme") — jogos */
 (function initTheme() {
   const root = document.documentElement;
   const saved = localStorage.getItem("theme");
