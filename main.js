@@ -18,9 +18,25 @@ document.getElementById("themeBtn").addEventListener("click", () => {
   applyTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
 });
 
+function loc(pt, en) {
+  return window.I18n && window.I18n.isEN ? en : pt;
+}
+
 const nav = document.getElementById("nav");
 const navToggle = document.getElementById("navToggle");
 const navLinks = document.getElementById("navLinks");
+const isMobileNav = () => window.matchMedia("(max-width: 768px)").matches;
+
+function syncNavVisibility() {
+  if (!isMobileNav()) {
+    navLinks.hidden = false;
+    navToggle.setAttribute("aria-expanded", "false");
+  } else if (navToggle.getAttribute("aria-expanded") !== "true") {
+    navLinks.hidden = true;
+  }
+}
+syncNavVisibility();
+window.addEventListener("resize", syncNavVisibility);
 
 window.addEventListener("scroll", () => nav.classList.toggle("scrolled", window.scrollY > 10), { passive: true });
 
@@ -28,25 +44,34 @@ navToggle.addEventListener("click", () => {
   const open = navLinks.hidden;
   navLinks.hidden = !open;
   navToggle.setAttribute("aria-expanded", open);
-  navToggle.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
+  navToggle.setAttribute("aria-label", open ? loc("Fechar menu", "Close menu") : loc("Abrir menu", "Open menu"));
 });
 
+function syncMenuAria() {
+  navToggle.setAttribute("aria-label", navLinks.hidden ? loc("Abrir menu", "Open menu") : loc("Fechar menu", "Close menu"));
+}
+
 navLinks.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+  if (!isMobileNav()) return;
   navLinks.hidden = true;
   navToggle.setAttribute("aria-expanded", "false");
 }));
 
 const typingEl = document.getElementById("typing");
+const TYPE_STATE = {
+  pt: ["sistemas web.", "LLMs.", "automação.", "gamificação.", "produção de pesquisa."],
+  en: ["web systems.", "LLMs.", "automation.", "gamification.", "research output."],
+  words: null, wi: 0, ci: 0, deleting: false
+};
 if (typingEl) {
-  const words = ["sistemas web.", "LLMs.", "automação.", "gamificação.", "produção de pesquisa."];
-  let wi = 0, ci = 0, deleting = false;
+  TYPE_STATE.words = window.I18n && window.I18n.isEN ? TYPE_STATE.en : TYPE_STATE.pt;
   (function type() {
-    const word = words[wi];
-    typingEl.textContent = word.slice(0, ci);
-    if (!deleting && ci < word.length) { ci++; setTimeout(type, 90); }
-    else if (!deleting) { deleting = true; setTimeout(type, 1800); }
-    else if (ci > 0) { ci--; setTimeout(type, 45); }
-    else { deleting = false; wi = (wi + 1) % words.length; setTimeout(type, 300); }
+    const word = TYPE_STATE.words[TYPE_STATE.wi];
+    typingEl.textContent = word.slice(0, TYPE_STATE.ci);
+    if (!TYPE_STATE.deleting && TYPE_STATE.ci < word.length) { TYPE_STATE.ci++; setTimeout(type, 90); }
+    else if (!TYPE_STATE.deleting) { TYPE_STATE.deleting = true; setTimeout(type, 1800); }
+    else if (TYPE_STATE.ci > 0) { TYPE_STATE.ci--; setTimeout(type, 45); }
+    else { TYPE_STATE.deleting = false; TYPE_STATE.wi = (TYPE_STATE.wi + 1) % TYPE_STATE.words.length; setTimeout(type, 300); }
   })();
 }
 
@@ -60,7 +85,7 @@ if (carousel) {
   for (let i = 0; i < slides.length; i++) {
     const dot = document.createElement("button");
     dot.className = "carousel-dot";
-    dot.setAttribute("aria-label", `Ir para o slide ${i + 1}`);
+    dot.setAttribute("aria-label", loc(`Ir para o slide ${i + 1}`, `Go to slide ${i + 1}`));
     dot.addEventListener("click", () => go(i));
     dotsWrap.appendChild(dot);
   }
@@ -83,7 +108,7 @@ if (carousel) {
     if (e.key === "ArrowRight") next();
   });
   carousel.tabIndex = 0;
-  carousel.setAttribute("aria-label", "Carrossel de destaques");
+  carousel.setAttribute("aria-label", loc("Carrossel de destaques", "Featured highlights"));
 
   go(0);
   timer = setInterval(next, 6000);
@@ -464,7 +489,11 @@ if (heroGraph) {
 
 const navLinksAll = document.querySelectorAll(".nav-links a");
 if (navLinksAll.length && "IntersectionObserver" in window) {
-  const sections = [...navLinksAll].map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+  const sections = [...navLinksAll]
+    .map(a => a.getAttribute("href"))
+    .filter(href => href && href.startsWith("#"))
+    .map(href => document.querySelector(href))
+    .filter(Boolean);
   const sio = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -473,4 +502,21 @@ if (navLinksAll.length && "IntersectionObserver" in window) {
     });
   }, { rootMargin: "-40% 0px -55% 0px" });
   sections.forEach(s => sio.observe(s));
+}
+if (window.I18n) {
+  window.I18n.on(() => {
+    syncMenuAria();
+    if (typingEl && TYPE_STATE.words) {
+      TYPE_STATE.words = window.I18n.isEN ? TYPE_STATE.en : TYPE_STATE.pt;
+      TYPE_STATE.wi = 0; TYPE_STATE.ci = 0; TYPE_STATE.deleting = false;
+      typingEl.textContent = "";
+    }
+    const dotsWrap = document.getElementById("carouselDots");
+    if (dotsWrap) {
+      [...dotsWrap.children].forEach((d, i) =>
+        d.setAttribute("aria-label", loc(`Ir para o slide ${i + 1}`, `Go to slide ${i + 1}`)));
+      const car = document.getElementById("carousel");
+      if (car) car.setAttribute("aria-label", loc("Carrossel de destaques", "Featured highlights"));
+    }
+  });
 }

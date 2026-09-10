@@ -41,9 +41,11 @@
     cursor: pointer; transition: border-color .15s, background .15s;
   }
   .theme-btn-sm:hover { border-color: var(--acc); background: var(--acc-soft); }
+  .theme-btn-sm.lang-sm { width: auto; gap: 5px; padding: 0 10px; font-weight: 700; font-size: 11px; letter-spacing: .03em; }
   @media (max-width:420px){ .app{max-width:340px} }
 </style>
 <script>document.documentElement.setAttribute("data-theme",(localStorage.getItem("theme")||"dark"));</script>
+<script src="../assets/i18n.js?v=20260910b"></script>
 </head>
 <body>
 <div class="app">
@@ -51,12 +53,13 @@
     <h1>Ligue 4</h1>
     <div style="display:flex;gap:8px;align-items:center">
       <button class="theme-btn-sm" id="themeBtn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Voltar</a>
+      <button class="theme-btn-sm lang-sm" id="langBtn" type="button" aria-label="Idioma / Language"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span data-i18n-label>EN</span></button>
+      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> <span data-i18n="btnBack">Voltar</span></a>
     </div>
   </header>
 
   <div class="turnbar">
-    <span>Vez de</span>
+    <span data-i18n="turnOf">Vez de</span>
     <span class="dot red" id="dotRed"></span>
     <span id="turnName">Âmbar</span>
     <span class="dot yellow" id="dotY"></span>
@@ -64,46 +67,54 @@
 
   <div class="board"><div class="cols" id="cols"></div></div>
   <div class="controls">
-    <button class="ghost" id="btnReset">Reiniciar</button>
-    <button class="primary" id="btnMenu">Menu</button>
+    <button class="ghost" id="btnReset" data-i18n="resetBtn">Reiniciar</button>
+    <button class="primary" id="btnMenu" data-i18n="menuLabel">Menu</button>
   </div>
 </div>
 
 <div class="overlay hidden" id="modeOverlay">
   <div class="modal">
     <h2><img src="assets/ligue4.svg" width="26" height="26" alt=""> Ligue 4</h2>
-    <p class="sub">Escolha o modo de jogo</p>
+    <p class="sub" data-i18n="modeSub">Escolha o modo de jogo</p>
     <div class="modebtns">
-      <button id="btnCpu">vs Computador</button>
-      <button id="btn2p">2 Jogadores</button>
+      <button id="btnCpu" data-i18n="btnCpu">vs Computador</button>
+      <button id="btn2p" data-i18n="btn2p">2 Jogadores</button>
     </div>
     <div id="starterRow">
-      <p class="sub" style="margin-top:10px">Quem começa?</p>
+      <p class="sub" style="margin-top:10px" data-i18n="starterQ">Quem começa?</p>
       <div class="modebtns">
-        <button id="btnHumanStart">Você começa</button>
-        <button id="btnCpuStart">Computador começa</button>
+        <button id="btnHumanStart" data-i18n="humanStart">Você começa</button>
+        <button id="btnCpuStart" data-i18n="cpuStart">Computador começa</button>
       </div>
     </div>
-    <button class="primary" id="btnStart">Iniciar</button>
+    <button class="primary" id="btnStart" data-i18n="startGame">Iniciar</button>
   </div>
 </div>
 
 <div class="overlay hidden" id="winOverlay">
   <div class="modal">
     <h2 id="winTitle"></h2>
-    <p class="sub" id="winSub">Fim de jogo</p>
-    <button class="primary" id="btnAgain">Jogar Novamente</button>
-    <button class="ghost" id="btnMenu2">Menu</button>
+    <p class="sub" id="winSub" data-i18n="winSub">Fim de jogo</p>
+    <button class="primary" id="btnAgain" data-i18n="againBtn">Jogar Novamente</button>
+    <button class="ghost" id="btnMenu2" data-i18n="menuLabel">Menu</button>
   </div>
 </div>
 
-<script src="jogos.js"></script>
+<script src="jogos.js?v=20260910b"></script>
 <script>
 const ROWS=6, COLS=7;
 const RED=1, YELLOW=2;
 let grid, turn, over, mode='cpu';
 let starter=RED;
 let names={[RED]:'Âmbar',[YELLOW]:'Verde'};
+let lastWin=null;
+
+function loc(pt,en){ return (window.I18n&&window.I18n.isEN)?en:pt; }
+function namesFor(){
+  const two=mode==='2p';
+  if(two) return {[RED]:loc('Âmbar','Red'),[YELLOW]:loc('Verde','Yellow')};
+  return {[RED]:loc('Você','You'),[YELLOW]:loc('Computador','Computer')};
+}
 
 const colsEl=document.getElementById('cols');
 const turnName=document.getElementById('turnName');
@@ -212,14 +223,15 @@ function updateTurn(){
 function showWin(w){
   const t=document.getElementById('winTitle');
   const s=document.getElementById('winSub');
-  if(w===0){ t.innerHTML='<svg class="icon-flag" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4"/><path d="M4 4c2-2 3 1 6 1s4-1 6 0c1 1 0 1 4 1v7c-4 0-3-1-6-1s-4 1-6 0z"/></svg> Empate!'; s.textContent='Ninguém conseguiu ligar 4.'; }
+  if(w===0){ lastWin=w; t.innerHTML='<svg class="icon-flag" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4"/><path d="M4 4c2-2 3 1 6 1s4-1 6 0c1 1 0 1 4 1v7c-4 0-3-1-6-1s-4 1-6 0z"/></svg> '+loc('Empate!','Draw!'); s.textContent=loc('Ninguém conseguiu ligar 4.','Nobody managed to connect 4.'); }
   else{
     const who=names[w];
     const icon=w===RED
       ? '<circle cx="12" cy="12" r="9" fill="var(--accent)" stroke="none"/>'
       : '<circle cx="12" cy="12" r="9" fill="var(--accent-2)" stroke="none"/>';
-    t.innerHTML='<svg class="icon-trophy" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 4h1"/><path d="M17 6h3a2 2 0 0 1-2 4h-1"/></svg> <svg width="16" height="16" viewBox="0 0 24 24">'+icon+'</svg> '+who+' venceu!';
-    s.textContent='Quatro em linha!';
+    lastWin=w;
+    t.innerHTML='<svg class="icon-trophy" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 4h1"/><path d="M17 6h3a2 2 0 0 1-2 4h-1"/></svg> <svg width="16" height="16" viewBox="0 0 24 24">'+icon+'</svg> '+who+' '+loc('venceu!','won!');
+    s.textContent=loc('Quatro em linha!','Four in a row!');
   }
   document.getElementById('winOverlay').classList.remove('hidden');
 }
@@ -274,13 +286,8 @@ function selectStarter(s){
 }
 function setMode(m){
   mode=m;
-  if(m==='2p'){
-    names[RED]='Âmbar';
-    names[YELLOW]='Verde';
-  }else{
-    names[RED]='Você';
-    names[YELLOW]='Computador';
-  }
+  const n=namesFor();
+  names[RED]=n[RED]; names[YELLOW]=n[YELLOW];
   updateTurn();
 }
 function showMode(){ selectMode(selected); selectStarter(starter); document.getElementById('modeOverlay').classList.remove('hidden'); }
@@ -298,6 +305,19 @@ document.getElementById('btnMenu2').addEventListener('click',()=>location.href='
 
 init();
 showMode();
+function refreshI18n(){
+  const n=namesFor();
+  names[RED]=n[RED]; names[YELLOW]=n[YELLOW];
+  updateTurn();
+  if(lastWin!==null){
+    const ov=document.getElementById('winOverlay');
+    if(ov && !ov.classList.contains('hidden')){
+      showWin(lastWin);
+    }
+  }
+}
+if(window.I18n){ window.I18n.on(refreshI18n); refreshI18n(); }
 </script>
+<script src="../assets/lang/ligue4.js?v=20260910b"></script>
 </body>
 </html>

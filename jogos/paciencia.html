@@ -16,6 +16,7 @@
     cursor: pointer; transition: border-color .15s, background .15s;
   }
   .theme-btn-sm:hover { border-color: var(--acc); background: var(--acc-soft); }
+  .theme-btn-sm.lang-sm { width: auto; gap: 5px; padding: 0 10px; font-weight: 700; font-size: 11px; letter-spacing: .03em; }
   .top{display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:start; margin-bottom:6px}
   .left{display:flex; flex-direction:row; align-items:flex-start; gap:10px; margin-bottom:72px}
   .stock{display:flex; flex-direction:column; gap:6px; align-items:center; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px; min-width:96px}
@@ -59,12 +60,13 @@
   .moves .lbl{font-size:11px; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px; font-weight:400}
   @media (max-width:560px){
     .top{grid-template-columns:1fr}
-    .left{flex-direction:row}
-    .stock{min-width:0; flex:1}
+    .left{flex-direction:row; margin-bottom:4px; justify-content:center}
+    .stock{min-width:0; flex:1 1 130px; max-width:130px; padding:8px}
     .moves{min-width:0}
   }
 </style>
 <script>document.documentElement.setAttribute("data-theme",(localStorage.getItem("theme")||"dark"));</script>
+<script src="../assets/i18n.js?v=20260910b"></script>
 </head>
 <body>
 <div class="wrap">
@@ -72,52 +74,56 @@
     <h1>Paciência</h1>
     <div style="display:flex;gap:8px;align-items:center">
       <button class="theme-btn-sm" id="themeBtn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Voltar</a>
+      <button class="theme-btn-sm lang-sm" id="langBtn" type="button" aria-label="Idioma / Language"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span data-i18n-label>EN</span></button>
+      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> <span data-i18n="btnBack">Voltar</span></a>
     </div>
   </header>
 
   <div class="top">
     <div class="left">
       <div class="stock">
-        <span class="lbl">Monte</span>
+        <span class="lbl" data-i18n="stockLabel">Monte</span>
         <div class="card down" id="stockCard"></div>
         <span class="lbl" id="stockCount">0</span>
       </div>
       <div class="stock" id="wasteArea">
-        <span class="lbl">Descarte</span>
+        <span class="lbl" data-i18n="wasteLabel">Descarte</span>
         <div class="card empty" id="wasteCard"></div>
         <span class="lbl" id="wasteCount">0</span>
       </div>
     </div>
-    <div class="moves"><div class="lbl">Movimentos</div><span id="moves">0</span></div>
+    <div class="moves"><div class="lbl" data-i18n="movesLabel">Movimentos</div><span id="moves">0</span></div>
     <div class="foundations game-surface" id="foundations"></div>
   </div>
 
   <div class="tableau game-surface" id="tableau"></div>
 
   <div class="controls">
-    <button class="ghost" id="btnUndo">Desfazer</button>
-    <button class="ghost" id="btnReset">Reiniciar</button>
-    <button class="primary" id="btnMenu">Menu</button>
+    <button class="ghost" id="btnUndo" data-i18n="undoBtn">Desfazer</button>
+    <button class="ghost" id="btnReset" data-i18n="resetBtn">Reiniciar</button>
+    <button class="primary" id="btnMenu" data-i18n="menuLabel">Menu</button>
   </div>
   <div class="status" id="status">Dica: clique no monte para comprar cartas</div>
 </div>
 
 <div class="overlay hidden" id="winOverlay">
   <div class="modal">
-    <h2><svg class="icon-trophy" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 4h1"/><path d="M17 6h3a2 2 0 0 1-2 4h-1"/></svg> Você venceu!</h2>
+    <h2><svg class="icon-trophy" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 4h1"/><path d="M17 6h3a2 2 0 0 1-2 4h-1"/></svg> <span data-i18n="winTitle">Você venceu!</span></h2>
     <p class="sub" id="winSub">Paciência resolvida</p>
-    <button class="primary" id="btnAgain">Jogar Novamente</button>
-    <button class="ghost" id="btnMenu2">Menu</button>
+    <button class="primary" id="btnAgain" data-i18n="againBtn">Jogar Novamente</button>
+    <button class="ghost" id="btnMenu2" data-i18n="menuLabel">Menu</button>
   </div>
 </div>
 
-<script src="jogos.js"></script>
+<script src="jogos.js?v=20260910b"></script>
 <script src="input.js"></script>
 <script>
 const SUITS=['♠','♥','♦','♣'];
 const RANK=['','A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 let stock, waste, tableau, foundations, selected, moves, over, history;
+
+function loc(pt,en){ return (window.I18n&&window.I18n.isEN)?en:pt; }
+let lastWinMoves=0;
 
 function newDeck(){
   const d=[];
@@ -147,7 +153,7 @@ function init(){
   render();
   updateUndoButton();
   document.getElementById('winOverlay').classList.add('hidden');
-  document.getElementById('status').textContent='Clique no monte para comprar cartas';
+  document.getElementById('status').textContent=loc('Dica: clique no monte para comprar cartas','Tip: click the stock to draw cards');
 }
 
 function snapshot(){
@@ -403,7 +409,8 @@ function updateMoves(){ document.getElementById('moves').textContent=moves; }
 function checkWin(){
   if(foundations.every(f=>f.length===13)){
     over=true;
-    document.getElementById('winSub').textContent='Movimentos: '+moves;
+    lastWinMoves=moves;
+    document.getElementById('winSub').textContent=loc('Paciência resolvida · Movimentos: ','Solitaire solved in ')+moves+loc(' movimentos',' moves')+'.';
     document.getElementById('winOverlay').classList.remove('hidden');
   }
 }
@@ -505,6 +512,16 @@ bindDrag(wasteArea,{
 });
 
 init();
+function refreshI18n(){
+  const st=document.getElementById('status');
+  if(st) st.textContent=loc('Dica: clique no monte para comprar cartas','Tip: click the stock to draw cards');
+  const ov=document.getElementById('winOverlay');
+  if(ov && !ov.classList.contains('hidden')){
+    document.getElementById('winSub').textContent=loc('Paciência resolvida · Movimentos: ','Solitaire solved in ')+lastWinMoves+loc(' movimentos',' moves')+'.';
+  }
+}
+if(window.I18n){ window.I18n.on(refreshI18n); refreshI18n(); }
 </script>
+<script src="../assets/lang/paciencia.js?v=20260910b"></script>
 </body>
 </html>

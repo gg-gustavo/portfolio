@@ -186,3 +186,56 @@ button.gold { background: linear-gradient(135deg, var(--game), var(--game-strong
 @media (min-width: 521px) {
   .app { padding-top: 28px; }
 }
+
+/* ============================================================
+   Mobile — sem pull-to-refresh / zoom de duplo toque indesejado
+   ============================================================ */
+html { touch-action: manipulation; }
+html, body { overscroll-behavior-x: contain; overscroll-behavior-y: contain; }
+
+/* Superfícies de jogo: o navegador nunca pode roubar o gesto
+   (scroll, bounce ou pull-to-refresh) começado nelas. */
+#boardWrapper, #board { touch-action: none; }
+
+/* --- Hub compacto do Tetris (âmbar, toque) --- */
+.tet-pad {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 8px;
+  width: 100%;
+  max-width: 220px;
+  margin: 2px auto 0;
+}
+.tet-pad .pad-btn {
+  min-height: 54px;
+  padding: 0;
+  font-size: 22px;
+  line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, var(--acc-soft), color-mix(in srgb, var(--acc-soft) 80%, var(--acc)));
+  color: var(--acc-strong);
+  border: 1px solid color-mix(in srgb, var(--acc) 45%, transparent);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer; user-select: none; -webkit-user-select: none;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.tet-pad .pad-btn:active {
+  transform: scale(.94);
+  background: linear-gradient(135deg, var(--acc), var(--acc-strong));
+  color: #fff;
+  border-color: transparent;
+}
+.tet-pad .pad-rot { font-size: 26px; }
+.tet-pad .pad-drop {
+  background: linear-gradient(135deg, var(--acc), var(--acc-strong));
+  color: #fff;
+  border-color: transparent;
+  font-size: 24px;
+}
+.tet-pad .pad-drop:active { filter: brightness(1.12); transform: scale(.94); }
+@media (max-width: 520px), (hover: none) and (max-width: 820px) {
+  .tet-pad { display: grid; }
+  .pad-caption { display: none; }
+}

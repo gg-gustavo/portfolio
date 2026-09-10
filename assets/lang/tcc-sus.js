@@ -1,0 +1,22 @@
+/* Dicionário EN — SUS (tcc/sus.html) */
+window.I18N_EN = { btnCalc: "Calculate Result", btnReset: "Clear answers",
+    btnHome: "Home",
+    requiredHint: "Answer all 10 questions to calculate.",
+    scaleMin: "Strongly Disagree", scaleMid: "Neutral", scaleMax: "Strongly Agree",
+    heroTitle: "What is the SUS?",
+    heroDesc: "The <strong>SUS</strong> (System Usability Scale) is a validated scale that measures a system's usability through <strong>10 alternating questions</strong> (positive and negative), answered on a 1-to-5 Likert scale. The result is converted into a score from <strong>0 to 100</strong>, where scores from <strong>70</strong> and above are considered acceptable.",
+    resTitle: "Your Result",
+    resSub: "Converted SUS score (0 to 100) and acceptability classification.",
+    resHigh: "70 to 100 · Acceptable",
+    resMid: "60 to 69.9 · Marginal",
+    resLow: "0 to 59.9 · Not acceptable",
+    resOverall: "SUS Score:",
+    resBenchmark: "· Acceptable: ≥ 70",
+    resScoreCard: "SUS Score",
+    resGradeCard: "Classification",
+    gradeAcceptable: "Acceptable",
+    gradeMarginal: "Marginal",
+    gradeNotAcceptable: "Not acceptable",
+    footer: "SUS · System Usability Scale — Brooke (1996) · Didactic material for usability assessment.",
+    dimSubtitle: "System usability scale"
+  };

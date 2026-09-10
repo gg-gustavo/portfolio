@@ -6,6 +6,7 @@
 <title>Jogos de Gustavo Ripka</title>
 <link rel="icon" type="image/svg+xml" href="assets/jogos.svg">
 <link rel="stylesheet" href="jogos.css">
+<script src="../assets/i18n.js?v=20260910b"></script>
 <style>
   .apphub { max-width: 1000px; }
   .apphub header { text-align: center; margin-bottom: clamp(20px, 4vw, 36px); }
@@ -17,6 +18,14 @@
     cursor: pointer; transition: border-color .15s, background .15s;
   }
   .theme-btn:hover { border-color: var(--acc); background: var(--acc-soft); }
+  .lang-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: auto; gap: 6px; padding: 0 12px; height: 40px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    font-weight: 700; font-size: .8rem; cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .lang-btn:hover { border-color: var(--acc); background: var(--acc-soft); }
   :root {
     --game-accent-red: #ff4757; --game-accent-purple: #a55eea; --game-accent-green: #2ed573;
     --game-accent-gold: #f5a623; --game-accent-cyan: #45b7d1; --game-accent-blue: #4f8cff;
@@ -108,17 +117,18 @@
   <div class="container">
     <a class="nav-logo" href="../index.html">Gustavo<span>.</span>Ripka</a>
     <ul class="nav-links" id="navLinks">
-      <li><a href="../index.html#principal">Principal</a></li>
-      <li><a href="../index.html#sobre">Sobre</a></li>
-      <li><a href="../index.html#habilidades">Habilidades</a></li>
-      <li><a href="../index.html#linguagens">Stack</a></li>
-      <li><a href="../index.html#projetos">Projetos</a></li>
-      <li><a href="../index.html#projetos-anteriores">Anteriores</a></li>
-      <li><a href="index.html" class="active">Jogos</a></li>
-      <li><a href="../tcc/index.html">TCC</a></li>
-      <li><a href="../index.html#contato">Contato</a></li>
+      <li><a href="../index.html#principal" data-i18n="navHome">Principal</a></li>
+      <li><a href="../index.html#sobre" data-i18n="navAbout">Sobre</a></li>
+      <li><a href="../index.html#habilidades" data-i18n="navSkills">Habilidades</a></li>
+      <li><a href="../index.html#linguagens" data-i18n="navStack">Stack</a></li>
+      <li><a href="../index.html#projetos" data-i18n="navProjects">Projetos</a></li>
+      <li><a href="../index.html#projetos-anteriores" data-i18n="navPrev">Anteriores</a></li>
+      <li><a href="index.html" class="active" data-i18n="navGames">Jogos</a></li>
+      <li><a href="../tcc/index.html" data-i18n="navTcc">TCC</a></li>
+      <li><a href="../index.html#contato" data-i18n="navContact">Contato</a></li>
     </ul>
     <div class="nav-actions">
+      <button class="lang-btn" id="langBtn" type="button" aria-label="Mudar idioma / Change language"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span data-i18n-label>EN</span></button>
       <button class="icon-btn" id="themeBtn" type="button" aria-label="Alternar tema claro e escuro"><svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     </div>
@@ -126,26 +136,27 @@
 </nav>
 <div class="wrap apphub">
   <header>
-    <h1><span>Jogos</span></h1>
-    <p>Coleção de joguinhos clássicos escolha e jogue.</p>
+    <h1><span data-i18n="hubTitle">Jogos</span></h1>
+    <p data-i18n="hubDesc">Coleção de joguinhos clássicos escolha e jogue.</p>
     <nav>
-      <a href="#ligue4">Ligue 4</a>
-      <a href="#xadrez">Xadrez</a>
-      <a href="#dama">Dama</a>
-      <a href="#truco">Truco</a>
-      <a href="#paciencia">Paciência</a>
-      <a href="#slide">Slide</a>
-      <a href="#2048">2048</a>
-      <a href="#card-jitsu">Card Jitsu</a>
-      <a href="#tetris">Tetris</a>
+      <a href="#ligue4" data-i18n="chipLigue4">Ligue 4</a>
+      <a href="#xadrez" data-i18n="chipXadrez">Xadrez</a>
+      <a href="#dama" data-i18n="chipDama">Dama</a>
+      <a href="#truco" data-i18n="chipTruco">Truco</a>
+      <a href="#paciencia" data-i18n="chipPaciencia">Paciência</a>
+      <a href="#slide" data-i18n="chipSlide">Slide</a>
+      <a href="#2048" data-i18n="chip2048">2048</a>
+      <a href="#card-jitsu" data-i18n="chipCardJitsu">Card Jitsu</a>
+      <a href="#tetris" data-i18n="chipTetris">Tetris</a>
     </nav>
   </header>
 
   <div class="grid" id="grid"></div>
 
-  <footer>Feito por <a href="../index.html" class="footer-logo">Gustavo<span>.</span>Ripka</a> — mais jogos em breve</footer>
+  <footer>Feito por <a href="../index.html" class="footer-logo">Gustavo<span>.</span>Ripka</a> — <span data-i18n="hubFooterTail">mais jogos em breve</span></footer>
 </div>
 
+<script src="../assets/lang/jogos.js?v=20260910b"></script>
 <script>
 const navEl = document.getElementById('nav');
 const navToggle = document.getElementById('navToggle');
@@ -206,33 +217,61 @@ const GAMES = [
 ];
 
 const grid = document.getElementById('grid');
-GAMES.forEach(g => {
-  const card = document.createElement('a');
-  card.className = 'card' + (g.done ? '' : ' soon');
-  card.id = g.id;
-  card.href = g.href || '#';
-  card.setAttribute('data-accent', g.accent);
-  card.style.setProperty('--game', 'var(--game-accent-' + g.accent + ')');
-  card.innerHTML = `
-    <div class="card-dots"><span class="dot dot-black"></span><span class="dot dot-amber"></span><span class="dot dot-green"></span><span class="dot-arrow-wrap"><svg class="dot-arrow" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 4 6 8 10 4"/></svg></span></div>
-    <div class="icon"><img class="game-icon" src="assets/${g.id}.svg" alt="${g.title}" width="46" height="46"></div>
-    <h2>${g.title}</h2>
-    <p>${g.desc}</p>
-    <div class="tags">${g.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-    <span class="play">${g.done ? 'Jogar' : 'Em breve'}</span>
-  `;
-  grid.appendChild(card);
-});
 
-document.querySelectorAll('.card[data-accent]').forEach(card => {
-  card.addEventListener('mouseenter', () => {
-    const a = card.dataset.accent;
-    if (a) document.documentElement.setAttribute('data-accent', a);
+const G_EN = {
+  ligue4:   { title: 'Connect 4', desc: 'Connect 4 discs of the same color vertically, horizontally or diagonally before your opponent. A strategy game for 2 players.', tags: ['2 players', 'Strategy'] },
+  xadrez:   { title: 'Chess', desc: 'The classic strategy game. Capture the opponent\'s king using classic moves for every piece. For 2 players.', tags: ['2 players', 'Strategy'] },
+  dama:     { title: 'Checkers', desc: 'Move and capture the opponent\'s pieces diagonally. Promote your pieces to kings and dominate the board. For 2 players.', tags: ['2 players', 'Board'] },
+  truco:    { title: 'Truco', desc: 'The traditional Brazilian card game with manilhas, bluffs and truco calls. Win the 3 rounds against the computer.', tags: ['1 player', 'Cards'] },
+  paciencia:{ title: 'Solitaire', desc: 'The classic Klondike solitaire. Stack the cards in order and build the foundations from Ace to King. Single player.', tags: ['1 player', 'Cards'] },
+  slide:    { title: 'Slide Puzzle', desc: 'A 3x3 sliding puzzle. Arrange the numbered tiles in order with the fewest moves and in the least time.', tags: ['1 player', 'Logic'] },
+  '2048':   { title: '2048', desc: 'Slide and merge numbered tiles until you reach 2048. Use the keyboard on desktop or swipe gestures on mobile.', tags: ['1 player', 'Logic'] },
+  'card-jitsu': { title: 'Card-Jitsu', desc: 'Elemental card battles at the dojo: Fire, Ice and Water. Win duels and complete sets before the AI does.', tags: ['1 player', 'Cards'] },
+  tetris:   { title: 'Tetris', desc: 'The classic block game. Rotate, move and fit the pieces to complete lines — keyboard on desktop, swipe or buttons on mobile.', tags: ['1 player', 'Arcade'] }
+};
+
+function localized(g) {
+  const isEn = window.I18n && window.I18n.isEN;
+  const en = isEn && G_EN[g.id];
+  return {
+    title: en ? en.title : g.title,
+    desc: en ? en.desc : g.desc,
+    tags: en ? en.tags : g.tags,
+    play: g.done ? (isEn ? 'Play' : 'Jogar') : (isEn ? 'Soon' : 'Em breve')
+  };
+}
+
+function renderGrid() {
+  grid.innerHTML = '';
+  GAMES.forEach(g => {
+    const lc = localized(g);
+    const card = document.createElement('a');
+    card.className = 'card' + (g.done ? '' : ' soon');
+    card.id = g.id;
+    card.href = g.href || '#';
+    card.setAttribute('data-accent', g.accent);
+    card.style.setProperty('--game', 'var(--game-accent-' + g.accent + ')');
+    card.innerHTML = `
+    <div class="card-dots"><span class="dot dot-black"></span><span class="dot dot-amber"></span><span class="dot dot-green"></span><span class="dot-arrow-wrap"><svg class="dot-arrow" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 4 6 8 10 4"/></svg></span></div>
+    <div class="icon"><img class="game-icon" src="assets/${g.id}.svg" alt="${lc.title}" width="46" height="46"></div>
+    <h2>${lc.title}</h2>
+    <p>${lc.desc}</p>
+    <div class="tags">${lc.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    <span class="play">${lc.play}</span>
+  `;
+    card.addEventListener('mouseenter', () => {
+      const a = card.dataset.accent;
+      if (a) document.documentElement.setAttribute('data-accent', a);
+    });
+    card.addEventListener('mouseleave', () => {
+      document.documentElement.removeAttribute('data-accent');
+    });
+    grid.appendChild(card);
   });
-  card.addEventListener('mouseleave', () => {
-    document.documentElement.removeAttribute('data-accent');
-  });
-});
+}
+
+renderGrid();
+if (window.I18n) window.I18n.on(renderGrid);
 </script>
 </body>
 </html>

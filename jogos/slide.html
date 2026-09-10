@@ -54,12 +54,14 @@
     cursor: pointer; transition: border-color .15s, background .15s;
   }
   .theme-btn-sm:hover { border-color: var(--acc); background: var(--acc-soft); }
+  .theme-btn-sm.lang-sm { width: auto; gap: 5px; padding: 0 10px; font-weight: 700; font-size: 11px; letter-spacing: .03em; }
   @media (max-width: 420px) {
     .app { max-width: 340px }
     .stat .val { font-size: 20px }
   }
 </style>
 <script>document.documentElement.setAttribute("data-theme",(localStorage.getItem("theme")||"dark"));</script>
+<script src="../assets/i18n.js?v=20260910b"></script>
 </head>
 <body>
 <div class="app">
@@ -67,25 +69,26 @@
     <h1>Slide Puzzle</h1>
     <div style="display:flex;gap:8px;align-items:center">
       <button class="theme-btn-sm" id="themeBtn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Voltar</a>
+      <button class="theme-btn-sm lang-sm" id="langBtn" type="button" aria-label="Idioma / Language"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span data-i18n-label>EN</span></button>
+      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> <span data-i18n="btnBack">Voltar</span></a>
     </div>
   </header>
 
   <div class="stats">
-    <div class="stat"><div class="lbl">Movimentos</div><div class="val" id="moves">0</div></div>
-    <div class="stat"><div class="lbl">Tempo</div><div class="val" id="time">00:00</div></div>
+    <div class="stat"><div class="lbl" data-i18n="movesLabel">Movimentos</div><div class="val" id="moves">0</div></div>
+    <div class="stat"><div class="lbl" data-i18n="timeLabel">Tempo</div><div class="val" id="time">00:00</div></div>
   </div>
 
   <div class="board" id="board"></div>
 
   <div class="controls">
-    <button class="ghost" id="btnNew">Novo Jogo</button>
-    <button class="primary" id="btnShuffle">Embaralhar</button>
-    <button class="ghost" id="btnMenu">Menu</button>
+    <button class="ghost" id="btnNew" data-i18n="newGame">Novo Jogo</button>
+    <button class="primary" id="btnShuffle" data-i18n="shuffleBtn">Embaralhar</button>
+    <button class="ghost" id="btnMenu" data-i18n="menuLabel">Menu</button>
   </div>
 
   <div class="record">
-    <h3>Melhor Recorde</h3>
+    <h3 data-i18n="bestTitle">Melhor Recorde</h3>
     <div class="best" id="best">—</div>
   </div>
 </div>
@@ -93,28 +96,28 @@
 <div class="overlay hidden" id="menuOverlay">
   <div class="modal">
     <h2><img src="assets/slide.svg" width="26" height="26" alt=""> Slide Puzzle</h2>
-    <p class="sub">Escolha o layout e organize os blocos em ordem.</p>
+    <p class="sub" data-i18n="modeSub">Escolha o layout e organize os blocos em ordem.</p>
     <div class="layoutgrid" id="layoutGrid"></div>
-    <div class="seedrow"><input id="seed" type="text" placeholder="Seed (opcional)" autocomplete="off" spellcheck="false"></div>
-    <button class="primary" id="btnStart" style="margin-top:12px">Iniciar Jogo</button>
+    <div class="seedrow"><input id="seed" type="text" placeholder="Seed (optional)" autocomplete="off" spellcheck="false"></div>
+    <button class="primary" id="btnStart" style="margin-top:12px" data-i18n="startGame">Iniciar Jogo</button>
   </div>
 </div>
 
 <div class="overlay hidden" id="winOverlay">
   <div class="modal">
-    <h2><svg class="icon-trophy" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 4h1"/><path d="M17 6h3a2 2 0 0 1-2 4h-1"/></svg> Parabéns!</h2>
-    <p class="sub">Quebra-cabeça resolvido</p>
+    <h2><svg class="icon-trophy" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 4h1"/><path d="M17 6h3a2 2 0 0 1-2 4h-1"/></svg> <span data-i18n="congrats">Parabéns!</span></h2>
+    <p class="sub" data-i18n="solvedSub">Quebra-cabeça resolvido</p>
     <div class="big" id="winTime">00:00</div>
     <div class="grid">
-      <div class="cell"><div class="k">Movimentos</div><div class="v" id="winMoves">0</div></div>
-      <div class="cell"><div class="k">Recorde</div><div class="v" id="winBest">—</div></div>
+      <div class="cell"><div class="k" data-i18n="movesLabel">Movimentos</div><div class="v" id="winMoves">0</div></div>
+      <div class="cell"><div class="k" data-i18n="bestCell">Recorde</div><div class="v" id="winBest">—</div></div>
     </div>
-    <button class="primary" id="btnPlayAgain">Jogar Novamente</button>
-    <button class="ghost" id="btnMenu2">Menu</button>
+    <button class="primary" id="btnPlayAgain" data-i18n="againBtn">Jogar Novamente</button>
+    <button class="ghost" id="btnMenu2" data-i18n="menuLabel">Menu</button>
   </div>
 </div>
 
-<script src="jogos.js"></script>
+<script src="jogos.js?v=20260910b"></script>
 <script src="input.js"></script>
 <script>
 const COLORS = ['#4f8cff','#ff6b6b','#f5a623','#20c997','#a55eea','#ff7b54','#45b7d1','#e056fd',
@@ -337,5 +340,6 @@ updateBest();
 newGame();
 showMenu();
 </script>
+<script src="../assets/lang/slide.js?v=20260910b"></script>
 </body>
 </html>

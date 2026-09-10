@@ -105,6 +105,10 @@ section { padding: 60px 0; }
   border-radius: 10px; color: var(--text); cursor: pointer;
   transition: border-color .2s, color .2s;
 }
+.icon-btn.lang-btn {
+  width: auto; gap: 6px; padding: 0 12px;
+  font-weight: 700; font-size: .8rem; letter-spacing: .04em;
+}
 .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
 .nav-toggle { display: none; }
 @media (max-width: 768px) {

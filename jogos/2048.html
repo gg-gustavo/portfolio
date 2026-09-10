@@ -40,6 +40,7 @@
     cursor: pointer; transition: border-color .15s, background .15s;
   }
   .theme-btn-sm:hover { border-color: var(--acc); background: var(--acc-soft); }
+  .theme-btn-sm.lang-sm { width: auto; gap: 5px; padding: 0 10px; font-weight: 700; font-size: 11px; letter-spacing: .03em; }
 
   /* --- Header --- */
   .header {
@@ -259,6 +260,7 @@
   }
 </style>
 <script>document.documentElement.setAttribute("data-theme",(localStorage.getItem("theme")||"dark"));</script>
+<script src="../assets/i18n.js?v=20260910b"></script>
 </head>
 <body>
 <div class="container">
@@ -266,26 +268,27 @@
     <h1>2048</h1>
     <div style="display:flex;gap:8px;align-items:center">
       <button class="theme-btn-sm" id="themeBtn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Voltar</a>
+      <button class="theme-btn-sm lang-sm" id="langBtn" type="button" aria-label="Idioma / Language"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span data-i18n-label>EN</span></button>
+      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> <span data-i18n="btnBack">Voltar</span></a>
     </div>
   </header>
   <div class="header">
     <div class="title" id="titleVal">2</div>
     <div class="scores">
       <div class="score-box" id="scoreBox">
-        <div class="label">Pontos</div>
+        <div class="label" data-i18n="scoreLabel">Pontos</div>
         <div class="value" id="score">0</div>
       </div>
       <div class="score-box" id="bestBox">
-        <div class="label">Recorde</div>
+        <div class="label" data-i18n="bestLabel">Recorde</div>
         <div class="value" id="best">0</div>
       </div>
     </div>
   </div>
 
   <div class="controls">
-    <p>Combine os blocos e chegue ao <strong>2048!</strong></p>
-    <button class="new-game-btn" id="newGameBtn">Novo Jogo</button>
+    <p data-i18n="hint">Combine os blocos e chegue ao <strong>2048!</strong></p>
+    <button class="new-game-btn" id="newGameBtn" data-i18n="newGame">Novo Jogo</button>
   </div>
 
   <div class="board-wrapper" id="boardWrapper">
@@ -293,18 +296,18 @@
     <div class="tile-layer" id="tileLayer"></div>
 
     <div class="overlay" id="overlayGameOver">
-      <h2>Fim de Jogo!</h2>
-      <button class="new-game-btn" id="retryBtn">Tentar Novamente</button>
+      <h2 data-i18n="gameOverTitle">Fim de Jogo!</h2>
+      <button class="new-game-btn" id="retryBtn" data-i18n="retryBtn">Tentar Novamente</button>
     </div>
 
     <div class="overlay win" id="overlayWin">
-      <h2>Você Venceu!</h2>
-      <button class="new-game-btn" id="keepBtn">Continuar Jogando</button>
+      <h2 data-i18n="winTitle">Você Venceu!</h2>
+      <button class="new-game-btn" id="keepBtn" data-i18n="keepBtn">Continuar Jogando</button>
     </div>
   </div>
 </div>
 
-<script src="jogos.js"></script>
+<script src="jogos.js?v=20260910b"></script>
 <script>
 (() => {
   'use strict';
@@ -608,32 +611,28 @@
   /* ============================
      INPUT — TOUCH / SWIPE
   ============================ */
-  let touchStartX, touchStartY;
+  const boardArea = document.getElementById('boardWrapper');
+  let touchX = null, touchY = null;
 
-  document.addEventListener('touchstart', e => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
+  boardArea.addEventListener('touchstart', e => {
+    const p = e.touches[0];
+    touchX = p.clientX; touchY = p.clientY;
+  }, { passive: false });
 
-  document.addEventListener('touchend', e => {
-    if (touchStartX == null) return;
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    const absDx = Math.abs(dx);
-    const absDy = Math.abs(dy);
+  boardArea.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
 
-    if (Math.max(absDx, absDy) < 30) return; // too short
+  boardArea.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const p = e.changedTouches[0];
+    const dx = p.clientX - touchX, dy = p.clientY - touchY;
+    touchX = null; touchY = null;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+    move(Math.abs(dx) > Math.abs(dy)
+      ? (dx > 0 ? 'right' : 'left')
+      : (dy > 0 ? 'down' : 'up'));
+  }, { passive: false });
 
-    if (absDx > absDy) {
-      move(dx > 0 ? 'right' : 'left');
-    } else {
-      move(dy > 0 ? 'down' : 'up');
-    }
-    touchStartX = null;
-    touchStartY = null;
-  }, { passive: true });
-
-  /* ============================
+/* ============================
      BUTTONS
   ============================ */
   document.getElementById('newGameBtn').addEventListener('click', newGame);
@@ -657,5 +656,6 @@
   init();
 })();
 </script>
+<script src="../assets/lang/2048.js?v=20260910b"></script>
 </body>
 </html>

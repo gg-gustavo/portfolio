@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Xadrez</title>
 <link rel="icon" type="image/svg+xml" href="assets/xadrez.svg">
-<link rel="stylesheet" href="jogos.css">
+<link rel="stylesheet" href="jogos.css?v=20260910c">
 <style>
   :root { --light: #e8ecf4; --dark: #5a6b8c; }
   :root[data-theme="dark"] { --light: #d6dbe6; --dark: #46536e; }
@@ -16,9 +16,9 @@
   .chip.dim{opacity:.25; box-shadow:none}
   .board{
     background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px;
-    display:grid; grid-template-columns:repeat(8,1fr); aspect-ratio:1/1;
+    display:grid; grid-template-columns:repeat(8,1fr); grid-auto-rows:1fr; gap:0; aspect-ratio:1/1; overflow:hidden;
   }
-  .sq{position:relative; display:flex; align-items:center; justify-content:center; cursor:pointer; aspect-ratio:1/1; min-width:0; min-height:0}
+  .sq{position:relative; display:flex; align-items:center; justify-content:center; cursor:pointer; aspect-ratio:1/1; min-width:0; min-height:0; overflow:hidden; line-height:1}
   .sq.light{background:var(--light)}
   .sq.dark{background:var(--dark)}
   .sq.sel{box-shadow:inset 0 0 0 3px var(--acc)}
@@ -27,7 +27,7 @@
   .sq.hint::after,.sq.cap::after{content:''; position:absolute; border-radius:50%}
   .sq.hint::after{width:32%; height:32%; background:rgba(165,94,234,.5); background:color-mix(in srgb, var(--acc) 50%, transparent)}
   .sq.cap::after{width:100%; height:100%; border:4px solid rgba(220,38,38,.6); border-color:color-mix(in srgb, var(--bad) 60%, transparent)}
-  .piece{font-size:clamp(20px,7vw,40px); line-height:1; user-select:none; transition:transform .12s}
+  .piece{font-size:clamp(22px,5.5vmin,38px); line-height:1; display:flex; align-items:center; justify-content:center; width:100%; height:100%; overflow:hidden; user-select:none; transition:transform .12s}
   .piece:active{transform:scale(.9)}
   .game{display:flex; gap:10px; align-items:stretch}
   .board{flex:1; min-width:0}
@@ -38,6 +38,12 @@
   .cap.black .mini{color:#fff; text-shadow:0 0 1px #000}
   .colorpick { margin-top: 12px; }
   .err{color:var(--bad); font-size:13px; margin-top:10px}
+  @media (max-width:520px){
+    .game{flex-direction:column; align-items:center; gap:10px}
+    .board{flex:0 0 auto; width:100%; max-width:min(92vw, 420px)}
+    .captured{flex:0 0 auto; flex-direction:row; width:100%; max-width:min(92vw, 420px)}
+    .cap{min-height:40px}
+  }
   .theme-btn-sm {
     display: inline-flex; align-items: center; justify-content: center;
     width: 38px; height: 38px; border-radius: 12px;
@@ -45,9 +51,11 @@
     cursor: pointer; transition: border-color .15s, background .15s;
   }
   .theme-btn-sm:hover { border-color: var(--acc); background: var(--acc-soft); }
+  .theme-btn-sm.lang-sm { width: auto; gap: 5px; padding: 0 10px; font-weight: 700; font-size: 11px; letter-spacing: .03em; }
   @media (max-width:420px){ .app{max-width:340px} }
 </style>
 <script>document.documentElement.setAttribute("data-theme",(localStorage.getItem("theme")||"dark"));</script>
+<script src="../assets/i18n.js?v=20260910b"></script>
 </head>
 <body>
 <div class="app">
@@ -55,12 +63,13 @@
     <h1>Xadrez</h1>
     <div style="display:flex;gap:8px;align-items:center">
       <button class="theme-btn-sm" id="themeBtn" type="button" aria-label="Alternar tema"><svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Voltar</a>
+      <button class="theme-btn-sm lang-sm" id="langBtn" type="button" aria-label="Idioma / Language"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span data-i18n-label>EN</span></button>
+      <a class="btn-back" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> <span data-i18n="btnBack">Voltar</span></a>
     </div>
   </header>
 
   <div class="turnbar">
-    <span>Vez de:</span>
+    <span data-i18n="turnOf">Vez de:</span>
     <div class="chip white" id="chipWhite"></div>
     <div class="chip black" id="chipBlack"></div>
     <span id="turnName">Brancas</span>
@@ -75,42 +84,42 @@
   </div>
 
   <div class="controls">
-    <button class="ghost" id="btnNew">Novo Jogo</button>
-    <button class="ghost" id="btnReset">Reiniciar</button>
-    <button class="primary" id="btnMenu">Menu</button>
+    <button class="ghost" id="btnNew" data-i18n="newGame">Novo Jogo</button>
+    <button class="ghost" id="btnReset" data-i18n="resetBtn">Reiniciar</button>
+    <button class="primary" id="btnMenu" data-i18n="menuLabel">Menu</button>
   </div>
 </div>
 
 <div class="overlay hidden" id="modeOverlay">
   <div class="modal">
     <h2><img src="assets/xadrez.svg" width="26" height="26" alt=""> Xadrez</h2>
-    <p class="sub">Escolha o modo de jogo</p>
+    <p class="sub" data-i18n="modeSub">Escolha o modo de jogo</p>
     <div class="modebtns">
-      <button id="btnCpu">vs Computador</button>
-      <button id="btn2p">2 Jogadores</button>
+      <button id="btnCpu" data-i18n="btnCpu">vs Computador</button>
+      <button id="btn2p" data-i18n="btn2p">2 Jogadores</button>
     </div>
     <div class="colorpick hidden" id="colorpick">
-      <p class="sub">Suas peças:</p>
+      <p class="sub" data-i18n="yourPieces">Suas peças:</p>
       <div class="modebtns">
-        <button id="btnWhite">Brancas</button>
-        <button id="btnBlack">Pretas</button>
+        <button id="btnWhite" data-i18n="whitePick">Brancas</button>
+        <button id="btnBlack" data-i18n="blackPick">Pretas</button>
       </div>
-      <p class="err hidden" id="modeErr">Escolha a cor da peça</p>
+      <p class="err hidden" id="modeErr" data-i18n="errColor">Escolha a cor da peça</p>
     </div>
-    <button class="primary" id="btnStart">Iniciar</button>
+    <button class="primary" id="btnStart" data-i18n="startGame">Iniciar</button>
   </div>
 </div>
 
 <div class="overlay hidden" id="winOverlay">
   <div class="modal">
     <h2 id="winTitle"></h2>
-    <p class="sub" id="winSub">Fim de jogo</p>
-    <button class="primary" id="btnAgain">Jogar Novamente</button>
-    <button class="ghost" id="btnMenu2">Menu</button>
+    <p class="sub" id="winSub" data-i18n="winSub">Fim de jogo</p>
+    <button class="primary" id="btnAgain" data-i18n="againBtn">Jogar Novamente</button>
+    <button class="ghost" id="btnMenu2" data-i18n="menuLabel">Menu</button>
   </div>
 </div>
 
-<script src="jogos.js"></script>
+<script src="jogos.js?v=20260910b"></script>
 <script src="input.js"></script>
 <script>
 const N=8;
@@ -122,6 +131,9 @@ const GLYPH={
 let board, turn, selected, legalMoves, over, lastMove, castling, ep;
 let mode='cpu', selectedMode='cpu', humanColor=null, cpuColor=B, colorChosen=false;
 let names={[W]:'Você',[B]:'Computador'};
+let endMeta=null;
+function loc(pt,en){ return (window.I18n&&window.I18n.isEN)?en:pt; }
+function colorName(w){ return w===W?loc('Brancas','White'):loc('Pretas','Black'); }
 let whiteCap=[], blackCap=[];
 
 function init(){
@@ -384,19 +396,25 @@ function doMove(m){
   if(!over&&mode==='cpu'&&turn===cpuColor) setTimeout(cpuMove,thinkDelay());
 }
 
+const FLAG_ICON='<svg class="icon-flag" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4"/><path d="M4 4c2-2 3 1 6 1s4-1 6 0c1 1 0 1 4 1v7c-4 0-3-1-6-1s-4 1-6 0z"/></svg>';
+function applyEndUI(){
+  const t=document.getElementById('winTitle');
+  if(!endMeta) return;
+  if(endMeta.checkmate){
+    const who=colorName(endMeta.winner);
+    t.innerHTML=FLAG_ICON+loc(' Xeque-mate!',' Checkmate!');
+    document.getElementById('winSub').textContent=who+loc(' venceram.',' won.');
+  }else{
+    t.innerHTML=FLAG_ICON+loc(' Empate!',' Draw!');
+    document.getElementById('winSub').textContent=loc('Afogamento (stalemate).','Stalemate.');
+  }
+}
 function checkEnd(){
   const moves=legalMovesFor(turn);
   if(moves.length===0){
     over=true;
-    if(isInCheck(turn)){
-      const winner=turn===W?B:W;
-      const who=winner===W?'Brancas':'Pretas';
-      document.getElementById('winTitle').innerHTML='<svg class="icon-flag" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4"/><path d="M4 4c2-2 3 1 6 1s4-1 6 0c1 1 0 1 4 1v7c-4 0-3-1-6-1s-4 1-6 0z"/></svg> Xeque-mate!';
-      document.getElementById('winSub').textContent=who+' venceram.';
-    }else{
-      document.getElementById('winTitle').innerHTML='<svg class="icon-flag" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4"/><path d="M4 4c2-2 3 1 6 1s4-1 6 0c1 1 0 1 4 1v7c-4 0-3-1-6-1s-4 1-6 0z"/></svg> Empate!';
-      document.getElementById('winSub').textContent='Afogamento (stalemate).';
-    }
+    endMeta=isInCheck(turn)?{checkmate:true,winner:turn===W?B:W}:{checkmate:false};
+    applyEndUI();
     document.getElementById('winOverlay').classList.remove('hidden');
   }
 }
@@ -438,8 +456,9 @@ function pickColor(col){
 }
 function setMode(m){
   mode=m;
-  if(m==='2p'){ names[W]='Brancas'; names[B]='Pretas'; }
-  else{ const cpu=humanColor===W?B:W; names[humanColor]='Você'; names[cpu]='Computador'; }
+  const n=m==='2p'?{[W]:loc('Brancas','White'),[B]:loc('Pretas','Black')}:null;
+  if(n){ names[W]=n[W]; names[B]=n[B]; }
+  else{ const cpu=humanColor===W?B:W; names[humanColor]=loc('Você','You'); names[cpu]=loc('Computador','Computer'); }
   updateTurn();
 }
 function showMode(){
@@ -480,6 +499,16 @@ bindDrag(boardEl,{
 
 init();
 showMode();
+function refreshI18n(){
+  const n=mode==='2p'?{[W]:loc('Brancas','White'),[B]:loc('Pretas','Black')}:null;
+  if(n){ names[W]=n[W]; names[B]=n[B]; }
+  else if(mode==='cpu'){ const cpu=humanColor===W?B:W; names[humanColor]=loc('Você','You'); names[cpu]=loc('Computador','Computer'); }
+  updateTurn();
+  const ov=document.getElementById('winOverlay');
+  if(ov && endMeta && !ov.classList.contains('hidden')) applyEndUI();
+}
+if(window.I18n){ window.I18n.on(refreshI18n); refreshI18n(); }
 </script>
+<script src="../assets/lang/xadrez.js?v=20260910b"></script>
 </body>
 </html>
