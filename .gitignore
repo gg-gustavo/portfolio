@@ -3,3 +3,5 @@ teste.txt
 # zips grandes hospedados no servidor local (nao versionados)
 articles/Artigos.zip
 articles/Screen.zip
+# export da apresentacao (gerado a partir do index.html)
+pipefy/apresentacao.pdf
